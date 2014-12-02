@@ -3,21 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package steampunkyfx;
-
-import classes.Ballista;
-import classes.Direction;
-import classes.Game;
-import classes.Lobby;
-import classes.Object;
-import classes.Obstacle;
-import classes.Position;
-import classes.Projectile;
-import classes.Server;
-import classes.Object;
-import classes.Character;
-import static classes.Server.getServer;
-import classes.User;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
