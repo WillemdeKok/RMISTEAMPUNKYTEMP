@@ -1,0 +1,14 @@
+.root
+{
+    -fx-background-color: #000000;
+}
+
+.AnchorPane
+{
+    -fx-background-color: #000000;
+}
+
+.label
+{
+    -fx-text-fill: #ffffff;
+}

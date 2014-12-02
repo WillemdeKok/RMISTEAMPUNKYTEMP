@@ -1,0 +1,148 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package steampunkyclient;
+
+import fontys.observer.RemotePropertyListener;
+import fontys.observer.RemotePublisher;
+import java.beans.PropertyChangeEvent;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
+import javax.swing.JOptionPane;
+
+/**
+ *
+ * @author bart
+ */
+public class SteampunkFXControllerLogin implements RemotePropertyListener, Initializable
+{
+    // Loginproftaak
+    @FXML Tab loginuser;
+    @FXML Tab Createuser;
+    @FXML TabPane Logintabs;
+    //Login user
+    @FXML Button BTloginuserlogin;
+    @FXML Button BTExitlogin;
+    @FXML TextField TFUsernamelogin;
+    @FXML TextField TFWachtwoordlogin;
+    @FXML Label LBUsernamelogin;
+    @FXML Label LBWachtwoordlogin;
+    
+    //Create user
+    @FXML Button BtCreatecreate;
+    @FXML Button BTExitcreate;
+    @FXML TextField TFUsernamecreate;
+    @FXML TextField TFWachtwoordcreate;
+    @FXML Label LBUsernamecreate;
+    @FXML Label LBWachtwoordcreate;
+
+    // Lobby
+    @FXML Button Btcreatelobby;
+    @FXML Button Btdeletelobby;
+    @FXML Button btjoinlobby;
+    @FXML TextField TfCreatename;
+    @FXML TextField Tfvreatepassword;
+    @FXML ListView Lblobby;
+    @FXML ComboBox CBdeletelobby; 
+    @FXML ComboBox CBjoinlobby;     
+    
+    private Server server;
+    private SteampunkyFX main;
+
+
+    public void setApp(SteampunkyFX application)
+    {
+        this.main = application;
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) 
+    {    
+        try {
+            RemotePublisher publisher = (RemotePublisher) Naming.lookup("rmi://localhost:1099/server");
+            publisher.addListener(this, "server");
+        } catch (NotBoundException | MalformedURLException | RemoteException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    @FXML
+    private void BTExitlogin()
+    {
+        Stage stage = (Stage) BTExitlogin.getScene().getWindow();
+        stage.close();
+    }
+    
+    //Kijk of de user kan inloggen met het opgeven wachtwoord en username
+    @FXML
+    private void Btlogin() throws IOException 
+    {
+       if(TFUsernamelogin.getText().isEmpty() && TFWachtwoordlogin.getText().isEmpty())
+       {
+           JOptionPane.showMessageDialog(null,"Password or username is empty");
+       }
+       else
+       {
+           if(server.loginUser(TFUsernamelogin.getText(), TFWachtwoordlogin.getText()))
+           {
+               System.out.println("longin succes"); 
+               try
+               {  
+                   User tempuser = new User(TFUsernamelogin.getText(), TFWachtwoordlogin.getText());
+                   server.Userlogedin(tempuser);
+                   main.gotoLobbyselect(tempuser);
+               }
+               catch(Exception ex)
+               {
+                    System.out.println("Error at starting lobby : " + ex);
+               }
+               
+           }
+           else
+           {
+               JOptionPane.showMessageDialog(null,"Password or username are incorrect");
+           }
+       }
+    }
+    
+    //Maakt een user aan in de database
+    @FXML
+    private void BtCreatecreate() 
+    {
+       if(TFUsernamecreate.getText().isEmpty() && TFWachtwoordcreate.getText().isEmpty())
+       {
+           JOptionPane.showMessageDialog(null,"No username or password was filled in");
+       }
+       else
+       {
+           if(server.createUser(TFUsernamecreate.getText(), TFWachtwoordcreate.getText()))
+           {
+               Logintabs.getSelectionModel().select(loginuser);
+               JOptionPane.showMessageDialog(null,"User created");
+           }
+           else
+           {
+               JOptionPane.showMessageDialog(null,"User already registerd");
+           }
+       }
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent pce) throws RemoteException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+}
