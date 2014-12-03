@@ -5,10 +5,20 @@
  */
 package steampunkyserver;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.util.List;
+
 /**
  *
  * @author Willem
  */
-public interface IGame {
-    
+public interface IGame extends Remote{
+    public int getHeightPixels() throws RemoteException;
+    public int getHeightCubes() throws RemoteException;
+    public int getWidthPixels() throws RemoteException;
+    public int getWidthCubes() throws RemoteException;
+    public List<Object> getObjectsFromGrid(int x, int y);
+    public Position getPosition(int x, int y);
+    public List<Position> getGrid();
 }
