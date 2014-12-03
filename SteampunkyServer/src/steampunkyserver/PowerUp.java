@@ -20,8 +20,7 @@ public class PowerUp extends Object
     //************************datavelden*************************************
     private int powerUpID;
     private String name;
-    private String powerUpType;
-    private String objectType;
+    private String type;
     private String description;
     private String imgURL;
     private boolean available;
@@ -31,7 +30,7 @@ public class PowerUp extends Object
      Constructor of PowerUp
      <p>
      @param name        Name of this powerup
-     @param powerUpType        Type of this powerup
+     @param type        Type of this powerup
      @param description Description of this powerup
      @param available   If this Powerup is available for the player
      @param position    An Object of the Class Position which holds the Position of this PowerUp.
@@ -39,21 +38,21 @@ public class PowerUp extends Object
      @param movable     A boolean that holds the current state of this PowerUp.
      @param direction   An Object of the Class Direction which holds the direction in which this PowerUp moves.
      */
-    public PowerUp(String name , String powerUpType , String description , boolean available , Position position , boolean active , boolean movable , Direction direction,Game game)
+    public PowerUp(String name , String type , String description , boolean available , Position position , boolean active , boolean movable , Direction direction,Game game)
     {
         super(position , active , movable , direction,game);
 
         // The Name, Type and Description of the constructor can't be null or empty.
-        if ((name != null) || (powerUpType != null) || (description != null))
+        if ((name != null) || (type != null) || (description != null))
         {
-            if (!name.isEmpty() && !powerUpType.isEmpty() && !description.isEmpty())
+            if (!name.isEmpty() && !type.isEmpty() && !description.isEmpty())
             {
                 this.powerUpID = super.getInterfaceID();
                 this.name = name;
-                this.powerUpType = powerUpType;
+                this.type = type;
                 this.description = description;
 
-                switch (powerUpType)
+                switch (type)
                 {
                     case "runspeed":
                         this.imgURL = "powerup01.png";
@@ -93,9 +92,9 @@ public class PowerUp extends Object
      <p>
      @return a type as String
      */
-    public String getPowerUpType()
+    public String getType()
     {
-        return this.powerUpType;
+        return this.type;
     }
 
     /**
