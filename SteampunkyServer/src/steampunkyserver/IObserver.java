@@ -7,13 +7,13 @@ package steampunkyserver;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import javafx.collections.ObservableList;
 
 /**
  *
  * @author Willem
  */
 public interface IObserver extends Remote{
-    public void AddObserver() throws RemoteException;
-    public void RemoveObserver() throws RemoteException;
-    public void NotifyObservers() throws RemoteException;
+    public void updateLobbies(ObservableList<Lobby> lobbies) throws RemoteException;
+    public void updateUsers(ObservableList<User> users) throws RemoteException;
 }

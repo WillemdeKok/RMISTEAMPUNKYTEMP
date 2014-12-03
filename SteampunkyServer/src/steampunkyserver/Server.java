@@ -5,12 +5,16 @@
  */
 package steampunkyserver;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import static javafx.collections.FXCollections.observableList;
 import javafx.collections.ObservableList;
@@ -20,7 +24,7 @@ import javafx.collections.ObservableList;
  *
  * @author Bart
  */
-public class Server extends Observable{
+public class Server extends UnicastRemoteObject implements IServer{
 
     //************************datavelden*************************************
     
@@ -28,6 +32,9 @@ public class Server extends Observable{
     private ArrayList<User> users;
     private transient ObservableList<User> observableUsers;    
     private transient ObservableList<Lobby> observableLobbies;
+    
+    private java.util.concurrent.locks.Lock lock = new java.util.concurrent.locks.ReentrantLock();
+    private ArrayList<IObserver> observers;
     
     private Connection con;
     private static Server server = null;
@@ -37,9 +44,10 @@ public class Server extends Observable{
      * creates a server with ...
      *
      */
-    private Server() {
+    private Server() throws RemoteException{
         this.lobbies = new ArrayList();
         this.users = new ArrayList();
+        this.observers = new ArrayList();
         
         observableUsers = observableList(users);
         observableLobbies = observableList(lobbies);
@@ -138,8 +146,11 @@ public class Server extends Observable{
         if (lobbyName != null && admin != null) {
             Lobby lobby;
             this.observableLobbies.add(lobby = new Lobby(lobbyName, admin, password));
-            this.setChanged();
-            this.notifyObservers(lobby);
+            try {
+                this.NotifyObserversLobbies();
+            } catch (RemoteException ex) {
+                System.out.println("Lobby creation threw a remote Exception:    " + ex.getMessage());
+            }
             return true;
         } else {
             System.out.println("Admin of lobbyname is null");
@@ -184,10 +195,50 @@ public class Server extends Observable{
         }
     }
 
-    public static Server getServer() {
+    public static Server getServer() throws RemoteException {
         if (server == null) {
             server = new Server();
         }      
         return server;
+    }
+
+    @Override
+    public void AddObserver(IObserver observer) throws RemoteException {
+        synchronized(lock) {
+        this.observers.add(observer);
+        }
+    }
+
+    @Override
+    public void RemoveObserver(IObserver observer) throws RemoteException {
+        synchronized(lock) {
+        this.observers.remove(observer);
+        }
+    }
+
+    @Override
+    public void NotifyObserversLobbies() throws RemoteException {
+        synchronized(lock) {
+            observers.stream().forEach((observer) -> {
+                try {
+                    observer.updateLobbies(this.observableLobbies);
+                } catch(RemoteException ex) {
+                    System.out.println("Observer couldn't be notified");
+                }                    
+            });
+        } 
+    }
+    
+    @Override
+    public void NotifyObserversUsers() throws RemoteException {
+        synchronized(lock) {
+            observers.stream().forEach((observer) -> {
+                try {
+                    observer.updateUsers(this.observableUsers);
+                } catch(RemoteException ex) {
+                    System.out.println("Observer couldn't be notified");
+                }                    
+            });
+        } 
     }
 }
