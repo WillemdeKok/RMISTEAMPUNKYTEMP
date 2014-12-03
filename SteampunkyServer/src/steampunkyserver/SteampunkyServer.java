@@ -34,14 +34,16 @@ public class SteampunkyServer extends UnicastRemoteObject
     private Registry registry = null;
     private Server server = null;
     
-    public SteampunkyServer()
-    {
+    /**
+     *
+     */
+    public SteampunkyServer() throws RemoteException{
          // Print port number for registry
         System.out.println("Server: Port number " + portNumber);
         
         // Create student administration
         try {
-            Server server = Server.getServer();
+            server = Server.getServer();
             System.out.println("Server: server created");
         } catch (RemoteException ex) {
             System.out.println("Server: Cannot create server");
@@ -60,7 +62,7 @@ public class SteampunkyServer extends UnicastRemoteObject
                 System.out.println("Server: server bound to " + bindingName);
             }
             else {
-                System.out.println("Server: server not bound");
+                System.out.println("Server: server not bound with registry");
             }
         }
         else {
@@ -70,7 +72,7 @@ public class SteampunkyServer extends UnicastRemoteObject
                 System.out.println("Server: server bound to " + bindingName);
             }
             else {
-                System.out.println("Server: server not bound");
+                System.out.println("Server: server not bound with naming");
             }
         }
     }    
@@ -125,6 +127,10 @@ public class SteampunkyServer extends UnicastRemoteObject
         }
         
         // Create server
-        SteampunkyServer rmiserver = new SteampunkyServer();
+        try {
+            SteampunkyServer rmiserver = new SteampunkyServer();
+        } catch(RemoteException ex) {
+            System.out.println("RMI Server could not be created");
+        }
     }    
 }
