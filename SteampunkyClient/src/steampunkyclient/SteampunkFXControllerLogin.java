@@ -60,7 +60,7 @@ public class SteampunkFXControllerLogin implements RemotePropertyListener, Initi
     @FXML ComboBox CBdeletelobby; 
     @FXML ComboBox CBjoinlobby;     
     
-    private Server server;
+    private IServer server;
     private SteampunkyFX main;
 
 
@@ -102,7 +102,7 @@ public class SteampunkFXControllerLogin implements RemotePropertyListener, Initi
                System.out.println("longin succes"); 
                try
                {  
-                   User tempuser = new User(TFUsernamelogin.getText(), TFWachtwoordlogin.getText());
+                   IUser tempuser = new User(TFUsernamelogin.getText(), TFWachtwoordlogin.getText());
                    server.Userlogedin(tempuser);
                    main.gotoLobbyselect(tempuser);
                }
@@ -141,7 +141,6 @@ public class SteampunkFXControllerLogin implements RemotePropertyListener, Initi
        }
     }
 
-    @Override
     public void propertyChange(PropertyChangeEvent pce) throws RemoteException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

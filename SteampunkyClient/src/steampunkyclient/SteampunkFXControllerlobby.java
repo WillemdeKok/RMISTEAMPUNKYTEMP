@@ -3,12 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package steampunkyfx;
+package steampunkyClient;
 
-import classes.Lobby;
-import classes.Server;
-import static classes.Server.getServer;
-import classes.User;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Observable;
@@ -47,11 +44,11 @@ public class SteampunkFXControllerlobby implements Observer, Initializable
 
     //JAVAFX referenties / mee gegeven objecten van andere forums
     private SteampunkyFX main;
-    private Server server;
-    private User user;
+    private IServer server;
+    private IUser user;
     
 
-    public void setApp(SteampunkyFX application,User user)
+    public void setApp(SteampunkyFX application,IUser user)
     {
         this.main = application;
         this.user = user;
@@ -63,7 +60,7 @@ public class SteampunkFXControllerlobby implements Observer, Initializable
     {   
         Clear();
         lobbyName = new ArrayList();
-        this.server = (Server) getServer();
+        this.server = (IServer)getServer();
         server.addObserver(this);    
     }
 

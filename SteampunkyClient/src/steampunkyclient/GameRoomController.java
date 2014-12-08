@@ -31,6 +31,13 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import steampunkyclient.Direction;
+import steampunkyclient.ICharacter;
+import steampunkyclient.IGame;
+import steampunkyclient.IObject;
+import steampunkyclient.IPosition;
+import steampunkyclient.IServer;
+import steampunkyclient.IUser;
 
 /**
  * FXML Controller class
@@ -83,7 +90,7 @@ public class GameRoomController implements Initializable, Observer {
     private AnchorPane box;
     private Rectangle field;
     private Rectangle playfield;
-    private List<Object> objects;
+    private List<IObject> objects;
 
     //Listen die nodig zijn voor de gui te updaten
     private ArrayList<String> SpectatorNames;
@@ -104,7 +111,7 @@ public class GameRoomController implements Initializable, Observer {
     private int countdown = 6;
     private int slotsleft = 4;
 
-    public void setApp(SteampunkyFX application, User admin, Lobby lobby, Stage stage) {
+    public void setApp(SteampunkyFX application, IUser admin, Lobby lobby, Stage stage) {
         this.stage = stage;
         this.main = application;
         this.admin = admin;
@@ -158,7 +165,7 @@ public class GameRoomController implements Initializable, Observer {
         this.CBlevelsizeHeight.getSelectionModel().select(0);
 
         //Kijkt of de ingelogde speler een admin is
-        for (User u : lobby.getSpectators()) {
+        for (IUser u : lobby.getSpectators()) {
             if (u == admin) {
                 this.LBLsize.setDisable(false);
                 this.LBLHeight.setDisable(false);
@@ -175,7 +182,7 @@ public class GameRoomController implements Initializable, Observer {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        server = (Server) getServer();
+        server = (IServer) getServer();
         SpectatorNames = new ArrayList<>();
         PlayerNames = new ArrayList<>();
         Roomsizewidth = new ArrayList<>();
@@ -248,13 +255,14 @@ public class GameRoomController implements Initializable, Observer {
         box.getChildren().add(this.field);
         box.getChildren().add(this.playfield);
          
-        for (Position p : this.game.getGrid())
+        for (IPosition p : this.game.getGrid())
             {
                 objects = p.getObjects();
 
-                for (Object o : objects)
+                for (IObject o : objects)
                 {
-                    Shape s = o.getShape();
+                    Shape s;
+                    s = o.getShape();
                     box.getChildren().add(s);
                 }
             }
@@ -272,7 +280,7 @@ public class GameRoomController implements Initializable, Observer {
         int botdif = 1; //afhankelijk van level spelers, nog niet geimplementeerd
         int rounds = Integer.parseInt(this.CBrounds.getValue().toString());
 
-        this.game = new Game(width, height, time, botdif, rounds);
+        this.game = new IGame(width, height, time, botdif, rounds) {};
         this.widthPixels = this.game.getWidthPixels();
         this.widthCubes = this.game.getWidthCubes();
         this.heightPixels = this.game.getHeightPixels();
@@ -326,14 +334,14 @@ public class GameRoomController implements Initializable, Observer {
             
             if(keyEvent.getCode().toString().equals("Q"))
             {
-                Character c = (classes.Character) game.getCharacter();
-                c.createBallista(Direction.Right ,4 , 1);
+                ICharacter c = (ICharacter) game.getCharacter();
+                c.createBallista(Direction.Right ,4);
             }
             
             if(keyEvent.getCode().toString().equals("E"))
             {
-                Character c = (classes.Character) game.getCharacter();
-                c.createBallista(Direction.Up ,4 , 1);
+                ICharacter c = (ICharacter) game.getCharacter();
+                c.createBallista(Direction.Up ,4);
             }
         });
     }
@@ -406,11 +414,11 @@ public class GameRoomController implements Initializable, Observer {
         this.LBSpectators.getItems().clear();
         this.LBPlayers.getItems().clear();
 
-        for (User u : this.lobby.getPlayers()) {
+        for (IUser u : this.lobby.getPlayers()) {
             this.PlayerNames.add(u.toString());
         }
 
-        for (User u : this.lobby.getSpectators()) {
+        for (IUser u : this.lobby.getSpectators()) {
             this.SpectatorNames.add(u.toString());
         }
         
