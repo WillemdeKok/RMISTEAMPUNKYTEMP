@@ -33,11 +33,13 @@ public class SteampunkFXControllerlobby implements Observer, Initializable
     @FXML Label joinlobbynamelb;
     @FXML Label LBLLobbyWelcome;
     @FXML ComboBox CBjoinlobby;
+    @FXML TextField TFchat;
     @FXML TextField TfCreatename;
     @FXML TextField Tfvreatepassword;
     @FXML Button Btcreatelobby;
     @FXML Button btjoinlobby;
     @FXML ListView Lblobby;
+    
     
     //list voor de gemaakte lobby's te laten zien
     ArrayList<String> lobbyName;
@@ -86,6 +88,22 @@ public class SteampunkFXControllerlobby implements Observer, Initializable
             }
             catch (Exception ex) {
                 JOptionPane.showMessageDialog(null,"Lobby creation has failed" + ex.getMessage());
+                        System.out.println("Failed" + ex.getMessage());
+            }
+        }
+    }
+    
+    @FXML
+    public void AddChatmessage() {
+        if (TFchat.getText().equals("")) {
+            JOptionPane.showMessageDialog(null,"Pleas enter a chat message");
+        }
+        else {
+            try {
+                lobby.Addchatmessage(Tfvreatepassword.getText());
+            }
+            catch (Exception ex) {
+                JOptionPane.showMessageDialog(null,"Server connection faild" + ex.getMessage());
                         System.out.println("Failed" + ex.getMessage());
             }
         }
