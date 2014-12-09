@@ -780,7 +780,6 @@ public class Game {
         List<Position> visiblePositions = new ArrayList();
         
         //<editor-fold defaultstate="collapsed" desc="Get the for this character visible positions in the grid">
-        int torch = C.getTorchRange();
         int CX = C.getPositionX();
         int CY = C.getPositionY();
         grid.stream().forEach((P) -> {
@@ -788,17 +787,17 @@ public class Game {
             int PY = P.getY();
             int difX;
             int difY;
-            if (PX > CX) {
+            if (PX >= CX) {
                 difX = PX - CX;
             } else {
                 difX = CX - PX;
             }
-            if (PY > CY) {
+            if (PY >= CY) {
                 difY = PY - CY;
             } else {
                 difY = CY - PY;
             }
-            if ((difY + difX) <= torch) {
+            if ((difY + difX) <= C.getTorchRange()) {
                 visiblePositions.add(P);
             }
         });
