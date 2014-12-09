@@ -14,7 +14,6 @@ import java.util.*;
 public class Game {
 
     //************************datavelden*************************************
-
     private int heightPixels;
     private int heightCubes;
     private int widthPixels;
@@ -71,17 +70,17 @@ public class Game {
             int row = 1;
             int col = 1;
 
+            //<editor-fold defaultstate="collapsed" desc="Initiate Grid">
             while (row <= this.widthCubes) {
                 col = 1;
-
                 while (col <= this.heightCubes) {
                     Position p = new Position(col, row);
                     this.grid.add(p);
                     col++;
                 }
-
                 row++;
             }
+            //</editor-fold>
 
             this.levels = new ArrayList<>();
             this.objects = new ArrayList<>();
@@ -780,10 +779,36 @@ public class Game {
     }
 
     public ArrayList<String[]> GetInformation(Character C) {
-
+        
         ArrayList<String[]> information = new ArrayList();
+        List<Position> visiblePositions = new ArrayList();
+        
+        //<editor-fold defaultstate="collapsed" desc="Get the for this character visible positions in the grid">
+        int torch = C.getTorchRange();
+        int CX = C.getPositionX();
+        int CY = C.getPositionY();
+        grid.stream().forEach((P) -> {
+            int PX = P.getX();
+            int PY = P.getY();
+            int difX;
+            int difY;
+            if (PX > CX) {
+                difX = PX - CX;
+            } else {
+                difX = CX - PX;
+            }
+            if (PY > CY) {
+                difY = PY - CY;
+            } else {
+                difY = CY - PY;
+            }
+            if ((difY + difX) <= torch) {
+                visiblePositions.add(P);
+            }
+        });
+        //</editor-fold>
 
-        for (Position p : grid) {
+        for (Position p : visiblePositions) {
             List<Object> TempObjects = this.getObjectsFromGrid(p.getX(), p.getY());
 
             for (Object o : TempObjects) {

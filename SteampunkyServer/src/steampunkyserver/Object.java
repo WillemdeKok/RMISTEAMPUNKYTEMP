@@ -137,7 +137,7 @@ public abstract class Object {
         return this.myGame;
     }
 
-    //<editor-fold default-state="collapsed" desc="movement and collision code">
+    //<editor-fold defaultstate="collapsed" desc="movement and collision code">
     /**
      * A Method for moving this Object
      * <p>
@@ -226,7 +226,6 @@ public abstract class Object {
         return Movable;
     }
 
-    //</editor-fold>
     public void RemoveFromGame() {
         if (this instanceof Character) {
             Character C = (Character) this;
@@ -258,5 +257,6 @@ public abstract class Object {
             }
         }
     }
+    //</editor-fold>
 
 }
