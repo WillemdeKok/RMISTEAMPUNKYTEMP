@@ -15,7 +15,7 @@ import javafx.collections.ObservableList;
  * OK
  * @author Bart
  */
-public class Lobby extends Observable
+public class Lobby extends Observable implements ILobby
 {
     //************************datavelden*************************************
     private int lobbyID;
@@ -56,23 +56,33 @@ public class Lobby extends Observable
         observableChat = observableList(chatMessages);
     }
 
+    @Override
     public String GetLobbyname(){
        return this.lobbyName;       
     }
     
+    @Override
     public ObservableList<User> getSpectators() {
         return (ObservableList<User>) FXCollections.unmodifiableObservableList(observableSpectators);
     }
     
+    @Override
     public ObservableList<User> getPlayers() {
         return (ObservableList<User>) FXCollections.unmodifiableObservableList(observablePlayers);
     }
     
+    @Override
     public ObservableList<String> getChat() {
         return (ObservableList<String>) FXCollections.unmodifiableObservableList(observableChat);
     }
     
-    //**********************methoden****************************************
+    @Override
+    public void Addchatmessage(String message)
+    {
+        observableChat.add(message);
+    }
+    
+    @Override
     public boolean checkPassword(String password)
     {
         if(this.password.equals(password))
@@ -85,6 +95,7 @@ public class Lobby extends Observable
         }
     }
     
+    @Override
     public boolean createGame(double timelimit, int botDifficulty, String level, int rounds)
     {
         //todo
@@ -97,6 +108,7 @@ public class Lobby extends Observable
         return false;
     }
     
+    @Override
     public boolean addUser(User user)
     {
         if(user != null && !this.observableSpectators.contains(user))
@@ -114,6 +126,7 @@ public class Lobby extends Observable
      * @param user
      * @return if return -1 delete this lobby, if 0 no user has been removed if 1 user has been removed
      */
+    @Override
     public int removeUser(User user)
     {
         int removedUser = 0;
@@ -138,7 +151,7 @@ public class Lobby extends Observable
           
     }
     
-    
+    @Override
     public boolean assignSlot(User user)
     {
         if(this.observableSpectators.contains(user) && !this.observablePlayers.contains(user))
@@ -152,6 +165,7 @@ public class Lobby extends Observable
         return false;
     }
     
+    @Override
     public boolean clearSlot(User user)
     {
         if(!this.observableSpectators.contains(user) && this.observablePlayers.contains(user))

@@ -24,4 +24,5 @@ public interface ILobby extends Remote{
     public int removeUser(User user) throws RemoteException;
     public boolean assignSlot(User user) throws RemoteException;
     public boolean clearSlot(User user) throws RemoteException;
+    public void Addchatmessage(String message)throws RemoteException;
 }
