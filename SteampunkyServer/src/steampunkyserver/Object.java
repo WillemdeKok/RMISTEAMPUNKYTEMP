@@ -194,6 +194,7 @@ public abstract class Object
         }
     }
     
+    //<editor-fold default-state="collapsed" desc="movement and collision code">
     /**
      A Method for moving this Object
      <p>
@@ -213,7 +214,6 @@ public abstract class Object
         } else {
             nextY++;
         }
-        
         if(this.checkCollision(nextX, nextY)){
             this.myGame.getObjectsFromGrid(nextX, nextY).add(this);
             this.position.removeObject(this);
@@ -222,12 +222,12 @@ public abstract class Object
     }
     
     /**
-     An method to check if the next Position of this projectile will collide with another object.
+     An method to check if the next Position of this object will collide with another object or wall.
      <p>
-     @param objects An list of all object currently in the game.
+     @param posX the X coordinate of the position to be checked.
+     @param posY the Y coordinate of the position to be checked.
      <p>
-     @return Returns an object if the next p of this projectile collides with the object
-     else it returns null.
+     @return Returns a boolean that states if the object can move to the desired position.
      */
     public Boolean checkCollision(int posX,int posY)
     {
@@ -236,54 +236,66 @@ public abstract class Object
             if (!this.myGame.getObjectsFromGrid(posX, posY).isEmpty()){
                 List<Object> objects = this.myGame.getObjectsFromGrid(posX, posY);
                 //if this is a Character
-                    if(this instanceof Character){
-                        //for every object on the desired position
-                        for (Object O : objects){
-                            //if the Object is a Projectile
-                            if (O instanceof Projectile){
-                                //if the direction of this character is opposite to the direciton of the projectile.
-                                if((this.direction == Direction.Up && this.direction == Direction.Down) ||(this.direction == Direction.Right && this.direction == Direction.Left)||(this.direction == Direction.Down && this.direction == Direction.Up)||(this.direction == Direction.Left && this.direction == Direction.Right)){
-                                    O.RemoveFromGame();
-                                    this.RemoveFromGame();
-                                    Movable = false;
-                                }
-                            } else if (O instanceof Ballista || O instanceof Obstacle){
-                                Movable = false;
-                            } else if (O instanceof PowerUp){
-                                PowerUp tempPowerUp = (PowerUp) O;
-                                PickUp(tempPowerUp.getPowerUpType());
-                                O.RemoveFromGame();
-                            }
-                        }
-                    // if this is Projectile
-                    } else if (this instanceof Projectile){
-                        //for every object on desired position
-                        for (Object O : objects){
-                            if (O instanceof Obstacle){
-                                Obstacle tempObstacle = (Obstacle) O;
-                                if(tempObstacle.getType().matches("cube")){
-                                    this.RemoveFromGame();
-                                    Movable = false;
-                                } else {
-                                    this.RemoveFromGame();
-                                    O.RemoveFromGame();
-                                    Movable = false;
-                                }
-                            } else {
+                if(this instanceof Character){
+                    //for every object on the desired position
+                    for (Object O : objects){
+                        //if the Object is a Projectile
+                        if (O instanceof Projectile){
+                            //if the direction of this character is opposite to the direciton of the projectile.
+                            if((this.direction == Direction.Up && this.direction == Direction.Down) ||(this.direction == Direction.Right && this.direction == Direction.Left)||(this.direction == Direction.Down && this.direction == Direction.Up)||(this.direction == Direction.Left && this.direction == Direction.Right)){
                                 O.RemoveFromGame();
                                 this.RemoveFromGame();
                                 Movable = false;
                             }
-                        }        
+                        } else if (O instanceof Ballista || O instanceof Obstacle){
+                            Movable = false;
+                        } else if (O instanceof PowerUp){
+                            PowerUp tempPowerUp = (PowerUp) O;
+                            PickUp(tempPowerUp.getPowerUpType());
+                            O.RemoveFromGame();
+                        }
                     }
-                }  
-            } else {
+                // if this is Projectile
+                } else if (this instanceof Projectile){
+                    //for every object on desired position
+                    for (Object O : objects){
+                        if (O instanceof Obstacle){
+                            Obstacle tempObstacle = (Obstacle) O;
+                            if(tempObstacle.getType().matches("cube")){
+                                this.RemoveFromGame();
+                                Movable = false;
+                            } else {
+                                this.RemoveFromGame();
+                                O.RemoveFromGame();
+                                Movable = false;
+                            }
+                        } else {
+                            O.RemoveFromGame();
+                            this.RemoveFromGame();
+                            Movable = false;
+                        }
+                    }        
+                }
+            }  
+        } else {
             Movable = false;
-            }
-        return Movable;
         }
-    
-
+        return Movable;
+    }
+   
+    //</editor-fold>
+    public void RemoveFromGame(){
+        if (this instanceof Character){
+            Character C = (Character) this;
+            C.setDead(true);
+        } else if (this instanceof Obstacle){
+            Obstacle O = (Obstacle)this;
+            O.setBroken(true);
+        }
+        this.setActive(false);
+        this.position.removeObject(this);
+        this.myGame.getObjects().remove(this);
+    } 
     
     private void PickUp(String type)
     {
@@ -307,18 +319,5 @@ public abstract class Object
                 c.setShots(t+4);
             }
         }
-    }
-    
-    public void RemoveFromGame(){
-        if (this instanceof Character){
-            Character C = (Character) this;
-            C.setDead(true);
-        } else if (this instanceof Obstacle){
-            Obstacle O = (Obstacle)this;
-            O.setBroken(true);
-        }
-        this.setActive(false);
-        this.position.removeObject(this);
-        this.myGame.getObjects().remove(this);
     }
 }
