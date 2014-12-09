@@ -775,10 +775,10 @@ public class Game {
     }
 
     public ArrayList<String[]> GetInformation(Character C) {
-        
+
         ArrayList<String[]> information = new ArrayList();
         List<Position> visiblePositions = new ArrayList();
-        
+
         //<editor-fold defaultstate="collapsed" desc="Get the for this character visible positions in the grid">
         int CX = C.getPositionX();
         int CY = C.getPositionY();
@@ -803,6 +803,7 @@ public class Game {
         });
         //</editor-fold>
 
+        //<editor-fold defaultstate="collapsed" desc="For all visible Positions set the objects in an arraylist and put that list in the stringArray information">
         for (Position p : visiblePositions) {
             List<Object> TempObjects = this.getObjectsFromGrid(p.getX(), p.getY());
 
@@ -843,6 +844,8 @@ public class Game {
                 information.add(objectinfo);
             }
         }
+
+        //</editor-fold>
         return information;
     }
 
