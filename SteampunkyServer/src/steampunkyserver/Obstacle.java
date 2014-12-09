@@ -38,7 +38,8 @@ public class Obstacle extends Object
       */
     public Obstacle(String type , boolean broken , Position position , boolean active , boolean movable, Game game)
     {
-        super(position , active , movable , null, game);
+        
+        super(position , active , movable , null, game, type);
 
         interfaceID = super.getInterfaceID();
         if (interfaceID == 0)
@@ -52,15 +53,6 @@ public class Obstacle extends Object
         }
 
         this.type = type;
-        
-        if (this.type.equals("box"))
-        {      
-            super.setImage("obstacle.png");
-        }
-        else if (this.type.equals("cube"))
-        {     
-            super.setImage("box01.png");
-        }
         
         this.broken = broken;
 

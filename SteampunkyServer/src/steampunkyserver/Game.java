@@ -561,14 +561,7 @@ public class Game
             Random r = new Random();
             double b = r.nextDouble();
 
-            if (b <= perc)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return b <= perc;
         }
         else
         {
@@ -582,13 +575,9 @@ public class Game
      */
     public void setObjectInGrid(Object object)
     {
-        for (Position p : this.grid)
-        {
-            if (p.getX() == object.getPositionX() && p.getY() == object.getPositionY())
-            {
-                p.addObject(object);
-            }
-        }
+        this.grid.stream().filter((p) -> (p.getX() == object.getPositionX() && p.getY() == object.getPositionY())).forEach((p) -> {
+            p.addObject(object);
+        });
     }
     
     /**
@@ -751,12 +740,6 @@ public class Game
         namen[2] = "Andre";
         namen[3] = "Nico";
         
-        Color[] colors = new Color[4];
-        colors[0] = Color.RED;
-        colors[1] = Color.LIMEGREEN;
-        colors[2] = Color.ROYALBLUE;
-        colors[3] = Color.YELLOW;
-        
         Position[] positions = new Position[4];
         positions[0] = getPosition(1, this.heightCubes);
         positions[1] = getPosition(1, 1);
@@ -777,7 +760,7 @@ public class Game
         //Add character to player
         for (User p : this.players)
         {
-            Character c = new Character(1, false, 1, 3, positions[i], true, true, directions[i], colors[i], this);
+            Character c = new Character(1, false, 1, 3, positions[i], true, true, directions[i], this);
             p.setCharacter(c);
             this.characters.add(c);
             this.objects.add(c);
@@ -794,7 +777,7 @@ public class Game
                 Bot b = new Bot(namen[k], this.botDifficulty, this);
                 this.bots.add(b);
                 
-                Character c = new Character(1, false, 1, 3, positions[k], true, true, directions[k], colors[k], this);
+                Character c = new Character(1, false, 1, 3, positions[k], true, true, directions[k], this);
                 b.setCharacter(c);
                 this.objects.add(c);
             }
@@ -816,10 +799,9 @@ public class Game
         } 
         
         //Add all objects to grid
-        for (Object o : this.objects)
-        {
+        this.objects.stream().forEach((o) -> {
             this.setObjectInGrid(o);
-        }
+        });
     }
     
     /**
@@ -856,9 +838,58 @@ public class Game
         this.objects.addAll(this.getCubes());
         
         //Add all objects to grid
-        for (Object o : this.objects)
-        {
+        this.objects.stream().forEach((o) -> {
             this.setObjectInGrid(o);
-        }
+        });
     }
+    
+        public ArrayList<String[]> GetInformation(Character C) {
+       
+            
+            
+        ArrayList<String[]> information = new ArrayList();
+        
+	for (Position p : grid) {
+            List<Object> TempObjects = this.getObjectsFromGrid(p.getX(), p.getY());
+		
+            for (Object o : TempObjects) {
+                String[] objectinfo = new String[4];
+
+                if (o instanceof Character) {
+                    objectinfo[0] = "1";
+                    objectinfo[1] = o.getObjectType();
+                    objectinfo[2] = o.getPosition().getX() + "";
+                    objectinfo[3] = o.getPosition().getY() + "";
+
+                } else if (o instanceof Obstacle) {
+                    objectinfo[0] = "2";
+                    objectinfo[1] = o.getObjectType();
+                    objectinfo[2] = o.getPosition().getX() + "";
+                    objectinfo[3] = o.getPosition().getY() + "";
+
+                } else if (o instanceof PowerUp) {
+                    objectinfo[0] = "3";
+                    objectinfo[1] = o.getObjectType();
+                    objectinfo[2] = o.getPosition().getX() + "";
+                    objectinfo[3] = o.getPosition().getY() + "";
+
+                } else if (o instanceof Ballista) {
+                    objectinfo[0] = "4";
+                    objectinfo[1] = o.getObjectType();
+                    objectinfo[2] = o.getPosition().getX() + "";
+                    objectinfo[3] = o.getPosition().getY() + "";
+
+                } else if (o instanceof Projectile) {
+                    objectinfo[0] = "5";
+                    objectinfo[1] = o.getObjectType();
+                    objectinfo[2] = o.getPosition().getX() + "";
+                    objectinfo[3] = o.getPosition().getY() + "";
+                }	
+                
+                information.add(objectinfo);
+            }
+        }
+        return information;
+    }
+
 }
