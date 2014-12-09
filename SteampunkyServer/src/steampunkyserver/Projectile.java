@@ -5,7 +5,6 @@
  */
 package steampunkyserver;
 
-
 /**
  * OK
  * <p>
@@ -14,7 +13,6 @@ package steampunkyserver;
 public class Projectile extends Object {
 
     //************************datavelden*************************************
-
     private final int projectileID;
     private final String type;
     private double speed;

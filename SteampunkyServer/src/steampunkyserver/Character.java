@@ -15,7 +15,6 @@ import java.util.*;
 public class Character extends Object {
 
     //************************datavelden*************************************
-
     private int characterID;
     private int score;
     private double speed;
@@ -40,8 +39,7 @@ public class Character extends Object {
      * @param active A boolean if the character is active or not
      * @param movable A boolean if the character can move or not
      * @param direction A Direction to which the character is moving
-     * @param color
-     * @param game
+     * @param game A instance of game that created this instance of Character.
      */
     public Character(double speed, boolean dead, int maxBallista, int torch,
             Position position, boolean active, boolean movable, Direction direction, Game game) {

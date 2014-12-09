@@ -15,7 +15,6 @@ import java.util.ArrayList;
 public class Obstacle extends Object {
 
     //************************datavelden*************************************
-
     private final int interfaceID;
     private int obstacleID = 1;
     private final String type;
