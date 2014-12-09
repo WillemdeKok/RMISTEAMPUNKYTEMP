@@ -625,10 +625,6 @@ public class Game {
             P.move(P.getDirection());
         });
 
-        for (PowerUp P : tempPowerUps) {
-            //addpowerup to characters
-        }
-
         this.bots.stream().forEach((B) -> {
             B.AI();
         });
