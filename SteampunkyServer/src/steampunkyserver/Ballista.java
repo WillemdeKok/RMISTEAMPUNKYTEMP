@@ -16,7 +16,6 @@ import java.util.TimerTask;
 public class Ballista extends Object {
 
     //************************datavelden*************************************
-
     private int ballistaID;
     private Direction direction;
     private String ballistaType;
@@ -96,7 +95,6 @@ public class Ballista extends Object {
     }
 
     //**********************methoden****************************************
-
     /**
      * The getter of the Ballista ID.
      * <p>

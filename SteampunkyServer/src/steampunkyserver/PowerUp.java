@@ -5,12 +5,6 @@
  */
 package steampunkyserver;
 
-import java.util.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
-
 /**
  * <p>
  * @author Melanie
@@ -18,7 +12,6 @@ import javafx.scene.shape.Shape;
 public class PowerUp extends Object {
 
     //************************datavelden*************************************
-
     private int powerUpID;
     private String name;
     private String powerUpType;

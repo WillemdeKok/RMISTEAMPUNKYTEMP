@@ -15,8 +15,8 @@ public class Projectile extends Object {
 
     //************************datavelden*************************************
 
-    private int projectileID;
-    private String type;
+    private final int projectileID;
+    private final String type;
     private double speed;
     private Direction direction;
 
