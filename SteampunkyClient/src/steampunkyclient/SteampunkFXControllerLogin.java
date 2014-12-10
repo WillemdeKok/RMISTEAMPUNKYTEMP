@@ -66,7 +66,7 @@ public class SteampunkFXControllerLogin implements RemotePropertyListener, Initi
     private int portNumber;
     private String ipAddress;
     // Set binding name for student administration
-    private static final String bindingName = "MockLogin";
+    private static final String bindingName = "serverMock";
 
     // References to registry and student administration
     private Registry registry = null;
@@ -161,7 +161,7 @@ public class SteampunkFXControllerLogin implements RemotePropertyListener, Initi
                try
                {  
                    clientInfo.setUser(TFUsernamelogin.getText());
-                   main.gotoLobbyselect(clientInfo.getUser());
+                   main.gotoLobbyselect(this.clientInfo);
                }
                catch(Exception ex)
                {

@@ -58,20 +58,20 @@ public class SteampunkyFX extends Application {
         }
     }
     
-    protected void gotoLobbyselect(String user) {
+    protected void gotoLobbyselect(Client client) {
         try {
             SteampunkFXControllerlobby lobbyselect = (SteampunkFXControllerlobby) replaceSceneContent("Lobby3.fxml");
-            lobbyselect.setApp(this, user);
+            lobbyselect.setApp(this, client);
         } catch (Exception ex) {
             System.out.println("Error: " + ex.getMessage());
             Logger.getLogger(SteampunkyFX.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    protected void gotoGameRoomselect(User admin, Lobby lobby) {
+    protected void gotoGameRoomselect() {
         try {
             GameRoomController GameRoomselect = (GameRoomController) replaceSceneContent("GameRoom.fxml");
-            GameRoomselect.setApp(this, admin, lobby, stage);
+  //          GameRoomselect.setApp(this,, stage);
         } catch (Exception ex) {
             Logger.getLogger(SteampunkyFX.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package server;
+package steampunkyserver;
 
 import java.net.InetAddress;
 import java.net.MalformedURLException;
@@ -27,42 +27,42 @@ public class RMIServer {
     private static final int portNumber = 1099;
 
     // Set binding name for student administration
-    private static final String bindingName = "MockEffectenbeurs";
+    private static final String bindingName = "serverMock";
 
     // References to registry and student administration
     private Registry registry = null;
-    private MockEffectenbeurs mock;
+    private Server serverMock;
 
     // Constructor
     public RMIServer() {
         System.out.println("Server: Port number " + portNumber);
         try {
-            mock = new MockEffectenbeurs();
-            System.out.println("Server: MockEffectenbeurs created");
+            serverMock = Server.getServer();
+            System.out.println("Server: serverMock created");
         } catch (RemoteException ex) {
-            System.out.println("Server: Cannot create MockEffectenbeurs");
+            System.out.println("Server: Cannot create ServerMock");
             System.out.println("Server: RemoteException: " + ex.getMessage());
-            mock = null;
+            serverMock = null;
         }
         //Aanmaken van een regisrty
         if (createRegistry) {
             registry = createRegistry();
       
         // Als register aan maken is gelukt proberen te binden op register
-        if (registry != null && mock != null) {
+        if (registry != null && serverMock != null) {
                 bindMockUsingRegistry();
-                System.out.println("Server: MockEffectenbeurs bound to " + bindingName);
+                System.out.println("Server: serverMock bound to " + bindingName);
             } else {
-                System.out.println("Server: MockEffectenbeurs not bound");
+                System.out.println("Server: serverMock not bound");
             }
         } 
         // Als register aan maken is gelukt proberen te binden op naam
         else {
-            if (mock != null) {
+            if (serverMock != null) {
                 bindMockUsingNaming();
-                System.out.println("Server: MockEffectenbeurs bound to " + bindingName);
+                System.out.println("Server: serverMock bound to " + bindingName);
             } else {
-                System.out.println("Server: MockEffectenbeurs not bound");
+                System.out.println("Server: serverMock not bound");
             }
         }
     }
@@ -84,9 +84,9 @@ public class RMIServer {
     // probeert het register tebinden op bindingnaam en de classe met de RemotePublisher
     private void bindMockUsingRegistry() {
         try {
-            registry.rebind(bindingName, mock);
+            registry.rebind(bindingName, serverMock);
         } catch (RemoteException ex) {
-            System.out.println("Server: Cannot bind MockEffectenbeurs");
+            System.out.println("Server: Cannot bind serverMock");
             System.out.println("Server: RemoteException: " + ex.getMessage());
         }
     }
@@ -95,12 +95,12 @@ public class RMIServer {
     private void bindMockUsingNaming() {
         try {
             LocateRegistry.createRegistry(portNumber);
-            Naming.rebind(bindingName, mock);
+            Naming.rebind(bindingName, serverMock);
         } catch (MalformedURLException ex) {
-            System.out.println("Server: Cannot bind MockEffectenbeurs");
+            System.out.println("Server: Cannot bind serverMock");
             System.out.println("Server: MalformedURLException: " + ex.getMessage());
         } catch (RemoteException ex) {
-            System.out.println("Server: Cannot bind MockEffectenbeurs");
+            System.out.println("Server: Cannot bind serverMock");
             System.out.println("Server: RemoteException: " + ex.getMessage());
         }
     }

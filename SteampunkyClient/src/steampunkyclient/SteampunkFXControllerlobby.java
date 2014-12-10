@@ -8,10 +8,7 @@ package steampunkyClient;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.ResourceBundle;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -19,13 +16,13 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javax.swing.JOptionPane;
+
 
 /**
  *
  * @author Bart
  */
-public class SteampunkFXControllerlobby implements Observer, Initializable
+public class SteampunkFXControllerlobby implements Initializable
 {
     //Lobby
     @FXML Label Creatlobbynamelb;
@@ -46,15 +43,14 @@ public class SteampunkFXControllerlobby implements Observer, Initializable
 
     //JAVAFX referenties / mee gegeven objecten van andere forums
     private SteampunkyFX main;
-    private IServer server;
-    private IUser user;
+    private Client clientInfo;
     
 
-    public void setApp(SteampunkyFX application,IUser user)
+    public void setApp(SteampunkyFX application,Client client)
     {
+        this.clientInfo = client;
         this.main = application;
-        this.user = user;
-        LBLLobbyWelcome.setText("Welcome: " + user.getUsername());
+        LBLLobbyWelcome.setText("Welcome: " + client.getUsername());
     }
 
     @Override
@@ -62,69 +58,67 @@ public class SteampunkFXControllerlobby implements Observer, Initializable
     {   
         Clear();
         lobbyName = new ArrayList();
-        this.server = IServer.getServer();
-        server.addObserver(this);    
     }
 
     
     //Maakt een lobby 
-    @FXML
-    public void AddLobby() {
-        if (TfCreatename.getText().equals("")) {
-            JOptionPane.showMessageDialog(null,"Please enter a valid name.");
-        }
-        else {
-            try {
-                server.createLobby(TfCreatename.getText(), Tfvreatepassword.getText(), user);
-                JOptionPane.showMessageDialog(null,"Lobby has been created");
-                
-                
-                for (Lobby L : this.server.getLobbies()) {
-                    if (L.GetLobbyname().equals(TfCreatename.getText())) {
-                        L.addUser(user);
-                        main.gotoGameRoomselect(user, L);
-                    }
-                }
-            }
-            catch (Exception ex) {
-                JOptionPane.showMessageDialog(null,"Lobby creation has failed" + ex.getMessage());
-                        System.out.println("Failed" + ex.getMessage());
-            }
-        }
-    }
+//    @FXML
+//    public void AddLobby() {
+//        if (TfCreatename.getText().equals("")) {
+//            JOptionPane.showMessageDialog(null,"Please enter a valid name.");
+//        }
+//        else {
+//            try {
+//                server.createLobby(TfCreatename.getText(), Tfvreatepassword.getText(), user);
+//                JOptionPane.showMessageDialog(null,"Lobby has been created");
+//                
+//                
+//                for (Lobby L : this.server.getLobbies()) {
+//                    if (L.GetLobbyname().equals(TfCreatename.getText())) {
+//                        L.addUser(user);
+//                        main.gotoGameRoomselect(user, L);
+//                    }
+//                }
+//            }
+//            catch (Exception ex) {
+//                JOptionPane.showMessageDialog(null,"Lobby creation has failed" + ex.getMessage());
+//                        System.out.println("Failed" + ex.getMessage());
+//            }
+//        }
+//    }
     
-    @FXML
-    public void AddChatmessage() {
-        if (TFchat.getText().equals("")) {
-            JOptionPane.showMessageDialog(null,"Pleas enter a chat message");
-        }
-        else {
-            try {
-                lobby.Addchatmessage(Tfvreatepassword.getText());
-            }
-            catch (Exception ex) {
-                JOptionPane.showMessageDialog(null,"Server connection faild" + ex.getMessage());
-                        System.out.println("Failed" + ex.getMessage());
-            }
-        }
-    }
+//    @FXML
+//    public void AddChatmessage() {
+//        if (TFchat.getText().equals("")) {
+//            JOptionPane.showMessageDialog(null,"Pleas enter a chat message");
+//        }
+//        else {
+//            try {
+//                lobby.Addchatmessage(Tfvreatepassword.getText());
+//            }
+//            catch (Exception ex) {
+//                JOptionPane.showMessageDialog(null,"Server connection faild" + ex.getMessage());
+//                        System.out.println("Failed" + ex.getMessage());
+//            }
+//        }
+//    }
 
     //update de rooms die worden aangemaakt in de listview
-    @Override
-    public void update(Observable o, Object o1) {
-        try {
-            Lobby lobby = (Lobby) o1;
-            for (Lobby l : server.getLobbies()) {
-                lobbyName.add(l.toString());
-            }
-        } catch(Exception ex) {
-            System.out.println("Not an lobby");
-        }
-        
-        
-        Lblobby.setItems(FXCollections.observableList(lobbyName));
-        CBjoinlobby.setItems(FXCollections.observableList(lobbyName));
-    }
+//    @Override
+//    public void update(Observable o, Object o1) {
+//        try {
+//            Lobby lobby = (Lobby) o1;
+//            for (Lobby l : server.getLobbies()) {
+//                lobbyName.add(l.toString());
+//            }
+//        } catch(Exception ex) {
+//            System.out.println("Not an lobby");
+//        }
+//        
+//        
+//        Lblobby.setItems(FXCollections.observableList(lobbyName));
+//        CBjoinlobby.setItems(FXCollections.observableList(lobbyName));
+//    }
     
     public void Clear() {
         Lblobby.getItems().clear();

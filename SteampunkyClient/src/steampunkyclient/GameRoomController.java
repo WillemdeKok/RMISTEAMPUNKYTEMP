@@ -31,13 +31,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import steampunkyclient.Direction;
-import steampunkyclient.ICharacter;
-import steampunkyclient.IGame;
-import steampunkyclient.IObject;
-import steampunkyclient.IPosition;
-import steampunkyclient.IServer;
-import steampunkyclient.IUser;
+import steampunkyclient.Client;
+import steampunkyclient.SteampunkyFX;
+
 
 /**
  * FXML Controller class
@@ -73,14 +69,11 @@ public class GameRoomController implements Initializable, Observer {
     @FXML private ComboBox CBrounds;
 
     //JAVAFX referenties / mee gegeven objecten van andere forums
-    private Lobby lobby;
-    private Server server;
+
     private SteampunkyFX main;
-    private User admin;
     private Stage stage;
     
     //Game refereantie met game eigenschappen
-    private Game game;
     private int widthPixels;
     private int widthCubes;
     private int heightPixels;
@@ -90,7 +83,6 @@ public class GameRoomController implements Initializable, Observer {
     private AnchorPane box;
     private Rectangle field;
     private Rectangle playfield;
-    private List<IObject> objects;
 
     //Listen die nodig zijn voor de gui te updaten
     private ArrayList<String> SpectatorNames;
@@ -110,16 +102,13 @@ public class GameRoomController implements Initializable, Observer {
     private int timercount = 6;
     private int countdown = 6;
     private int slotsleft = 4;
+    private Client client;
 
-    public void setApp(SteampunkyFX application, IUser admin, Lobby lobby, Stage stage) {
+    public void setApp(SteampunkyFX application, Stage stage) {
         this.stage = stage;
         this.main = application;
-        this.admin = admin;
-        this.lobby = lobby;
-        this.lobby.addObserver(this);
-        this.game = null;
 
-        this.LBLusername.setText("Welcome: " + admin.getUsername());
+        this.LBLusername.setText("Welcome: " + client);
         this.LBLRemaining.setText("Remaining slots: " + this.slotsleft);
         this.BTReady.setDisable(true);
         this.BTSpectator.setDisable(true);
@@ -165,24 +154,24 @@ public class GameRoomController implements Initializable, Observer {
         this.CBlevelsizeHeight.getSelectionModel().select(0);
 
         //Kijkt of de ingelogde speler een admin is
-        for (IUser u : lobby.getSpectators()) {
-            if (u == admin) {
-                this.LBLsize.setDisable(false);
-                this.LBLHeight.setDisable(false);
-                this.LBLWidth.setDisable(false);
-                this.LBLTime.setDisable(false);
-                this.LBLRound.setDisable(false);
-                this.CBlevelsizeHeight.setDisable(false);
-                this.CBlevelsizeWidth.setDisable(false);
-                this.CBMinutes.setDisable(false);
-                this.CBrounds.setDisable(false);
-            }
-        }
+//        for (IUser u : lobby.getSpectators()) {
+//            if (u == admin) {
+//                this.LBLsize.setDisable(false);
+//                this.LBLHeight.setDisable(false);
+//                this.LBLWidth.setDisable(false);
+//                this.LBLTime.setDisable(false);
+//                this.LBLRound.setDisable(false);
+//                this.CBlevelsizeHeight.setDisable(false);
+//                this.CBlevelsizeWidth.setDisable(false);
+//                this.CBMinutes.setDisable(false);
+//                this.CBrounds.setDisable(false);
+//            }
+//        }
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        server = (IServer) getServer();
+//        server = (IServer) getServer();
         SpectatorNames = new ArrayList<>();
         PlayerNames = new ArrayList<>();
         Roomsizewidth = new ArrayList<>();
@@ -194,7 +183,7 @@ public class GameRoomController implements Initializable, Observer {
     //Methode die er voor zorgt dat een speler een spectator wordt
     @FXML
     public void becomeSpectator() {
-        this.lobby.clearSlot(this.admin);
+  //      this.lobby.clearSlot(this.admin);
         this.slotsleft++;
         this.LBLRemaining.setText("Remaining slots: " + this.slotsleft);
         this.BTReady.setDisable(true);
@@ -205,7 +194,7 @@ public class GameRoomController implements Initializable, Observer {
     //Methode die er voor zorgt dat een speler een player wordt
     @FXML
     public void becomePlayer() {
-        lobby.assignSlot(this.admin);
+  //      lobby.assignSlot(this.admin);
         this.slotsleft--;
         this.BTReady.setDisable(false);
         this.BTPlayer.setDisable(true);
@@ -216,7 +205,7 @@ public class GameRoomController implements Initializable, Observer {
     //Methode die de van de gameroom terug gaat naar de lobby
     @FXML
     public void ReturnToMenu() {
-        this.main.gotoLobbyselect(admin);
+ //       this.main.gotoLobbyselect(admin);
     }
     
     //Stopt het starten van de game als op readt is geklikt
@@ -245,8 +234,8 @@ public class GameRoomController implements Initializable, Observer {
         {
             this.SetupDraw();
             this.setKeyBindings();
-            this.game.addPlayer(this.admin);
-            this.game.startRound();
+  //          this.game.addPlayer(this.admin);
+   //         this.game.startRound();
         }
     }
     //clears the scene and draws new boxes for every object.
@@ -255,17 +244,17 @@ public class GameRoomController implements Initializable, Observer {
         box.getChildren().add(this.field);
         box.getChildren().add(this.playfield);
          
-        for (IPosition p : this.game.getGrid())
-            {
-                objects = p.getObjects();
-
-                for (IObject o : objects)
-                {
-                    Shape s;
-                    s = o.getShape();
-                    box.getChildren().add(s);
-                }
-            }
+//        for (IPosition p : this.game.getGrid())
+//            {
+//                objects = p.getObjects();
+//
+//                for (IObject o : objects)
+//                {
+//                    Shape s;
+//                    s = o.getShape();
+//                    box.getChildren().add(s);
+//                }
+//            }
     }
     
     //Sets up the settings needed to draw.
@@ -280,11 +269,11 @@ public class GameRoomController implements Initializable, Observer {
         int botdif = 1; //afhankelijk van level spelers, nog niet geimplementeerd
         int rounds = Integer.parseInt(this.CBrounds.getValue().toString());
 
-        this.game = new IGame(width, height, time, botdif, rounds) {};
-        this.widthPixels = this.game.getWidthPixels();
-        this.widthCubes = this.game.getWidthCubes();
-        this.heightPixels = this.game.getHeightPixels();
-        this.heightCubes = this.game.getHeightCubes();
+//        this.game = new IGame(width, height, time, botdif, rounds) {};
+//        this.widthPixels = this.game.getWidthPixels();
+//        this.widthCubes = this.game.getWidthCubes();
+//        this.heightPixels = this.game.getHeightPixels();
+//        this.heightCubes = this.game.getHeightCubes();
 
         root = new Group();
         Scene scene = new Scene(root, 1700, 900);
@@ -311,39 +300,39 @@ public class GameRoomController implements Initializable, Observer {
     
     //Set the keybindings for this Scene
     public void setKeyBindings(){
-        this.stage.getScene().setOnKeyPressed((KeyEvent keyEvent) -> {
-            if(keyEvent.getCode().toString().equals("W"))
-            {
-                this.game.getCharacter().move(Direction.Up);
-            }
-            
-            if(keyEvent.getCode().toString().equals("A"))
-            {
-                this.game.getCharacter().move(Direction.Left);
-            }
-            
-            if(keyEvent.getCode().toString().equals("S"))
-            {
-                this.game.getCharacter().move(Direction.Down);
-            }
-            
-            if(keyEvent.getCode().toString().equals("D"))
-            {
-                this.game.getCharacter().move(Direction.Right);
-            }
-            
-            if(keyEvent.getCode().toString().equals("Q"))
-            {
-                ICharacter c = (ICharacter) game.getCharacter();
-                c.createBallista(Direction.Right ,4);
-            }
-            
-            if(keyEvent.getCode().toString().equals("E"))
-            {
-                ICharacter c = (ICharacter) game.getCharacter();
-                c.createBallista(Direction.Up ,4);
-            }
-        });
+//        this.stage.getScene().setOnKeyPressed((KeyEvent keyEvent) -> {
+//            if(keyEvent.getCode().toString().equals("W"))
+//            {
+//                this.game.getCharacter().move(Direction.Up);
+//            }
+//            
+//            if(keyEvent.getCode().toString().equals("A"))
+//            {
+//                this.game.getCharacter().move(Direction.Left);
+//            }
+//            
+//            if(keyEvent.getCode().toString().equals("S"))
+//            {
+//                this.game.getCharacter().move(Direction.Down);
+//            }
+//            
+//            if(keyEvent.getCode().toString().equals("D"))
+//            {
+//                this.game.getCharacter().move(Direction.Right);
+//            }
+//            
+//            if(keyEvent.getCode().toString().equals("Q"))
+//            {
+//                ICharacter c = (ICharacter) game.getCharacter();
+//                c.createBallista(Direction.Right ,4);
+//            }
+//            
+//            if(keyEvent.getCode().toString().equals("E"))
+//            {
+//                ICharacter c = (ICharacter) game.getCharacter();
+//                c.createBallista(Direction.Up ,4);
+//            }
+//        });
     }
     
     //Zodra er op ready wordt geklikt start de timer die aftelt tot de game start
@@ -388,7 +377,7 @@ public class GameRoomController implements Initializable, Observer {
                 {
                     try
                     {
-                    game.updateGame();
+           //         game.updateGame();
                     DrawGame();
                     }
                     catch(NullPointerException ex)
@@ -414,13 +403,13 @@ public class GameRoomController implements Initializable, Observer {
         this.LBSpectators.getItems().clear();
         this.LBPlayers.getItems().clear();
 
-        for (IUser u : this.lobby.getPlayers()) {
-            this.PlayerNames.add(u.toString());
-        }
-
-        for (IUser u : this.lobby.getSpectators()) {
-            this.SpectatorNames.add(u.toString());
-        }
+//        for (IUser u : this.lobby.getPlayers()) {
+//            this.PlayerNames.add(u.toString());
+//        }
+//
+//        for (IUser u : this.lobby.getSpectators()) {
+//            this.SpectatorNames.add(u.toString());
+//        }
         
         this.CBlevelsizeWidth.setItems(this.observableRoomsizewidth);
         this.CBlevelsizeHeight.setItems(this.observableRoomsizeheight);
