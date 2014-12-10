@@ -72,9 +72,11 @@ public class SteampunkFXControllerLogin implements RemotePropertyListener, Initi
     private Registry registry = null;
     private ILogin loginMock;
     private Client clientInfo;
-    public SteampunkFXControllerLogin()
+    public SteampunkFXControllerLogin(String ipAddress, int portNumber)
     {    
         clientInfo = new Client();
+        this.ipAddress = ipAddress;
+        this.portNumber = portNumber;
         // Print IP address and port number for registry
         System.out.println("Client: IP Address: " + this.ipAddress);
         System.out.println("Client: Port number " + this.portNumber);
@@ -119,10 +121,8 @@ public class SteampunkFXControllerLogin implements RemotePropertyListener, Initi
     
     
 
-    public void setApp(SteampunkyFX application, String ipAddress, int portNumber)
+    public void setApp(SteampunkyFX application)
     {
-        this.ipAddress = ipAddress;
-        this.portNumber = portNumber;
         this.main = application;
     }
     
