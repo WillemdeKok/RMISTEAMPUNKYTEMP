@@ -62,7 +62,7 @@ public class SteampunkFXControllerlobby implements Observer, Initializable
     {   
         Clear();
         lobbyName = new ArrayList();
-        this.server = (IServer)getServer();
+        this.server = IServer.getServer();
         server.addObserver(this);    
     }
 

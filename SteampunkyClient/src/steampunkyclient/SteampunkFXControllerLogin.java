@@ -76,7 +76,7 @@ public class SteampunkFXControllerLogin implements RemotePropertyListener, Initi
             RemotePublisher publisher = (RemotePublisher) Naming.lookup("rmi://localhost:1099/server");
             publisher.addListener(this, "server");
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SteampunkFXControllerLogin.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
