@@ -62,8 +62,8 @@ public class SteampunkFXControllerlobby implements Initializable
 
     
     //Maakt een lobby 
-//    @FXML
-//    public void AddLobby() {
+    @FXML
+    public void AddLobby() {
 //        if (TfCreatename.getText().equals("")) {
 //            JOptionPane.showMessageDialog(null,"Please enter a valid name.");
 //        }
@@ -85,10 +85,10 @@ public class SteampunkFXControllerlobby implements Initializable
 //                        System.out.println("Failed" + ex.getMessage());
 //            }
 //        }
-//    }
+    }
     
-//    @FXML
-//    public void AddChatmessage() {
+    @FXML
+    public void AddChatmessage() {
 //        if (TFchat.getText().equals("")) {
 //            JOptionPane.showMessageDialog(null,"Pleas enter a chat message");
 //        }
@@ -101,7 +101,7 @@ public class SteampunkFXControllerlobby implements Initializable
 //                        System.out.println("Failed" + ex.getMessage());
 //            }
 //        }
-//    }
+    }
 
     //update de rooms die worden aangemaakt in de listview
 //    @Override
