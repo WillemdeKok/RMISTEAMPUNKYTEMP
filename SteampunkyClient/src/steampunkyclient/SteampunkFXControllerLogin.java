@@ -15,6 +15,8 @@ import java.net.URL;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -62,6 +64,60 @@ public class SteampunkFXControllerLogin implements RemotePropertyListener, Initi
     
     private SteampunkyFX main;
 
+//    // Set binding name for student administration
+//    private static final String bindingName = "MockEffectenbeurs";
+//
+//    // References to registry and student administration
+//    private Registry registry = null;
+//    private IEffectenbeurs mok;
+//
+//    public BannerController(Label lb,String ipAddress, int portNumber)
+//    {    
+//        this.lb = lb;
+//        lb.setMinWidth(1500);
+//        // Print IP address and port number for registry
+//        System.out.println("Client: IP Address: " + ipAddress);
+//        System.out.println("Client: Port number " + portNumber);
+//        
+//        // Locate registry at IP address and port number
+//        try {
+//            registry = LocateRegistry.getRegistry(ipAddress, portNumber);
+//        } catch (RemoteException ex) {
+//            System.out.println("Client: Cannot locate registry");
+//            System.out.println("Client: RemoteException: " + ex.getMessage());
+//            registry = null;
+//        }
+//        
+//        // Print result locating registry
+//        if (registry != null) {
+//            System.out.println("Client: Registry located");
+//        } else {
+//            System.out.println("Client: Cannot locate registry");
+//            System.out.println("Client: Registry is null pointer");
+//        }
+//        // Bind student administration using registry
+//        if (registry != null) {
+//            try {
+//                mok = (IEffectenbeurs) registry.lookup(bindingName);
+//            } catch (RemoteException ex) {
+//                System.out.println("Client: Cannot bind student administration");
+//                System.out.println("Client: RemoteException: " + ex.getMessage());
+//                mok = null;
+//            } catch (NotBoundException ex) {
+//                System.out.println("Client: Cannot bind student administration");
+//                System.out.println("Client: NotBoundException: " + ex.getMessage());
+//                mok = null;
+//            }
+//        }
+//        
+//        if (mok != null) {
+//            System.out.println("Client: Beurs is bound");
+//        } else {
+//            System.out.println("Client: Beurs is null pointer");
+//        }
+//    }
+    
+    
 
     public void setApp(SteampunkyFX application)
     {
