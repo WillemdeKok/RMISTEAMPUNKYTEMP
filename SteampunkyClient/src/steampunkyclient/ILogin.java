@@ -13,6 +13,6 @@ import java.rmi.RemoteException;
  * @author Mal
  */
 public interface ILogin extends Remote {
+    public boolean createUser(String username, String password) throws RemoteException;
     public boolean loginUser(String username, String password) throws RemoteException;
-    
 }
