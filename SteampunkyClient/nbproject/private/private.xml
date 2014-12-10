@@ -2,6 +2,17 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/Users/Mal/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyClient/src/steampunkyclient/GameRoomController.java</file>
+            <file>file:/C:/Users/Mal/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyClient/src/steampunkyclient/SteampunkFXControllerlobby.java</file>
+            <file>file:/C:/Users/Mal/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyClient/src/steampunkyclient/GameRoom.fxml</file>
+            <file>file:/C:/Users/Mal/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyClient/src/steampunkyclient/SteampunkFXControllerLogin.java</file>
+            <file>file:/C:/Users/Mal/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyClient/src/steampunkyclient/Client.java</file>
+            <file>file:/C:/Users/Mal/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyClient/src/steampunkyclient/ILogin.java</file>
+            <file>file:/C:/Users/Mal/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyClient/src/steampunkyclient/SteampunkyFX.java</file>
+            <file>file:/C:/Users/Mal/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyClient/src/steampunkyclient/LoginProftaak2.fxml</file>
+            <file>file:/C:/Users/Mal/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyClient/src/steampunkyclient/Lobby3.fxml</file>
+            <file>file:/C:/Users/Mal/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyClient/nbproject/build-impl.xml</file>
+        </group>
     </open-files>
 </project-private>

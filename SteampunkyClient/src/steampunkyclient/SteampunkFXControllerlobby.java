@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package steampunkyClient;
+package steampunkyclient;
 
 
 import java.net.URL;
@@ -50,7 +50,7 @@ public class SteampunkFXControllerlobby implements Initializable
     {
         this.clientInfo = client;
         this.main = application;
-        LBLLobbyWelcome.setText("Welcome: " + client.getUsername());
+        LBLLobbyWelcome.setText("Welcome: " + client.getUser());
     }
 
     @Override
