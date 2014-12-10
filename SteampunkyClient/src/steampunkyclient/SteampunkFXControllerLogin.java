@@ -60,7 +60,6 @@ public class SteampunkFXControllerLogin implements RemotePropertyListener, Initi
     @FXML ComboBox CBdeletelobby; 
     @FXML ComboBox CBjoinlobby;     
     
-    private IServer server;
     private SteampunkyFX main;
 
 

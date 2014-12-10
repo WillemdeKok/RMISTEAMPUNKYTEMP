@@ -6,20 +6,13 @@
 package steampunkyclient;
 
 import java.rmi.Remote;
+import java.rmi.RemoteException;
 
 /**
  *
- * @author Mnesymne
+ * @author Mal
  */
-public interface IServer extends Remote {
-
-    boolean loginUser(String username, String password);
-
-    boolean createUser(String username, String password);
-
-    void Userlogedin(IUser user);
+public interface ILogin extends Remote {
+    public boolean loginUser(String username, String password) throws RemoteException;
     
-    Server getServer();
-        
-    }
 }
