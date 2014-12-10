@@ -6,6 +6,7 @@
 package steampunkyclient;
 
 import java.io.InputStream;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -24,9 +25,16 @@ import javafx.stage.Stage;
 public class SteampunkyFX extends Application {
 
     private Stage stage;
-
+    private int portNumber;
+    private String ipAddress;
     @Override
     public void start(Stage stage) throws Exception {
+        System.out.println("CLIENT USING REGISTRY");
+        Scanner input = new Scanner(System.in);
+        System.out.print("CLIENT: ENTER IPADRESS:");
+        ipAddress = input.nextLine();
+        System.out.print("CLIENT: ENTER PORTNUMBER:");
+        portNumber = input.nextInt();
         try {
             this.stage = stage;
             this.stage.setTitle("SteamPunky");
@@ -44,13 +52,13 @@ public class SteampunkyFX extends Application {
     protected void gotoLoginselect() {
         try {
             SteampunkFXControllerLogin loginselect = (SteampunkFXControllerLogin) replaceSceneContent("LoginProftaak2.fxml");
-            loginselect.setApp(this); 
+            loginselect.setApp(this, ipAddress, portNumber); 
         } catch (Exception ex) {
             Logger.getLogger(SteampunkyFX.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    protected void gotoLobbyselect(User user) {
+    protected void gotoLobbyselect(String user) {
         try {
             SteampunkFXControllerlobby lobbyselect = (SteampunkFXControllerlobby) replaceSceneContent("Lobby3.fxml");
             lobbyselect.setApp(this, user);
