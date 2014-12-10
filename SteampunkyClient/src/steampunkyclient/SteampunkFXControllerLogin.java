@@ -72,11 +72,20 @@ public class SteampunkFXControllerLogin implements RemotePropertyListener, Initi
     private Registry registry = null;
     private ILogin loginMock;
     private Client clientInfo;
-    public SteampunkFXControllerLogin(String ipAddress, int portNumber)
+    public SteampunkFXControllerLogin()
     {    
-        clientInfo = new Client();
+        
+    }
+    
+    
+
+    public void setApp(SteampunkyFX application, String ipAddress, int portNumber)
+    {
         this.ipAddress = ipAddress;
         this.portNumber = portNumber;
+        this.main = application;
+        
+        clientInfo = new Client();
         // Print IP address and port number for registry
         System.out.println("Client: IP Address: " + this.ipAddress);
         System.out.println("Client: Port number " + this.portNumber);
@@ -117,13 +126,6 @@ public class SteampunkFXControllerLogin implements RemotePropertyListener, Initi
         } else {
             System.out.println("Client: Login is null pointer");
         }
-    }
-    
-    
-
-    public void setApp(SteampunkyFX application)
-    {
-        this.main = application;
     }
     
 //<editor-fold defaultstate="collapsed" desc="Outcommented initialize for push">

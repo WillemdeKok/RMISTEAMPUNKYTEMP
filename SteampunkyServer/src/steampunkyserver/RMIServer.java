@@ -20,7 +20,7 @@ import java.rmi.registry.Registry;
  *
  * @author Bart
  */
-public class RMIServer {
+public class RMIServer{
 
     private static boolean createRegistry = true;
     // Set port number
@@ -38,6 +38,7 @@ public class RMIServer {
         System.out.println("Server: Port number " + portNumber);
         try {
             serverMock = Server.getServer();
+            
             System.out.println("Server: serverMock created");
         } catch (RemoteException ex) {
             System.out.println("Server: Cannot create ServerMock");

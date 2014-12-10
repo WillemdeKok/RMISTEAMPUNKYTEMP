@@ -13,8 +13,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import static javafx.collections.FXCollections.observableList;
 import javafx.collections.ObservableList;
@@ -24,18 +22,17 @@ import javafx.collections.ObservableList;
  *
  * @author Bart
  */
-public class Server extends UnicastRemoteObject implements IServer{
+public class Server extends UnicastRemoteObject implements ILogin {
 
     //************************datavelden*************************************
-    
     private ArrayList<Lobby> lobbies;
     private ArrayList<User> users;
-    private transient ObservableList<User> observableUsers;    
+    private transient ObservableList<User> observableUsers;
     private transient ObservableList<Lobby> observableLobbies;
-    
+
     private java.util.concurrent.locks.Lock lock = new java.util.concurrent.locks.ReentrantLock();
     private ArrayList<IObserver> observers;
-    
+
     private Connection con;
     private static Server server = null;
 
@@ -44,20 +41,20 @@ public class Server extends UnicastRemoteObject implements IServer{
      * creates a server with ...
      *
      */
-    private Server() throws RemoteException{
+    private Server() throws RemoteException {
         this.lobbies = new ArrayList();
         this.users = new ArrayList();
         this.observers = new ArrayList();
-        
+
         observableUsers = observableList(users);
         observableLobbies = observableList(lobbies);
-        
+
     }
-    
+
     public ObservableList<Lobby> getLobbies() {
         return (ObservableList<Lobby>) FXCollections.unmodifiableObservableList(observableLobbies);
     }
-    
+
     public ObservableList<User> getUsers() {
         return (ObservableList<User>) FXCollections.unmodifiableObservableList(observableUsers);
     }
@@ -69,11 +66,9 @@ public class Server extends UnicastRemoteObject implements IServer{
             System.out.println("Geen verbinding met database mogelijk: " + ex);
         }
     }
-    
-    public void Userlogedin(User tempuser)
-    {
-        if(tempuser != null)
-        {
+
+    public void Userlogedin(User tempuser) {
+        if (tempuser != null) {
             observableUsers.add(tempuser);
         }
     }
@@ -93,13 +88,11 @@ public class Server extends UnicastRemoteObject implements IServer{
                     System.out.println("Dubbele gebruiker gevonden");
                 }
             }
-             con.close();
-        } 
-        catch (Exception ex) {
+            con.close();
+        } catch (Exception ex) {
             System.out.println("Dubbele gebruiker gevonden" + ex);
             return false;
         }
- 
 
         if (adduser == true) {
             try {
@@ -133,7 +126,7 @@ public class Server extends UnicastRemoteObject implements IServer{
                     return true;
                 }
             }
-             con.close();
+            con.close();
         } catch (Exception ex) {
             System.out.println("Gebruiker niet gevonden" + ex);
             return false;
@@ -167,12 +160,9 @@ public class Server extends UnicastRemoteObject implements IServer{
 
     public boolean leaveLobby(Lobby lobby, User user) {
 
-        if (lobby.removeUser(user) == 1) 
-        {
+        if (lobby.removeUser(user) == 1) {
             return true;
-        }
-        else if(lobby.removeUser(user) == -1)
-        {
+        } else if (lobby.removeUser(user) == -1) {
             this.observableLobbies.remove(lobby);
             return true;
         }
@@ -198,47 +188,43 @@ public class Server extends UnicastRemoteObject implements IServer{
     public static Server getServer() throws RemoteException {
         if (server == null) {
             server = new Server();
-        }      
+        }
         return server;
     }
 
-    @Override
     public void AddObserver(IObserver observer) throws RemoteException {
-        synchronized(lock) {
-        this.observers.add(observer);
+        synchronized (lock) {
+            this.observers.add(observer);
         }
     }
 
-    @Override
     public void RemoveObserver(IObserver observer) throws RemoteException {
-        synchronized(lock) {
-        this.observers.remove(observer);
+        synchronized (lock) {
+            this.observers.remove(observer);
         }
     }
 
-    @Override
     public void NotifyObserversLobbies() throws RemoteException {
-        synchronized(lock) {
+        synchronized (lock) {
             observers.stream().forEach((observer) -> {
                 try {
                     observer.updateLobbies(this.observableLobbies);
-                } catch(RemoteException ex) {
+                } catch (RemoteException ex) {
                     System.out.println("Observer couldn't be notified");
-                }                    
+                }
             });
-        } 
+        }
     }
-    
-    @Override
+
     public void NotifyObserversUsers() throws RemoteException {
-        synchronized(lock) {
+        synchronized (lock) {
             observers.stream().forEach((observer) -> {
                 try {
                     observer.updateUsers(this.observableUsers);
-                } catch(RemoteException ex) {
+                } catch (RemoteException ex) {
                     System.out.println("Observer couldn't be notified");
-                }                    
+                }
             });
-        } 
+        }
     }
 }
