@@ -30,7 +30,6 @@ public class SteampunkyFX extends Application {
     private String ipAddress;
     @Override
     public void start(Stage stage) throws Exception {
-        System.setProperty("java.net.preferIPv4Stack" , "true");
         System.out.println("CLIENT USING REGISTRY");
         Scanner input = new Scanner(System.in);
         System.out.print("CLIENT: ENTER IPADRESS:");

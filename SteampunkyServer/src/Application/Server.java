@@ -61,7 +61,7 @@ public class Server extends UnicastRemoteObject implements ILogin {
 
     public void Connectionstring() {
         try {
-            con = DriverManager.getConnection("jdbc:oracle:thin:@fhictora01.fhict.local:1521:fhictora", "dbi291539", "H96K7hR65A");
+            con = DriverManager.getConnection("jdbc:mysql://stormhost.nl:3306/admin_bart", "admin_bart", "8IUAsf1E");
         } catch (Exception ex) {
             System.out.println("Geen verbinding met database mogelijk: " + ex);
         }
