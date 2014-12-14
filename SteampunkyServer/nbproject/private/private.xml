@@ -5,6 +5,9 @@
         <group>
             <file>file:/C:/Users/Bart/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyServer/src/Application/RMIServer.java</file>
             <file>file:/C:/Users/Bart/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyServer/src/Application/Server.java</file>
+            <file>file:/C:/Users/Bart/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyServer/src/Application/User.java</file>
+            <file>file:/C:/Users/Bart/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyServer/src/Application/Lobby.java</file>
+            <file>file:/C:/Users/Bart/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyServer/src/Application/ILobby.java</file>
         </group>
     </open-files>
 </project-private>

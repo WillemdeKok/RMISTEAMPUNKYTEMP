@@ -34,6 +34,7 @@ public class Server extends UnicastRemoteObject implements ILogin {
     private ArrayList<IObserver> observers;
 
     private Connection con;
+    private User newuser;
     private static Server server = null;
 
     //***********************constructoren***********************************
@@ -134,11 +135,12 @@ public class Server extends UnicastRemoteObject implements ILogin {
         System.out.println("Gebruiker mag niet inloggen");
         return false;
     }
-
-    public boolean createLobby(String lobbyName, String password, User admin) {
-        if (lobbyName != null && admin != null) {
+    
+    
+    public boolean createLobby(String lobbyName,String user,String userpassword,String password) {
+        if (lobbyName != null && !userpassword.equals("") && !user.equals("")) {
             Lobby lobby;
-            this.observableLobbies.add(lobby = new Lobby(lobbyName, admin, password));
+            this.observableLobbies.add(lobby = new Lobby(lobbyName, newuser = new User(user,userpassword), password));
             try {
                 this.NotifyObserversLobbies();
             } catch (RemoteException ex) {

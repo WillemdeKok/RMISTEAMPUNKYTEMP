@@ -12,6 +12,7 @@ package Application;
 public class Client {
 
     private String user;
+    private String password;
 
     public Client() {
 
@@ -23,5 +24,13 @@ public class Client {
 
     public String getUser() {
         return this.user;
+    }
+    
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPassword() {
+        return this.password;
     }
 }

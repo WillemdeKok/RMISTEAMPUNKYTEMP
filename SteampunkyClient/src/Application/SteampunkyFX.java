@@ -59,10 +59,10 @@ public class SteampunkyFX extends Application {
         }
     }
     
-    protected void gotoLobbyselect(Client client) {
+    protected void gotoLobbyselect(Client client,String ipAddress, int portNumber) {
         try {
             SteampunkFXControllerlobby lobbyselect = (SteampunkFXControllerlobby) replaceSceneContent("Lobby3.fxml");
-            lobbyselect.setApp(this, client);
+            lobbyselect.setApp(this, client,ipAddress,portNumber);
         } catch (Exception ex) {
             System.out.println("Error: " + ex.getMessage());
             Logger.getLogger(SteampunkyFX.class.getName()).log(Level.SEVERE, null, ex);

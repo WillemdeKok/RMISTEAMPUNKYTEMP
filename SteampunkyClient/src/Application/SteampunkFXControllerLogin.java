@@ -163,7 +163,8 @@ public class SteampunkFXControllerLogin implements RemotePropertyListener, Initi
                try
                {  
                    clientInfo.setUser(TFUsernamelogin.getText());
-                   main.gotoLobbyselect(this.clientInfo);
+                   clientInfo.setPassword(TFWachtwoordlogin.getText());
+                   main.gotoLobbyselect(this.clientInfo,ipAddress,portNumber);
                }
                catch(Exception ex)
                {

@@ -7,6 +7,10 @@ package Application;
 
 
 import java.net.URL;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -16,6 +20,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javax.swing.JOptionPane;
 
 
 /**
@@ -44,13 +49,111 @@ public class SteampunkFXControllerlobby implements Initializable
     //JAVAFX referenties / mee gegeven objecten van andere forums
     private SteampunkyFX main;
     private Client clientInfo;
-    
+    private int portNumber;
+    private String ipAddress;
+    private Registry registry = null;
+    private ILogin loginMock;
+    private ILobby lobbyMock;
+    private static final String bindingName = "serverMock";
 
-    public void setApp(SteampunkyFX application,Client client)
+    public void setApp(SteampunkyFX application,Client client,String ipAddress, int portNumber)
     {
         this.clientInfo = client;
         this.main = application;
         LBLLobbyWelcome.setText("Welcome: " + client.getUser());
+        
+        this.ipAddress = ipAddress;
+        this.portNumber = portNumber;
+        this.main = application;
+        
+        clientInfo = new Client();
+        // Print IP address and port number for registry
+        System.out.println("Client: IP Address: " + this.ipAddress);
+        System.out.println("Client: Port number " + this.portNumber);
+        
+        Serverlogin();
+        Serverlobby();
+        
+    }
+    
+    public void Serverlogin()
+    {
+        // Locate registry at IP address and port number
+        try {
+            registry = LocateRegistry.getRegistry(this.ipAddress, this.portNumber);
+        } catch (RemoteException ex) {
+            System.out.println("Client: Cannot locate registry");
+            System.out.println("Client: RemoteException: " + ex.getMessage());
+            registry = null;
+        }
+        
+        // Print result locating registry
+        if (registry != null) {
+            System.out.println("Client: Registry located");
+        } else {
+            System.out.println("Client: Cannot locate registry");
+            System.out.println("Client: Registry is null pointer");
+        }
+        // Bind student administration using registry
+        if (registry != null) {
+            try {
+                loginMock = (ILogin) registry.lookup(bindingName);
+            } catch (RemoteException ex) {
+                System.out.println("Client: Cannot bind ILogin");
+                System.out.println("Client: RemoteException: " + ex.getMessage());
+                loginMock = null;
+            } catch (NotBoundException ex) {
+                System.out.println("Client: Cannot bind ILogin");
+                System.out.println("Client: NotBoundException: " + ex.getMessage());
+                loginMock = null;
+            }
+        }
+        
+        if (loginMock != null) {
+            System.out.println("Client: Login is bound");
+        } else {
+            System.out.println("Client: Login is null pointer");
+        }
+    }
+    
+    public void Serverlobby()
+    {
+        // Locate registry at IP address and port number
+        try {
+            registry = LocateRegistry.getRegistry(this.ipAddress, this.portNumber);
+        } catch (RemoteException ex) {
+            System.out.println("Client: Cannot locate registry");
+            System.out.println("Client: RemoteException: " + ex.getMessage());
+            registry = null;
+        }
+        
+        // Print result locating registry
+        if (registry != null) {
+            System.out.println("Client: Registry located");
+        } else {
+            System.out.println("Client: Cannot locate registry");
+            System.out.println("Client: Registry is null pointer");
+        }
+        // Bind student administration using registry
+        if (registry != null) {
+            try {
+                lobbyMock = (ILobby) registry.lookup(bindingName);
+            } catch (RemoteException ex) {
+                System.out.println("Client: Cannot bind ILogin");
+                System.out.println("Client: RemoteException: " + ex.getMessage());
+                lobbyMock = null;
+            } catch (NotBoundException ex) {
+                System.out.println("Client: Cannot bind ILogin");
+                System.out.println("Client: NotBoundException: " + ex.getMessage());
+                lobbyMock = null;
+            }
+        }
+        
+        if (loginMock != null) {
+            System.out.println("Client: Login is bound");
+        } else {
+            System.out.println("Client: Login is null pointer");
+        }
     }
 
     @Override
@@ -64,27 +167,28 @@ public class SteampunkFXControllerlobby implements Initializable
     //Maakt een lobby 
     @FXML
     public void AddLobby() {
-//        if (TfCreatename.getText().equals("")) {
-//            JOptionPane.showMessageDialog(null,"Please enter a valid name.");
-//        }
-//        else {
-//            try {
-//                server.createLobby(TfCreatename.getText(), Tfvreatepassword.getText(), user);
-//                JOptionPane.showMessageDialog(null,"Lobby has been created");
-//                
-//                
-//                for (Lobby L : this.server.getLobbies()) {
-//                    if (L.GetLobbyname().equals(TfCreatename.getText())) {
-//                        L.addUser(user);
-//                        main.gotoGameRoomselect(user, L);
-//                    }
-//                }
-//            }
-//            catch (Exception ex) {
-//                JOptionPane.showMessageDialog(null,"Lobby creation has failed" + ex.getMessage());
-//                        System.out.println("Failed" + ex.getMessage());
-//            }
-//        }
+        if (TfCreatename.getText().equals("")) {
+            JOptionPane.showMessageDialog(null,"Please enter a valid name.");
+        }
+        else {
+            try {
+                
+                loginMock.createLobby(TfCreatename.getText(), Tfvreatepassword.getText(),clientInfo.getUser(),clientInfo.getPassword()); 
+                JOptionPane.showMessageDialog(null,"Lobby has been created");
+                
+                
+                for (Lobby L : loginMock.getLobbies()) {
+                    if (L.GetLobbyname().equals(TfCreatename.getText())) {
+                        L.addUser(user);
+                        main.gotoGameRoomselect(user, L);
+                    }
+                }
+            }
+            catch (Exception ex) {
+                JOptionPane.showMessageDialog(null,"Lobby creation has failed" + ex.getMessage());
+                        System.out.println("Failed" + ex.getMessage());
+            }
+        }
     }
     
     @FXML

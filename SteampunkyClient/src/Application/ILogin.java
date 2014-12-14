@@ -7,6 +7,7 @@ package Application;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -15,4 +16,6 @@ import java.rmi.RemoteException;
 public interface ILogin extends Remote {
     public boolean createUser(String username, String password) throws RemoteException;
     public boolean loginUser(String username, String password) throws RemoteException;
+    public boolean createLobby(String lobbyName,String user,String userpassword,String password);
+    public ObservableList<Lobby> getLobbies();
 }
