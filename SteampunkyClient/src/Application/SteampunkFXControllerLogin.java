@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package Application;
 
 import java.beans.PropertyChangeEvent;
@@ -28,38 +27,62 @@ import javax.swing.JOptionPane;
  *
  * @author bart
  */
-public class SteampunkFXControllerLogin implements Initializable
-{
+public class SteampunkFXControllerLogin implements Initializable {
+
     // Loginproftaak
-    @FXML Tab loginuser;
-    @FXML Tab Createuser;
-    @FXML TabPane Logintabs;
+
+    @FXML
+    Tab loginuser;
+    @FXML
+    Tab Createuser;
+    @FXML
+    TabPane Logintabs;
     //Login user
-    @FXML Button BTloginuserlogin;
-    @FXML Button BTExitlogin;
-    @FXML TextField TFUsernamelogin;
-    @FXML TextField TFWachtwoordlogin;
-    @FXML Label LBUsernamelogin;
-    @FXML Label LBWachtwoordlogin;
-    
+    @FXML
+    Button BTloginuserlogin;
+    @FXML
+    Button BTExitlogin;
+    @FXML
+    TextField TFUsernamelogin;
+    @FXML
+    TextField TFWachtwoordlogin;
+    @FXML
+    Label LBUsernamelogin;
+    @FXML
+    Label LBWachtwoordlogin;
+
     //Create user
-    @FXML Button BtCreatecreate;
-    @FXML Button BTExitcreate;
-    @FXML TextField TFUsernamecreate;
-    @FXML TextField TFWachtwoordcreate;
-    @FXML Label LBUsernamecreate;
-    @FXML Label LBWachtwoordcreate;
+    @FXML
+    Button BtCreatecreate;
+    @FXML
+    Button BTExitcreate;
+    @FXML
+    TextField TFUsernamecreate;
+    @FXML
+    TextField TFWachtwoordcreate;
+    @FXML
+    Label LBUsernamecreate;
+    @FXML
+    Label LBWachtwoordcreate;
 
     // Lobby
-    @FXML Button Btcreatelobby;
-    @FXML Button Btdeletelobby;
-    @FXML Button btjoinlobby;
-    @FXML TextField TfCreatename;
-    @FXML TextField Tfvreatepassword;
-    @FXML ListView Lblobby;
-    @FXML ComboBox CBdeletelobby; 
-    @FXML ComboBox CBjoinlobby;     
-    
+    @FXML
+    Button Btcreatelobby;
+    @FXML
+    Button Btdeletelobby;
+    @FXML
+    Button btjoinlobby;
+    @FXML
+    TextField TfCreatename;
+    @FXML
+    TextField Tfvreatepassword;
+    @FXML
+    ListView Lblobby;
+    @FXML
+    ComboBox CBdeletelobby;
+    @FXML
+    ComboBox CBjoinlobby;
+
     private SteampunkyFX main;
     private int portNumber;
     private String ipAddress;
@@ -70,24 +93,21 @@ public class SteampunkFXControllerLogin implements Initializable
     private Registry registry = null;
     private IGameServer loginMock;
     private Client clientInfo;
-    public SteampunkFXControllerLogin()
-    {    
-        
-    }
-    
-    
 
-    public void setApp(SteampunkyFX application, String ipAddress, int portNumber)
-    {
+    public SteampunkFXControllerLogin() {
+
+    }
+
+    public void setApp(SteampunkyFX application, String ipAddress, int portNumber) {
         this.ipAddress = ipAddress;
         this.portNumber = portNumber;
         this.main = application;
-        
+
         clientInfo = new Client();
         // Print IP address and port number for registry
         System.out.println("Client: IP Address: " + this.ipAddress);
         System.out.println("Client: Port number " + this.portNumber);
-        
+
         // Locate registry at IP address and port number
         try {
             registry = LocateRegistry.getRegistry(this.ipAddress, this.portNumber);
@@ -96,7 +116,7 @@ public class SteampunkFXControllerLogin implements Initializable
             System.out.println("Client: RemoteException: " + ex.getMessage());
             registry = null;
         }
-        
+
         // Print result locating registry
         if (registry != null) {
             System.out.println("Client: Registry located");
@@ -118,93 +138,76 @@ public class SteampunkFXControllerLogin implements Initializable
                 loginMock = null;
             }
         }
-        
+
         if (loginMock != null) {
             System.out.println("Client: Login is bound");
         } else {
             System.out.println("Client: Login is null pointer");
         }
     }
-    
+
 //<editor-fold defaultstate="collapsed" desc="Outcommented initialize for push">
     @Override
-    public void initialize(URL location, ResourceBundle resources){    
+    public void initialize(URL location, ResourceBundle resources) {
 //        try {
 //            RemotePublisher publisher = (RemotePublisher) Naming.lookup("rmi://localhost:1099/server");
 //            publisher.addListener(this, "server");
 //        } catch (NotBoundException | MalformedURLException | RemoteException ex) {
 //            Logger.getLogger(SteampunkFXControllerLogin.class.getName()).log(Level.SEVERE, null, ex);
 //        }
-   }
+    }
 //</editor-fold>
-    
+
     @FXML
-    private void BTExitlogin()
-    {
+    private void BTExitlogin() {
         Stage stage = (Stage) BTExitlogin.getScene().getWindow();
         stage.close();
     }
-    
+
     //Kijk of de user kan inloggen met het opgeven wachtwoord en username
     @FXML
-    private void Btlogin() throws IOException 
-    {
-       if(TFUsernamelogin.getText().isEmpty() && TFWachtwoordlogin.getText().isEmpty())
-       {
-           JOptionPane.showMessageDialog(null,"Password or username is empty");
-       }
-       else
-       {
-           if(loginMock.loginUser(TFUsernamelogin.getText(), TFWachtwoordlogin.getText()))
-           {
-               System.out.println("login succes"); 
-               try
-               {  
-                   clientInfo.setUser(TFUsernamelogin.getText());
-                   clientInfo.setPassword(TFWachtwoordlogin.getText());
-                   main.gotoLobbyselect(this.clientInfo,ipAddress,portNumber);
-               }
-               catch(Exception ex)
-               {
+    private void Btlogin() throws IOException {
+        if (TFUsernamelogin.getText().isEmpty() && TFWachtwoordlogin.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Password or username is empty");
+        } else {
+            if (loginMock.loginUser(TFUsernamelogin.getText(), TFWachtwoordlogin.getText())) {
+                System.out.println("login succes");
+                try {
+                    clientInfo.setUser(TFUsernamelogin.getText());
+                    clientInfo.setPassword(TFWachtwoordlogin.getText());
+                    main.gotoLobbyselect(this.clientInfo, ipAddress, portNumber);
+                } catch (Exception ex) {
                     System.out.println("Error at starting lobby : " + ex);
-               }
-               
-           }
-           else
-           {
-               JOptionPane.showMessageDialog(null,"Password or username are incorrect");
-           }
-       }
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(null, "Password or username are incorrect");
+            }
+        }
     }
-    
+
     //Maakt een user aan in de database
     @FXML
-    private void BtCreatecreate() 
-    {
-       if(TFUsernamecreate.getText().isEmpty() && TFWachtwoordcreate.getText().isEmpty())
-       {
-           JOptionPane.showMessageDialog(null,"No username or password was filled in");
-       }
-       else
-       {
-           try {
-           if(loginMock.createUser(TFUsernamecreate.getText(), TFWachtwoordcreate.getText()))
-           {
-               Logintabs.getSelectionModel().select(loginuser);
-               JOptionPane.showMessageDialog(null,"User created");
-           }
-           else
-           {
-               JOptionPane.showMessageDialog(null,"User already registerd");
-           }
-           } catch (RemoteException ex){
-               System.out.println(ex);
-           }
-       }
+    private void BtCreatecreate() {
+        if (TFUsernamecreate.getText().isEmpty() && TFWachtwoordcreate.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No username or password was filled in");
+        } else {
+            try {
+                if (loginMock.createUser(TFUsernamecreate.getText(), TFWachtwoordcreate.getText())) {
+                    Logintabs.getSelectionModel().select(loginuser);
+                    JOptionPane.showMessageDialog(null, "User created");
+                } else {
+                    JOptionPane.showMessageDialog(null, "User already registerd");
+                }
+            } catch (RemoteException ex) {
+                System.out.println(ex);
+            }
+        }
     }
 //<editor-fold defaultstate="collapsed" desc="outcommented propertyChange for push">
+
     public void propertyChange(PropertyChangeEvent pce) throws RemoteException {
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-   }
+    }
 //</editor-fold>
 }
