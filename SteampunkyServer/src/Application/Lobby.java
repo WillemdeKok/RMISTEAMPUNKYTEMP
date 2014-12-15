@@ -63,13 +63,27 @@ public class Lobby extends Observable implements ILobby
     }
     
     @Override
-    public ObservableList<User> getSpectators() {
-        return (ObservableList<User>) FXCollections.unmodifiableObservableList(observableSpectators);
+    public ObservableList<String> getSpectators() {
+        ArrayList<String> temp = new ArrayList();
+        
+        for (User u : this.observableSpectators) {
+            temp.add(u.getUsername());
+        }
+        
+        ObservableList<String> ObservableTemp = observableList(temp);
+        return (ObservableList<String>) FXCollections.unmodifiableObservableList(ObservableTemp);
     }
     
     @Override
-    public ObservableList<User> getPlayers() {
-        return (ObservableList<User>) FXCollections.unmodifiableObservableList(observablePlayers);
+    public ObservableList<String> getPlayers() {
+        ArrayList<String> temp = new ArrayList();
+        
+        for (User u : this.observablePlayers) {
+            temp.add(u.getUsername());
+        }
+        
+        ObservableList<String> ObservableTemp = observableList(temp);
+        return (ObservableList<String>) FXCollections.unmodifiableObservableList(ObservableTemp);
     }
     
     @Override
