@@ -3,11 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Mal/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyServer/src/Application/Server.java</file>
-            <file>file:/C:/Users/Mal/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyServer/src/Application/ILobby.java</file>
-            <file>file:/C:/Users/Mal/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyServer/src/Application/Lobby.java</file>
-            <file>file:/C:/Users/Mal/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyServer/src/Application/IGameServer.java</file>
-            <file>file:/C:/Users/Mal/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyServer/src/Application/RMIServer.java</file>
+            <file>file:/C:/Users/Bart/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyServer/src/Application/RMIServer.java</file>
+            <file>file:/C:/Users/Bart/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyServer/src/Application/IGame.java</file>
+            <file>file:/C:/Users/Bart/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyServer/src/Application/Server.java</file>
+            <file>file:/C:/Users/Bart/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyServer/src/Application/IServer.java</file>
+            <file>file:/C:/Users/Bart/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyServer/src/Application/User.java</file>
+            <file>file:/C:/Users/Bart/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyServer/src/Application/Lobby.java</file>
+            <file>file:/C:/Users/Bart/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyServer/src/Application/ILobby.java</file>
+            <file>file:/C:/Users/Bart/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyServer/src/Application/IObserver.java</file>
         </group>
     </open-files>
 </project-private>
