@@ -6,6 +6,7 @@
 
 package Application;
 
+import java.io.Serializable;
 import java.util.*;
 import javafx.collections.FXCollections;
 import static javafx.collections.FXCollections.observableList;
@@ -15,7 +16,7 @@ import javafx.collections.ObservableList;
  * OK
  * @author Bart
  */
-public class Lobby extends Observable implements ILobby
+public class Lobby extends Observable implements ILobby, Serializable
 {
     //************************datavelden*************************************
     private int lobbyID;
@@ -71,32 +72,27 @@ public class Lobby extends Observable implements ILobby
     }
     
     @Override
-    public ObservableList<String> getSpectators() {
-        ArrayList<String> temp = new ArrayList();
-        
+    public ArrayList<String> getSpectators() {
+        ArrayList<String> temp = new ArrayList();      
         for (User u : this.observableSpectators) {
             temp.add(u.getUsername());
         }
-        
-        ObservableList<String> ObservableTemp = observableList(temp);
-        return (ObservableList<String>) FXCollections.unmodifiableObservableList(ObservableTemp);
+        return temp;
     }
     
     @Override
-    public ObservableList<String> getPlayers() {
+    public ArrayList<String> getPlayers() {
         ArrayList<String> temp = new ArrayList();
         
         for (User u : this.observablePlayers) {
             temp.add(u.getUsername());
         }
-        
-        ObservableList<String> ObservableTemp = observableList(temp);
-        return (ObservableList<String>) FXCollections.unmodifiableObservableList(ObservableTemp);
+        return temp;
     }
     
     @Override
-    public ObservableList<String> getChat() {
-        return (ObservableList<String>) FXCollections.unmodifiableObservableList(observableChat);
+    public ArrayList<String> getChat() {
+        return this.chatMessages;
     }
     
     @Override

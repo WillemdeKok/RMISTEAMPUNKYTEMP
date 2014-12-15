@@ -7,13 +7,13 @@ package Application;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import javafx.collections.ObservableList;
+import java.util.ArrayList;
 
 /**
  *
  * @author Willem
  */
 public interface IObserver extends Remote{
-    public void updateLobbies(ObservableList<String> lobbies) throws RemoteException;
-    public void updateUsers(ObservableList<String> users) throws RemoteException;
+    public void updateLobbies(ArrayList<ILobby> lobbies) throws RemoteException;
+    public void updateUsers(ArrayList<String> users) throws RemoteException;
 }

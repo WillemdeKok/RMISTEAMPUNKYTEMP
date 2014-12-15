@@ -13,6 +13,7 @@ public class Client {
 
     private String user;
     private String password;
+    private ILobby currentLobby;
 
     public Client() {
 
@@ -32,5 +33,12 @@ public class Client {
 
     public String getPassword() {
         return this.password;
+    }
+    
+    public void setLobby(ILobby lobby){
+        this.currentLobby = lobby;
+    }
+    public ILobby getLobby(){
+        return this.currentLobby;
     }
 }

@@ -5,6 +5,7 @@
  */
 package Application;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -12,7 +13,7 @@ import java.util.*;
  <p>
  @author Linda
  */
-public class User
+public class User implements Serializable
 {
 
     //************************datavelden*************************************

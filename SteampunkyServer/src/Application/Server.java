@@ -13,6 +13,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import static javafx.collections.FXCollections.observableList;
 import javafx.collections.ObservableList;
@@ -25,10 +27,10 @@ import javafx.collections.ObservableList;
 public class Server extends UnicastRemoteObject implements IGameServer,IServer {
 
     //************************datavelden*************************************
-    private ArrayList<Lobby> lobbies;
+    private ArrayList<ILobby> lobbies;
     private ArrayList<User> users;
     private transient ObservableList<User> observableUsers;
-    private transient ObservableList<Lobby> observableLobbies;
+    private transient ObservableList<ILobby> observableLobbies;
 
     private java.util.concurrent.locks.Lock lock = new java.util.concurrent.locks.ReentrantLock();
     private ArrayList<IObserver> observers;
@@ -53,14 +55,23 @@ public class Server extends UnicastRemoteObject implements IGameServer,IServer {
     }
 
     @Override
-    public ObservableList<Lobby> getLobbies() {
-        return (ObservableList<Lobby>) FXCollections.unmodifiableObservableList(observableLobbies);
+    public ArrayList<ILobby> getLobbies() {
+        return this.lobbies;
+    }
+    
+    public ObservableList<User> getUsersAsUser() {
+        return (ObservableList<User>) FXCollections.unmodifiableObservableList(observableUsers);
     }
     
     @Override
-    public ObservableList<User> getUsers() {
-        return (ObservableList<User>) FXCollections.unmodifiableObservableList(observableUsers);
+    public ArrayList<String> getUsers(){
+        ArrayList<String> tempusers = new ArrayList();
+        for(User U : observableUsers){
+            tempusers.add(U.getUsername());
+        }
+        return tempusers;
     }
+            
 
     @Override
     public void Connectionstring() {
@@ -71,7 +82,7 @@ public class Server extends UnicastRemoteObject implements IGameServer,IServer {
         }
     }
 
-    @Override
+ 
     public void Userlogedin(User tempuser) {
         if (tempuser != null) {
             observableUsers.add(tempuser);
@@ -130,10 +141,13 @@ public class Server extends UnicastRemoteObject implements IGameServer,IServer {
             while (rs.next()) {
                 if (rs.getString("NAAM").equals(username) && rs.getString("WACHTWOORD").equals(password)) {
                     System.out.println("Gebruiker mag inloggen");
+                    this.Userlogedin(new User(username, password));
                     return true;
                 }
             }
             con.close();
+            
+            
         } catch (Exception ex) {
             System.out.println("Gebruiker niet gevonden" + ex);
             return false;
@@ -144,6 +158,7 @@ public class Server extends UnicastRemoteObject implements IGameServer,IServer {
     
     @Override
     public boolean createLobby(String lobbyName,String password,String username) {
+        System.out.println("ik ben een lobby");
         User admin = null;
         for(User U: this.observableUsers)
         {
@@ -152,6 +167,7 @@ public class Server extends UnicastRemoteObject implements IGameServer,IServer {
                 admin = U;
             }
         }
+        System.out.println(lobbyName +" "+ username);
         if (lobbyName != null && admin != null) {
             Lobby lobby;
             this.observableLobbies.add(lobby = new Lobby(lobbyName, admin, password));
@@ -168,19 +184,19 @@ public class Server extends UnicastRemoteObject implements IGameServer,IServer {
     }
 
     @Override
-    public boolean joinLobby(Lobby lobby, User user, String password) {
-        if (lobby.addUser(user.getUsername())) {
+    public boolean joinLobby(ILobby lobby, String user, String password) throws RemoteException {
+        if (lobby.addUser(user)) {
             return true;
         }
         return false;
     }
 
     @Override
-    public boolean leaveLobby(Lobby lobby, User user) {
+    public boolean leaveLobby(ILobby lobby, String user) throws RemoteException {
 
-        if (lobby.removeUser(user.getUsername()) == 1) {
+        if (lobby.removeUser(user) == 1) {
             return true;
-        } else if (lobby.removeUser(user.getUsername()) == -1) {
+        } else if (lobby.removeUser(user) == -1) {
             this.observableLobbies.remove(lobby);
             return true;
         }
@@ -189,9 +205,9 @@ public class Server extends UnicastRemoteObject implements IGameServer,IServer {
     }
 
     @Override
-    public boolean deleteLobby(Lobby lobby) {
-        Lobby templobby = null;
-        for (Lobby lobbylist : observableLobbies) {
+    public boolean deleteLobby(ILobby lobby) {
+        ILobby templobby = null;
+        for (ILobby lobbylist : observableLobbies) {
             if (lobbylist == lobby) {
                 templobby = lobbylist;
             }
@@ -230,7 +246,7 @@ public class Server extends UnicastRemoteObject implements IGameServer,IServer {
         synchronized (lock) {
             observers.stream().forEach((observer) -> {
                 try {
-                    observer.updateLobbies(this.observableLobbies);
+                    observer.updateLobbies((ArrayList<ILobby>) this.observableLobbies);
                 } catch (RemoteException ex) {
                     System.out.println("Observer couldn't be notified");
                 }
@@ -242,10 +258,15 @@ public class Server extends UnicastRemoteObject implements IGameServer,IServer {
     public void NotifyObserversUsers() throws RemoteException {
         synchronized (lock) {
             observers.stream().forEach((observer) -> {
+                ArrayList<String> tempUsers = new ArrayList();
+                for(User U : observableUsers){
+                    tempUsers.add(U.getUsername());
+                }
+                ObservableList temp = observableList(tempUsers);
                 try {
-                    observer.updateUsers(this.observableUsers);
+                    observer.updateLobbies((ArrayList<ILobby>) temp);
                 } catch (RemoteException ex) {
-                    System.out.println("Observer couldn't be notified");
+                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
                 }
             });
         }

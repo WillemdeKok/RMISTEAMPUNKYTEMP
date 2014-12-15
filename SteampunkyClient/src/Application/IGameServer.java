@@ -7,21 +7,20 @@ package Application;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import javafx.collections.ObservableList;
+import java.util.ArrayList;
 
 /**
  *
  * @author Mal
  */
 public interface IGameServer extends Remote {
-    public ObservableList<String> getLobbies()throws RemoteException;
-    public ObservableList<String> getUsers()throws RemoteException;
+    public ArrayList<ILobby> getLobbies()throws RemoteException;
+    public ArrayList<String> getUsers()throws RemoteException;
     public void Connectionstring()throws RemoteException;
-    public void Userlogedin(String tempuser)throws RemoteException;
     public boolean createUser(String username, String password)throws RemoteException;
     public boolean loginUser(String username, String password)throws RemoteException;
     public boolean createLobby(String lobbyName,String password,String username)throws RemoteException;
-    public boolean joinLobby(String lobby, String user, String password)throws RemoteException;
-    public boolean leaveLobby(String lobby, String user)throws RemoteException;
-    public boolean deleteLobby(String lobby)throws RemoteException; 
+    public boolean joinLobby(ILobby lobby, String user, String password)throws RemoteException;
+    public boolean leaveLobby(ILobby lobby, String user)throws RemoteException;
+    public boolean deleteLobby(ILobby lobby)throws RemoteException; 
 }
