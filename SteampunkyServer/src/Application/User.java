@@ -86,6 +86,11 @@ public class User
     {
         return this.username;
     }
+    
+    public String getPassword()
+    {
+        return this.password;
+    }
 
     /**
      The Getter for this Users Wins & Losses.

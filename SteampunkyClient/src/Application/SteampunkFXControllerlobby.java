@@ -54,6 +54,7 @@ public class SteampunkFXControllerlobby implements Initializable
     private Registry registry = null;
     private ILogin loginMock;
     private ILobby lobbyMock;
+    private Iuser Usermock;
     private static final String bindingName = "serverMock";
 
     public void setApp(SteampunkyFX application,Client client,String ipAddress, int portNumber)
@@ -173,13 +174,13 @@ public class SteampunkFXControllerlobby implements Initializable
         else {
             try {
                 
-                loginMock.createLobby(TfCreatename.getText(), Tfvreatepassword.getText(),clientInfo.getUser(),clientInfo.getPassword()); 
+                loginMock.createLobby(TfCreatename.getText(), Tfvreatepassword.getText(),(Iuser)("","")); 
                 JOptionPane.showMessageDialog(null,"Lobby has been created");
                 
                 
-                for (Lobby L : loginMock.getLobbies()) {
+                for (ILobby L : loginMock.getLobbies()) {
                     if (L.GetLobbyname().equals(TfCreatename.getText())) {
-                        L.addUser(user);
+                        L.addUser(Iuser);
                         main.gotoGameRoomselect(user, L);
                     }
                 }

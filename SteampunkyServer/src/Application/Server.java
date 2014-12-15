@@ -137,10 +137,10 @@ public class Server extends UnicastRemoteObject implements ILogin {
     }
     
     
-    public boolean createLobby(String lobbyName,String user,String userpassword,String password) {
-        if (lobbyName != null && !userpassword.equals("") && !user.equals("")) {
+    public boolean createLobby(String lobbyName,String password,User admin) {
+        if (lobbyName != null && admin != null) {
             Lobby lobby;
-            this.observableLobbies.add(lobby = new Lobby(lobbyName, newuser = new User(user,userpassword), password));
+            this.observableLobbies.add(lobby = new Lobby(lobbyName, admin, password));
             try {
                 this.NotifyObserversLobbies();
             } catch (RemoteException ex) {

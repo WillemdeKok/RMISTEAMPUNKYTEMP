@@ -14,15 +14,6 @@ import javafx.collections.ObservableList;
  * @author Willem
  */
 public interface ILobby extends Remote{
-    public String GetLobbyname() throws RemoteException;
-    public ObservableList<User> getSpectators() throws RemoteException;
-    public ObservableList<User> getPlayers() throws RemoteException;
-    public ObservableList<String> getChat() throws RemoteException;
-    public boolean checkPassword(String password) throws RemoteException;
-    public boolean createGame(double timelimit, int botDifficulty, String level, int rounds) throws RemoteException;
-    public boolean addUser(User user) throws RemoteException;
-    public int removeUser(User user) throws RemoteException;
-    public boolean assignSlot(User user) throws RemoteException;
-    public boolean clearSlot(User user) throws RemoteException;
-    public void Addchatmessage(String message)throws RemoteException;
+    public String GetLobbyname();
+    public boolean addUser(Iuser user);
 }

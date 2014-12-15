@@ -16,6 +16,6 @@ import javafx.collections.ObservableList;
 public interface ILogin extends Remote {
     public boolean createUser(String username, String password) throws RemoteException;
     public boolean loginUser(String username, String password) throws RemoteException;
-    public boolean createLobby(String lobbyName,String user,String userpassword,String password);
-    public ObservableList<Lobby> getLobbies();
+    public boolean createLobby(String lobbyName,String user,Iuser account);
+    public ObservableList<ILobby> getLobbies();
 }
