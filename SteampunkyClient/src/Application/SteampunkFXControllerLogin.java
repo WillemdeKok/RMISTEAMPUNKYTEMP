@@ -6,8 +6,6 @@
 
 package Application;
 
-import fontys.observer.RemotePropertyListener;
-import fontys.observer.RemotePublisher;
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -30,7 +28,7 @@ import javax.swing.JOptionPane;
  *
  * @author bart
  */
-public class SteampunkFXControllerLogin implements RemotePropertyListener, Initializable
+public class SteampunkFXControllerLogin implements Initializable
 {
     // Loginproftaak
     @FXML Tab loginuser;
