@@ -14,6 +14,6 @@ import javafx.collections.ObservableList;
  * @author Willem
  */
 public interface IObserver extends Remote{
-    public void updateLobbies(ObservableList<Lobby> lobbies) throws RemoteException;
-    public void updateUsers(ObservableList<User> users) throws RemoteException;
+    public void updateLobbies(ObservableList<String> lobbies) throws RemoteException;
+    public void updateUsers(ObservableList<String> users) throws RemoteException;
 }
