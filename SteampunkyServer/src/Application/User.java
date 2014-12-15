@@ -172,7 +172,7 @@ public class User
      */
     public boolean leaveLobby(Lobby lobby)
     {
-        if (lobby.removeUser(this) == 1)
+        if (lobby.removeUser(this.getUsername()) == 1)
         {
             this.currentLobby = null;
             return true;

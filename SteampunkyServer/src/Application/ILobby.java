@@ -22,7 +22,5 @@ public interface ILobby extends Remote{
     public boolean createGame(double timelimit, int botDifficulty, String level, int rounds) throws RemoteException;
     public boolean addUser(String user) throws RemoteException;
     public int removeUser(String user) throws RemoteException;
-    public boolean assignSlot(String user) throws RemoteException;
-    public boolean clearSlot(String user) throws RemoteException;
     public void Addchatmessage(String message)throws RemoteException;
 }

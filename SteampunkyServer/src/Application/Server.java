@@ -169,7 +169,7 @@ public class Server extends UnicastRemoteObject implements IGameServer,IServer {
 
     @Override
     public boolean joinLobby(Lobby lobby, User user, String password) {
-        if (lobby.addUser(user)) {
+        if (lobby.addUser(user.getUsername())) {
             return true;
         }
         return false;
@@ -178,9 +178,9 @@ public class Server extends UnicastRemoteObject implements IGameServer,IServer {
     @Override
     public boolean leaveLobby(Lobby lobby, User user) {
 
-        if (lobby.removeUser(user) == 1) {
+        if (lobby.removeUser(user.getUsername()) == 1) {
             return true;
-        } else if (lobby.removeUser(user) == -1) {
+        } else if (lobby.removeUser(user.getUsername()) == -1) {
             this.observableLobbies.remove(lobby);
             return true;
         }

@@ -62,6 +62,14 @@ public class Lobby extends Observable implements ILobby
        return this.lobbyName;       
     }
     
+    public ObservableList<User> getPlayersAsUsers() {
+        return (ObservableList<User>) FXCollections.unmodifiableObservableList(this.observablePlayers);
+    }
+    
+    public ObservableList<User> getSpectatorsAsUsers() {
+        return (ObservableList<User>) FXCollections.unmodifiableObservableList(this.observableSpectators);
+    }
+    
     @Override
     public ObservableList<String> getSpectators() {
         ArrayList<String> temp = new ArrayList();
@@ -124,11 +132,19 @@ public class Lobby extends Observable implements ILobby
     }
     
     @Override
-    public boolean addUser(User user)
+    public boolean addUser(String user)
     {
-        if(user != null && !this.observableSpectators.contains(user))
+        User Tempuser = null;
+        
+        for (User u : this.observablePlayers) {
+            if (u.getUsername().equals(user)) {
+                Tempuser = u;
+            }
+        }
+        
+        if(Tempuser != null && !this.observableSpectators.contains(Tempuser))
         {
-            this.observableSpectators.add(user);
+            this.observableSpectators.add(Tempuser);
             this.setChanged();
             this.notifyObservers(user);
             return true;   
@@ -142,33 +158,40 @@ public class Lobby extends Observable implements ILobby
      * @return if return -1 delete this lobby, if 0 no user has been removed if 1 user has been removed
      */
     @Override
-    public int removeUser(User user)
+    public int removeUser(String user)
     {
+        User Tempuser = null;
+        
+        for (User u : this.observablePlayers) {
+            if (u.getUsername().equals(user)) {
+                Tempuser = u;
+            }
+        }
+        
         int removedUser = 0;
         
-        if(this.observableSpectators.contains(user)){
-            this.observableSpectators.remove(user);
+        if(this.observableSpectators.contains(Tempuser)){
+            this.observableSpectators.remove(Tempuser);
             this.setChanged();
-            this.notifyObservers(user);
+            this.notifyObservers(Tempuser);
             removedUser = 1;
-        }else if (this.observablePlayers.contains(user)){
-            this.observablePlayers.remove(user);
+        }else if (this.observablePlayers.contains(Tempuser)){
+            this.observablePlayers.remove(Tempuser);
             this.setChanged();
             this.notifyObservers(user);
             removedUser = 1;
         }
-        if (this.admin == user && this.observableSpectators.iterator().hasNext()){
+        if (this.admin == Tempuser && this.observableSpectators.iterator().hasNext()){
             this.admin = this.observableSpectators.iterator().next();            
-        } else if (this.admin == user){
+        } else if (this.admin == Tempuser){
             removedUser = -1;
         }
         return removedUser;
           
     }
     
-    @Override
     public boolean assignSlot(User user)
-    {
+    {        
         if(this.observableSpectators.contains(user) && !this.observablePlayers.contains(user))
         {
             this.observablePlayers.add(user);
@@ -180,9 +203,9 @@ public class Lobby extends Observable implements ILobby
         return false;
     }
     
-    @Override
     public boolean clearSlot(User user)
     {
+        
         if(!this.observableSpectators.contains(user) && this.observablePlayers.contains(user))
         {
             this.observableSpectators.add(user);
