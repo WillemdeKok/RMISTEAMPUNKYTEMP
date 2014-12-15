@@ -54,6 +54,7 @@ public class Lobby extends Observable implements ILobby
         observablePlayers = observableList(players);
         this.chatMessages = new ArrayList<>();
         observableChat = observableList(chatMessages);
+        this.observableSpectators.add(admin);
     }
 
     @Override

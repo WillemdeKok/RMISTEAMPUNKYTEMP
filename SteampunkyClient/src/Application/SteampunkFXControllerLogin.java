@@ -70,7 +70,7 @@ public class SteampunkFXControllerLogin implements RemotePropertyListener, Initi
 
     // References to registry and student administration
     private Registry registry = null;
-    private ILogin loginMock;
+    private IGameServer loginMock;
     private Client clientInfo;
     public SteampunkFXControllerLogin()
     {    
@@ -109,7 +109,7 @@ public class SteampunkFXControllerLogin implements RemotePropertyListener, Initi
         // Bind student administration using registry
         if (registry != null) {
             try {
-                loginMock = (ILogin) registry.lookup(bindingName);
+                loginMock = (IGameServer) registry.lookup(bindingName);
             } catch (RemoteException ex) {
                 System.out.println("Client: Cannot bind ILogin");
                 System.out.println("Client: RemoteException: " + ex.getMessage());

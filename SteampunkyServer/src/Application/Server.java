@@ -22,7 +22,7 @@ import javafx.collections.ObservableList;
  *
  * @author Bart
  */
-public class Server extends UnicastRemoteObject implements ILogin {
+public class Server extends UnicastRemoteObject implements IGameServer,IServer {
 
     //************************datavelden*************************************
     private ArrayList<Lobby> lobbies;
@@ -52,14 +52,17 @@ public class Server extends UnicastRemoteObject implements ILogin {
 
     }
 
+    @Override
     public ObservableList<Lobby> getLobbies() {
         return (ObservableList<Lobby>) FXCollections.unmodifiableObservableList(observableLobbies);
     }
-
+    
+    @Override
     public ObservableList<User> getUsers() {
         return (ObservableList<User>) FXCollections.unmodifiableObservableList(observableUsers);
     }
 
+    @Override
     public void Connectionstring() {
         try {
             con = DriverManager.getConnection("jdbc:mysql://stormhost.nl:3306/admin_bart", "admin_bart", "8IUAsf1E");
@@ -68,6 +71,7 @@ public class Server extends UnicastRemoteObject implements ILogin {
         }
     }
 
+    @Override
     public void Userlogedin(User tempuser) {
         if (tempuser != null) {
             observableUsers.add(tempuser);
@@ -75,6 +79,7 @@ public class Server extends UnicastRemoteObject implements ILogin {
     }
 
     //**********************methoden****************************************
+    @Override
     public boolean createUser(String username, String password) {
         boolean adduser = true;
         try {
@@ -114,6 +119,7 @@ public class Server extends UnicastRemoteObject implements ILogin {
         return false;
     }
 
+    @Override
     public boolean loginUser(String username, String password) {
         try {
             Connectionstring();
@@ -136,8 +142,16 @@ public class Server extends UnicastRemoteObject implements ILogin {
         return false;
     }
     
-    
-    public boolean createLobby(String lobbyName,String password,User admin) {
+    @Override
+    public boolean createLobby(String lobbyName,String password,String username) {
+        User admin = null;
+        for(User U: this.observableUsers)
+        {
+            if(U.getUsername().equals(username))
+            {
+                admin = U;
+            }
+        }
         if (lobbyName != null && admin != null) {
             Lobby lobby;
             this.observableLobbies.add(lobby = new Lobby(lobbyName, admin, password));
@@ -153,6 +167,7 @@ public class Server extends UnicastRemoteObject implements ILogin {
         }
     }
 
+    @Override
     public boolean joinLobby(Lobby lobby, User user, String password) {
         if (lobby.addUser(user)) {
             return true;
@@ -160,6 +175,7 @@ public class Server extends UnicastRemoteObject implements ILogin {
         return false;
     }
 
+    @Override
     public boolean leaveLobby(Lobby lobby, User user) {
 
         if (lobby.removeUser(user) == 1) {
@@ -172,6 +188,7 @@ public class Server extends UnicastRemoteObject implements ILogin {
         return false;
     }
 
+    @Override
     public boolean deleteLobby(Lobby lobby) {
         Lobby templobby = null;
         for (Lobby lobbylist : observableLobbies) {
@@ -194,18 +211,21 @@ public class Server extends UnicastRemoteObject implements ILogin {
         return server;
     }
 
+    @Override
     public void AddObserver(IObserver observer) throws RemoteException {
         synchronized (lock) {
             this.observers.add(observer);
         }
     }
 
+    @Override
     public void RemoveObserver(IObserver observer) throws RemoteException {
         synchronized (lock) {
             this.observers.remove(observer);
         }
     }
 
+    @Override
     public void NotifyObserversLobbies() throws RemoteException {
         synchronized (lock) {
             observers.stream().forEach((observer) -> {
@@ -218,6 +238,7 @@ public class Server extends UnicastRemoteObject implements ILogin {
         }
     }
 
+    @Override
     public void NotifyObserversUsers() throws RemoteException {
         synchronized (lock) {
             observers.stream().forEach((observer) -> {

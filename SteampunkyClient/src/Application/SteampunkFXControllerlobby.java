@@ -52,9 +52,8 @@ public class SteampunkFXControllerlobby implements Initializable
     private int portNumber;
     private String ipAddress;
     private Registry registry = null;
-    private ILogin loginMock;
-    private ILobby lobbyMock;
-    private Iuser Usermock;
+    private IGameServer loginMock;
+ 
     private static final String bindingName = "serverMock";
 
     public void setApp(SteampunkyFX application,Client client,String ipAddress, int portNumber)
@@ -73,7 +72,7 @@ public class SteampunkFXControllerlobby implements Initializable
         System.out.println("Client: Port number " + this.portNumber);
         
         Serverlogin();
-        Serverlobby();
+       
         
     }
     
@@ -98,7 +97,7 @@ public class SteampunkFXControllerlobby implements Initializable
         // Bind student administration using registry
         if (registry != null) {
             try {
-                loginMock = (ILogin) registry.lookup(bindingName);
+                loginMock = (IGameServer) registry.lookup(bindingName);
             } catch (RemoteException ex) {
                 System.out.println("Client: Cannot bind ILogin");
                 System.out.println("Client: RemoteException: " + ex.getMessage());
@@ -107,46 +106,6 @@ public class SteampunkFXControllerlobby implements Initializable
                 System.out.println("Client: Cannot bind ILogin");
                 System.out.println("Client: NotBoundException: " + ex.getMessage());
                 loginMock = null;
-            }
-        }
-        
-        if (loginMock != null) {
-            System.out.println("Client: Login is bound");
-        } else {
-            System.out.println("Client: Login is null pointer");
-        }
-    }
-    
-    public void Serverlobby()
-    {
-        // Locate registry at IP address and port number
-        try {
-            registry = LocateRegistry.getRegistry(this.ipAddress, this.portNumber);
-        } catch (RemoteException ex) {
-            System.out.println("Client: Cannot locate registry");
-            System.out.println("Client: RemoteException: " + ex.getMessage());
-            registry = null;
-        }
-        
-        // Print result locating registry
-        if (registry != null) {
-            System.out.println("Client: Registry located");
-        } else {
-            System.out.println("Client: Cannot locate registry");
-            System.out.println("Client: Registry is null pointer");
-        }
-        // Bind student administration using registry
-        if (registry != null) {
-            try {
-                lobbyMock = (ILobby) registry.lookup(bindingName);
-            } catch (RemoteException ex) {
-                System.out.println("Client: Cannot bind ILogin");
-                System.out.println("Client: RemoteException: " + ex.getMessage());
-                lobbyMock = null;
-            } catch (NotBoundException ex) {
-                System.out.println("Client: Cannot bind ILogin");
-                System.out.println("Client: NotBoundException: " + ex.getMessage());
-                lobbyMock = null;
             }
         }
         
@@ -173,17 +132,11 @@ public class SteampunkFXControllerlobby implements Initializable
         }
         else {
             try {
+                loginMock.createLobby(TfCreatename.getText(), Tfvreatepassword.getText(),this.clientInfo.getUser());
                 
-                loginMock.createLobby(TfCreatename.getText(), Tfvreatepassword.getText(),(Iuser)("","")); 
                 JOptionPane.showMessageDialog(null,"Lobby has been created");
                 
-                
-                for (ILobby L : loginMock.getLobbies()) {
-                    if (L.GetLobbyname().equals(TfCreatename.getText())) {
-                        L.addUser(Iuser);
-                        main.gotoGameRoomselect(user, L);
-                    }
-                }
+                main.gotoGameRoomselect(this.clientInfo,this.ipAddress,this.portNumber);            
             }
             catch (Exception ex) {
                 JOptionPane.showMessageDialog(null,"Lobby creation has failed" + ex.getMessage());

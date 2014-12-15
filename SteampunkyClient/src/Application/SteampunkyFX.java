@@ -69,7 +69,7 @@ public class SteampunkyFX extends Application {
         }
     }
     
-    protected void gotoGameRoomselect() {
+    protected void gotoGameRoomselect(Client client,String ipAddress, int portNumber) {
         try {
             GameRoomController GameRoomselect = (GameRoomController) replaceSceneContent("GameRoom.fxml");
   //          GameRoomselect.setApp(this,, stage);

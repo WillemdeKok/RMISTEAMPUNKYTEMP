@@ -13,6 +13,7 @@ import javafx.collections.ObservableList;
  *
  * @author Willem
  */
-public interface ILobby extends Remote{
-    public void Addchatmessage(String message)throws RemoteException;
+public interface IObserver extends Remote{
+    public void updateLobbies(ObservableList<Lobby> lobbies) throws RemoteException;
+    public void updateUsers(ObservableList<User> users) throws RemoteException;
 }
