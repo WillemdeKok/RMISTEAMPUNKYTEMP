@@ -70,6 +70,7 @@ public class SteampunkFXControllerLogin implements Initializable
     private Registry registry = null;
     private IGameServer loginMock;
     private Client clientInfo;
+    
     public SteampunkFXControllerLogin()
     {    
         

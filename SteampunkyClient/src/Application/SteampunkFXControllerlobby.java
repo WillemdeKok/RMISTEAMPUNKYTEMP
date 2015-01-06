@@ -117,6 +117,11 @@ public class SteampunkFXControllerlobby implements Initializable, Observer {
         if (registry != null) {
             try {
                 ServerMock = (IGameServer) registry.lookup(bindingName);
+                
+                for (ILobby temp : ServerMock.getLobbies()) {
+                    this.observablelobbies.add(temp);
+                }
+                
             } catch (RemoteException ex) {
                 System.out.println("Client: Cannot bind ILogin");
                 System.out.println("Client: RemoteException: " + ex.getMessage());
