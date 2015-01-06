@@ -76,6 +76,7 @@ public class Server extends UnicastRemoteObject implements IGameServer,IServer {
     @Override
     public void Connectionstring() {
         try {
+            Class.forName("com.mysql.jdbc.Driver");
             con = DriverManager.getConnection("jdbc:mysql://stormhost.nl:3306/admin_bart", "admin_bart", "8IUAsf1E");
         } catch (Exception ex) {
             System.out.println("Geen verbinding met database mogelijk: " + ex);
@@ -101,7 +102,7 @@ public class Server extends UnicastRemoteObject implements IGameServer,IServer {
             String queryread = "SELECT NAAM FROM USERS";
             ResultSet rs = stat.executeQuery(queryread);
             while (rs.next()) {
-                if (rs.getString("Naam").equals(username)) {
+                if (rs.getString("NAAM").equals(username)) {
                     adduser = false;
                     System.out.println("Dubbele gebruiker gevonden");
                 }
