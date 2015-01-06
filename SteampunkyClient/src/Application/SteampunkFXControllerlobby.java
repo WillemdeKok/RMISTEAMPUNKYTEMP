@@ -234,4 +234,9 @@ public class SteampunkFXControllerlobby implements Initializable, Observer {
             }
         }, 0, 1000);
     }
+
+    @Override
+    public void update(Observable o, java.lang.Object arg) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
