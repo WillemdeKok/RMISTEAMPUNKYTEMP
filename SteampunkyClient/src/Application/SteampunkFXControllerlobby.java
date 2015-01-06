@@ -171,7 +171,7 @@ public class SteampunkFXControllerlobby implements Initializable, Observer {
     @FXML
     public void AddChatmessage() {
         if (TFchat.getText().equals("")) {
-            JOptionPane.showMessageDialog(null, "Pleas enter a chat message");
+            JOptionPane.showMessageDialog(null, "Please enter a chat message");
         } else {
             try {
                 this.clientInfo.getLobby().Addchatmessage(Tfvreatepassword.getText());
