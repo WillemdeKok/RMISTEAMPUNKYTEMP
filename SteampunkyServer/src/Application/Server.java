@@ -86,6 +86,7 @@ public class Server extends UnicastRemoteObject implements IGameServer,IServer {
     public void Userlogedin(User tempuser) {
         if (tempuser != null) {
             observableUsers.add(tempuser);
+            System.out.println("User has been added to the list");
         }
     }
 
