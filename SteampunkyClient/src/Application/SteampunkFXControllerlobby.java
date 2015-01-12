@@ -144,6 +144,7 @@ public class SteampunkFXControllerlobby implements Initializable, Observer {
     public void initialize(URL location, ResourceBundle resources) {
         Clear();
         lobbyName = new ArrayList();
+        this.UpdateForms();
     }
 
     //Maakt een lobby 
@@ -166,6 +167,7 @@ public class SteampunkFXControllerlobby implements Initializable, Observer {
                 System.out.println("Failed " + ex.getMessage());
             }
         }
+        this.UpdateForms();
     }
 
     @FXML
@@ -195,6 +197,11 @@ public class SteampunkFXControllerlobby implements Initializable, Observer {
 
         Lblobby.setItems(FXCollections.observableList(lobbyName));
         CBjoinlobby.setItems(FXCollections.observableList(lobbyName));
+    }
+    
+    public void UpdateForms() {
+        this.CBjoinlobby.setItems(observablelobbies);
+        this.Lblobby.setItems(observablelobbies);
     }
 
     public void Clear() {

@@ -41,6 +41,7 @@ public class Lobby extends Observable implements ILobby, Serializable
      */
     public Lobby(String lobbyname, User addedByUser, String password)
     {        
+        System.out.println("Lobby has been created");
         this.lobbyName = lobbyname;
         this.admin = addedByUser;
         this.lobbyID = this.nextLobbyID;
