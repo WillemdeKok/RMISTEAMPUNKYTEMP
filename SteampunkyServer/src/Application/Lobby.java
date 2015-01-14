@@ -7,7 +7,10 @@
 package Application;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import static javafx.collections.FXCollections.observableList;
 import javafx.collections.ObservableList;
@@ -26,11 +29,11 @@ public class Lobby extends Observable implements ILobby, Serializable
     private String map;
     private ArrayList<String> chatMessages;
     private transient ObservableList<String> observableChat;
-    private User admin;
-    private ArrayList<User> spectators;
-    private transient ObservableList<User> observableSpectators;
-    private ArrayList<User> players;
-    private transient ObservableList<User> observablePlayers;
+    private IUser admin;
+    private ArrayList<IUser> spectators;
+    private transient ObservableList<IUser> observableSpectators;
+    private ArrayList<IUser> players;
+    private transient ObservableList<IUser> observablePlayers;
     private ArrayList<Game> games;
     private int ratingDifference;
     private Game game;
@@ -39,8 +42,8 @@ public class Lobby extends Observable implements ILobby, Serializable
     /**
      * creates a lobby with ...
      */
-    public Lobby(String lobbyname, User addedByUser, String password)
-    {        
+    public Lobby(String lobbyname, IUser addedByUser, String password)
+    {      
         System.out.println("Lobby has been created");
         this.lobbyName = lobbyname;
         this.admin = addedByUser;
@@ -56,7 +59,8 @@ public class Lobby extends Observable implements ILobby, Serializable
         observablePlayers = observableList(players);
         this.chatMessages = new ArrayList<>();
         observableChat = observableList(chatMessages);
-        this.observableSpectators.add(admin);
+        this.addUser(admin);
+
     }
 
     @Override
@@ -64,20 +68,25 @@ public class Lobby extends Observable implements ILobby, Serializable
        return this.lobbyName;       
     }
     
-    public ObservableList<User> getPlayersAsUsers() {
-        return (ObservableList<User>) FXCollections.unmodifiableObservableList(this.observablePlayers);
+    public ObservableList<IUser> getPlayersAsUsers() {
+        return (ObservableList<IUser>) FXCollections.unmodifiableObservableList(this.observablePlayers);
     }
     
-    public ObservableList<User> getSpectatorsAsUsers() {
-        return (ObservableList<User>) FXCollections.unmodifiableObservableList(this.observableSpectators);
+    public ObservableList<IUser> getSpectatorsAsUsers() {
+        return (ObservableList<IUser>) FXCollections.unmodifiableObservableList(this.observableSpectators);
     }
     
     @Override
     public ArrayList<String> getSpectators() {
         ArrayList<String> temp = new ArrayList();      
-        for (User u : this.observableSpectators) {
-            temp.add(u.getUsername());
+        for (IUser u : this.observableSpectators) {
+            try {
+                temp.add(u.getUsername());
+            } catch (RemoteException ex) {
+                Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+        System.out.println("temp size: " + temp.size());
         return temp;
     }
     
@@ -85,8 +94,12 @@ public class Lobby extends Observable implements ILobby, Serializable
     public ArrayList<String> getPlayers() {
         ArrayList<String> temp = new ArrayList();
         
-        for (User u : this.observablePlayers) {
-            temp.add(u.getUsername());
+        for (IUser u : this.observablePlayers) {
+            try {
+                temp.add(u.getUsername());
+            } catch (RemoteException ex) {
+                Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return temp;
     }
@@ -129,21 +142,23 @@ public class Lobby extends Observable implements ILobby, Serializable
     }
     
     @Override
-    public boolean addUser(String user)
+    public boolean addUser(IUser user)
     {
-        User Tempuser = null;
+        IUser Tempuser = null;
         
-        for (User u : this.observablePlayers) {
-            if (u.getUsername().equals(user)) {
-                Tempuser = u;
+        for (IUser u : this.observablePlayers) {
+            try {
+                if (u.getUsername().equals(user)) {
+                    Tempuser = u;
+                }
+            } catch (RemoteException ex) {
+                Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         
         if(Tempuser != null && !this.observableSpectators.contains(Tempuser))
         {
             this.observableSpectators.add(Tempuser);
-            this.setChanged();
-            this.notifyObservers(user);
             return true;   
         }
         return false;
@@ -157,11 +172,15 @@ public class Lobby extends Observable implements ILobby, Serializable
     @Override
     public int removeUser(String user)
     {
-        User Tempuser = null;
+        IUser Tempuser = null;
         
-        for (User u : this.observablePlayers) {
-            if (u.getUsername().equals(user)) {
-                Tempuser = u;
+        for (IUser u : this.observablePlayers) {
+            try {
+                if (u.getUsername().equals(user)) {
+                    Tempuser = u;
+                }
+            } catch (RemoteException ex) {
+                Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         
@@ -169,13 +188,9 @@ public class Lobby extends Observable implements ILobby, Serializable
         
         if(this.observableSpectators.contains(Tempuser)){
             this.observableSpectators.remove(Tempuser);
-            this.setChanged();
-            this.notifyObservers(Tempuser);
             removedUser = 1;
         }else if (this.observablePlayers.contains(Tempuser)){
             this.observablePlayers.remove(Tempuser);
-            this.setChanged();
-            this.notifyObservers(user);
             removedUser = 1;
         }
         if (this.admin == Tempuser && this.observableSpectators.iterator().hasNext()){
@@ -187,28 +202,52 @@ public class Lobby extends Observable implements ILobby, Serializable
           
     }
     
-    public boolean assignSlot(User user)
+    @Override
+    public boolean assignSlot(String user)
     {        
-        if(this.observableSpectators.contains(user) && !this.observablePlayers.contains(user))
+        System.out.println("I arrived at AssignSlot");
+        IUser Tempuser = null;
+        
+        System.out.println("Size: " + this.observableSpectators.size());
+        
+        for (IUser u : this.observableSpectators) {
+            try {
+                if (u.getUsername().equals(user)) {
+                    Tempuser = u;
+                }
+            } catch (RemoteException ex) {
+                Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        if(Tempuser != null && this.observableSpectators.contains(Tempuser) && !this.observablePlayers.contains(Tempuser))
         {
-            this.observablePlayers.add(user);
-            this.observableSpectators.remove(user);
-            this.setChanged();
-            this.notifyObservers(user);
+            this.observablePlayers.add(Tempuser);
+            this.observableSpectators.remove(Tempuser);
             return true;
         }
         return false;
     }
     
-    public boolean clearSlot(User user)
+    @Override
+    public boolean clearSlot(String user)
     {
+        IUser Tempuser = null;
         
-        if(!this.observableSpectators.contains(user) && this.observablePlayers.contains(user))
+        for (IUser u : this.observablePlayers) {
+            try {
+                if (u.getUsername().equals(user)) {
+                    Tempuser = u;
+                }
+            } catch (RemoteException ex) {
+                Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        if(!this.observableSpectators.contains(Tempuser) && this.observablePlayers.contains(Tempuser))
         {
-            this.observableSpectators.add(user);
-            this.observablePlayers.remove(user);
-            this.setChanged();
-            this.notifyObservers(user);
+            this.observableSpectators.add(Tempuser);
+            this.observablePlayers.remove(Tempuser);
             return true;
         }
         return false;

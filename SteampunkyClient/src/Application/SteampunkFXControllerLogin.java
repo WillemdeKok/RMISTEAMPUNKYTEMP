@@ -68,7 +68,7 @@ public class SteampunkFXControllerLogin implements Initializable
 
     // References to registry and student administration
     private Registry registry = null;
-    private IGameServer loginMock;
+    private IGameServer ServerMock;
     private Client clientInfo;
     
     public SteampunkFXControllerLogin()
@@ -108,19 +108,19 @@ public class SteampunkFXControllerLogin implements Initializable
         // Bind student administration using registry
         if (registry != null) {
             try {
-                loginMock = (IGameServer) registry.lookup(bindingName);
+                ServerMock = (IGameServer) registry.lookup(bindingName);
             } catch (RemoteException ex) {
                 System.out.println("Client: Cannot bind ILogin");
                 System.out.println("Client: RemoteException: " + ex.getMessage());
-                loginMock = null;
+                ServerMock = null;
             } catch (NotBoundException ex) {
                 System.out.println("Client: Cannot bind ILogin");
                 System.out.println("Client: NotBoundException: " + ex.getMessage());
-                loginMock = null;
+                ServerMock = null;
             }
         }
         
-        if (loginMock != null) {
+        if (ServerMock != null) {
             System.out.println("Client: Login is bound");
         } else {
             System.out.println("Client: Login is null pointer");
@@ -156,14 +156,15 @@ public class SteampunkFXControllerLogin implements Initializable
        }
        else
        {
-           if(loginMock.loginUser(TFUsernamelogin.getText(), TFWachtwoordlogin.getText()))
+           if(ServerMock.loginUser(TFUsernamelogin.getText(), TFWachtwoordlogin.getText()))
            {
                System.out.println("login succes"); 
                try
                {  
                    clientInfo.setUser(TFUsernamelogin.getText());
                    clientInfo.setPassword(TFWachtwoordlogin.getText());
-                   main.gotoLobbyselect(this.clientInfo,ipAddress,portNumber);
+                   clientInfo.setIUser(this.ServerMock.Getuser(clientInfo.getUser(), clientInfo.getPassword()));
+                   main.gotoLobbyselect(this.clientInfo, this.ServerMock);
                }
                catch(Exception ex)
                {
@@ -189,7 +190,7 @@ public class SteampunkFXControllerLogin implements Initializable
        else
        {
            try {
-           if(loginMock.createUser(TFUsernamecreate.getText(), TFWachtwoordcreate.getText()))
+           if(ServerMock.createUser(TFUsernamecreate.getText(), TFWachtwoordcreate.getText()))
            {
                Logintabs.getSelectionModel().select(loginuser);
                JOptionPane.showMessageDialog(null,"User created");

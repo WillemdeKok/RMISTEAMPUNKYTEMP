@@ -6,6 +6,7 @@
 package Application;
 
 import java.io.InputStream;
+import java.net.Inet4Address;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,10 +33,9 @@ public class SteampunkyFX extends Application {
     public void start(Stage stage) throws Exception {
         System.out.println("CLIENT USING REGISTRY");
         Scanner input = new Scanner(System.in);
-        System.out.print("CLIENT: ENTER IPADRESS:");
-        ipAddress = input.nextLine();
-        System.out.print("CLIENT: ENTER PORTNUMBER:");
-        portNumber = input.nextInt();
+        //To be changed in case of deployment to the IP adres of the server you want to connect to.
+        ipAddress = Inet4Address.getLocalHost().getHostAddress();
+        portNumber = 1099;
         try {
             this.stage = stage;
             this.stage.setTitle("SteamPunky");
@@ -59,20 +59,20 @@ public class SteampunkyFX extends Application {
         }
     }
     
-    protected void gotoLobbyselect(Client client,String ipAddress, int portNumber) {
+    protected void gotoLobbyselect(Client client, IGameServer ServerMock) {
         try {
             SteampunkFXControllerlobby lobbyselect = (SteampunkFXControllerlobby) replaceSceneContent("Lobby3.fxml");
-            lobbyselect.setApp(this, client,ipAddress,portNumber);
+            lobbyselect.setApp(this, client, ServerMock);
         } catch (Exception ex) {
             System.out.println("Error: " + ex.getMessage());
             Logger.getLogger(SteampunkyFX.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    protected void gotoGameRoomselect(Client client,String ipAddress, int portNumber) {
+    protected void gotoGameRoomselect(Client client, ILobby l, IGameServer ServerMock) {
         try {
             GameRoomController GameRoomselect = (GameRoomController) replaceSceneContent("GameRoom.fxml");
-  //          GameRoomselect.setApp(this,, stage);
+            GameRoomselect.setApp(this, this.stage, client, l, ServerMock);
         } catch (Exception ex) {
             Logger.getLogger(SteampunkyFX.class.getName()).log(Level.SEVERE, null, ex);
         }

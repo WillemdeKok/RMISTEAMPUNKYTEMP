@@ -6,6 +6,8 @@
 package Application;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
 /**
@@ -13,7 +15,7 @@ import java.util.*;
  <p>
  @author Linda
  */
-public class User implements Serializable
+public class User extends UnicastRemoteObject implements IUser
 {
 
     //************************datavelden*************************************
@@ -35,7 +37,7 @@ public class User implements Serializable
      @param username A String which is this Users Username.
      @param password A String which is this Users Password.
      */
-    public User(String username , String password)
+    public User(String username , String password) throws RemoteException
     {
         this.userID++;
         this.username = username;
@@ -52,7 +54,7 @@ public class User implements Serializable
      @param wins     An int which is the # of wins this user has.
      @param losses   An int which is the # of losses this user has.
      */
-    public User(String username , String password , int rating , int wins , int losses)
+    public User(String username , String password , int rating , int wins , int losses) throws RemoteException
     {
         if (wins < 0 || losses < 0 || rating < 0)
         {
@@ -73,7 +75,8 @@ public class User implements Serializable
      <p>
      @return An int which holds the current rating of this User.
      */
-    public int getRating()
+    @Override
+    public int getRating() throws RemoteException
     {
         return this.rating;
     }
@@ -83,12 +86,14 @@ public class User implements Serializable
      <p>
      @return A String which is this users Username.
      */
-    public String getUsername()
+    @Override
+    public String getUsername() throws RemoteException
     {
         return this.username;
     }
     
-    public String getPassword()
+    @Override
+    public String getPassword() throws RemoteException
     {
         return this.password;
     }
@@ -98,7 +103,8 @@ public class User implements Serializable
      <p>
      @return A two dimensional int[].
      */
-    public int[] getWinLoss()
+    @Override
+    public int[] getWinLoss() throws RemoteException
     {
         int[] winst = new int[]
         {
@@ -112,7 +118,8 @@ public class User implements Serializable
      <p>
      @return An int which is this Users UserID.
      */
-    public int getUserID()
+    @Override
+    public int getUserID() throws RemoteException
     {
         return this.userID;
     }
@@ -126,13 +133,20 @@ public class User implements Serializable
     {
         this.character = c;
     }
+    
+    @Override
+    public void setPassword(String password)
+    {
+        this.password = password;
+    }
 
     /**
      The Setter of this Users Rating.
      <p>
      @param rating An int which is the new Rating of this User.
      */
-    public void setRating(int rating)
+    @Override
+    public void setRating(int rating) throws RemoteException
     {
         this.rating = rating;
     }
@@ -142,43 +156,9 @@ public class User implements Serializable
      <p>
      @param password A String which is the new password of this User.
      */
-    public void setPassword(String password)
+    
     {
         this.password = password;
-    }
-
-    /**
-     A Method for Joining a Lobby.
-     <p>
-     @param lobby An Object of the Class Lobby, which is the lobby you want to join.
-     <p>
-     @return A boolean to show if joining this Lobby was succesfull or not.
-     */
-    public boolean joinLobby(Lobby lobby)
-    {
-        if (lobby.assignSlot(this))
-        {
-            this.currentLobby = lobby;
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     A Method for Leaving a Lobby.
-     <p>
-     @param lobby An Object of the Class Lobby, which is the lobby you want to leave.
-     <p>
-     @return A boolean to show if leaving this Lobby was succesfull or not.
-     */
-    public boolean leaveLobby(Lobby lobby)
-    {
-        if (lobby.removeUser(this.getUsername()) == 1)
-        {
-            this.currentLobby = null;
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -188,7 +168,8 @@ public class User implements Serializable
      <p>
      @return A boolean which shows if the entered password is this Users password.
      */
-    public boolean checkPassword(String password)
+    @Override
+    public boolean checkPassword(String password) throws RemoteException
     {
         boolean correct = false;
         if (password.equals(this.password))

@@ -36,6 +36,9 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import Application.Client;
 import Application.SteampunkyFX;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -43,7 +46,7 @@ import Application.SteampunkyFX;
  *
  * @author Bart
  */
-public class GameRoomController implements Initializable, Observer {
+public class GameRoomController implements Initializable {
 
     //JAVAFX CONTROLS
     @FXML private Font x1;
@@ -106,12 +109,17 @@ public class GameRoomController implements Initializable, Observer {
     private int countdown = 6;
     private int slotsleft = 4;
     private Client client;
+    private ILobby lobbyinstance;
+    private IGameServer ServerMock;
 
-    public void setApp(SteampunkyFX application, Stage stage) {
+    public void setApp(SteampunkyFX application, Stage stage, Client client, ILobby l, IGameServer ServerMock) {
+        this.ServerMock = ServerMock;
+        this.lobbyinstance = l;
         this.stage = stage;
         this.main = application;
+        this.client = client;
 
-        this.LBLusername.setText("Welcome: " + client);
+        this.LBLusername.setText("Welcome: " + client.getUser());
         this.LBLRemaining.setText("Remaining slots: " + this.slotsleft);
         this.BTReady.setDisable(true);
         this.BTSpectator.setDisable(true);
@@ -187,11 +195,18 @@ public class GameRoomController implements Initializable, Observer {
     @FXML
     public void becomeSpectator() {
   //      this.lobby.clearSlot(this.admin);
+        
         this.slotsleft++;
         this.LBLRemaining.setText("Remaining slots: " + this.slotsleft);
         this.BTReady.setDisable(true);
         this.BTPlayer.setDisable(false);
         this.BTSpectator.setDisable(true);
+        try {
+            this.lobbyinstance.clearSlot(this.client.getUser());
+        } catch (RemoteException ex) {
+            System.out.println("User could not be cleared");
+        }
+        //UpdateForms();
     }
 
     //Methode die er voor zorgt dat een speler een player wordt
@@ -203,6 +218,13 @@ public class GameRoomController implements Initializable, Observer {
         this.BTPlayer.setDisable(true);
         this.BTSpectator.setDisable(false);
         this.LBLRemaining.setText("Remaining slots: " + this.slotsleft);
+        try {
+            this.lobbyinstance.assignSlot(this.client.getUser());
+        } catch (Exception ex) {
+            System.out.println("User could not be assigned");
+            ex.printStackTrace();
+        }
+        //UpdateForms();
     }
 
     //Methode die de van de gameroom terug gaat naar de lobby
@@ -361,6 +383,21 @@ public class GameRoomController implements Initializable, Observer {
         }, 0, 1000);
         GameUpdate();
     }
+    
+    public void LVupdate() {
+        this.timer = new Timer();
+        this.timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                javafx.application.Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        UpdateForms();
+                    }
+                });
+            }
+        }, 0, 2000);
+    }
 
     public void GameUpdate()
     {
@@ -395,11 +432,6 @@ public class GameRoomController implements Initializable, Observer {
         },500,500);
             
     }
-    //Update methode als er iets wordt geupdate in een lijst dan worde de methode InitCombos aangeroepen
-    @Override
-    public void update(Observable o, java.lang.Object o1) {
-        InitCombos();
-    }
 
     //Initialiseert de combo boxen
     public void InitCombos() {
@@ -418,7 +450,45 @@ public class GameRoomController implements Initializable, Observer {
         this.CBlevelsizeHeight.setItems(this.observableRoomsizeheight);
         this.CBMinutes.setItems(this.observableTime);
         this.CBrounds.setItems(this.observableRounds);
-        this.LBSpectators.setItems(FXCollections.observableList(this.SpectatorNames));
-        this.LBPlayers.setItems(FXCollections.observableList(this.PlayerNames));
+        UpdateForms();
     }
+    
+    public void UpdateForms() {
+        ArrayList<String> temp = new ArrayList<>();
+        ArrayList<String> temp2 = new ArrayList<>();
+        
+        
+        try {
+            for (String s : this.lobbyinstance.getSpectators()) {
+                temp.add(s);
+            }
+        } catch (RemoteException ex) {
+            System.out.println("Remote Exception");
+        }
+        
+        try {
+            for (String p : this.lobbyinstance.getPlayers()) {
+                temp2.add(p);
+            }
+        } catch (RemoteException ex) {
+            System.out.println("Remote Exception");
+        }
+        
+        this.LBSpectators.setItems(FXCollections.observableList(temp));
+        this.LBPlayers.setItems(FXCollections.observableList(temp2));
+           
+        //this.CBjoinlobby.setItems(FXCollections.observableArrayList(temp));
+        //this.Lblobby.setItems(FXCollections.observableArrayList(temp));
+    }
+    
+    
+    
+//    public void UpdateForms() {
+//        try {
+//            this.LBSpectators.setItems(FXCollections.observableList(this.lobbyinstance.getSpectators()));
+//            this.LBPlayers.setItems(FXCollections.observableList(this.lobbyinstance.getPlayers()));
+//        } catch (RemoteException ex) {
+//            System.out.println("Remote exception with updating GUI");
+//        }
+//    }
 }
