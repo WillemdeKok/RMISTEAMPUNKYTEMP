@@ -78,8 +78,7 @@ public class Lobby extends Observable implements ILobby, Serializable
     
     @Override
     public ArrayList<String> getSpectators() {
-        ArrayList<String> temp = new ArrayList();     
-        System.out.println(observableSpectators.size());
+        ArrayList<String> temp = new ArrayList();  
         for (IUser u : observableSpectators) {
             try {
                 temp.add(u.getUsername());
