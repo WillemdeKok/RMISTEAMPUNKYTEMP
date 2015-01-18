@@ -206,7 +206,7 @@ public class GameRoomController implements Initializable {
         } catch (RemoteException ex) {
             System.out.println("User could not be cleared");
         }
-        //UpdateForms();
+        UpdateForms();
     }
 
     //Methode die er voor zorgt dat een speler een player wordt
@@ -224,7 +224,7 @@ public class GameRoomController implements Initializable {
             System.out.println("User could not be assigned");
             ex.printStackTrace();
         }
-        //UpdateForms();
+        UpdateForms();
     }
 
     //Methode die de van de gameroom terug gaat naar de lobby

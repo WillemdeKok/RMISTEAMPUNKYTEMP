@@ -126,7 +126,8 @@ public class SteampunkFXControllerlobby implements Initializable {
                 }
                 for (ILobby L : this.ServerMock.getLobbies()) {
                     if (L.GetLobbyname().equals(TfCreatename.getText())) {
-                        System.out.println(this.clientInfo.getUser());
+                        System.out.println("User in AddLobby method " + this.clientInfo.getUser());
+                        this.ServerMock.joinLobby(L, this.clientInfo.getUser(), this.clientInfo.getPassword());
                         main.gotoGameRoomselect(this.clientInfo, L, this.ServerMock);                        
                     }
                 }

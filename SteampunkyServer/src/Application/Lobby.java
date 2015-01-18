@@ -28,12 +28,12 @@ public class Lobby extends Observable implements ILobby, Serializable
     private String password;
     private String map;
     private ArrayList<String> chatMessages;
-    private transient ObservableList<String> observableChat;
+    //private transient ObservableList<String> observableChat;
     private IUser admin;
     private ArrayList<IUser> spectators;
-    private transient ObservableList<IUser> observableSpectators;
+    //private transient ObservableList<IUser> observableSpectators;
     private ArrayList<IUser> players;
-    private transient ObservableList<IUser> observablePlayers;
+    //private transient ObservableList<IUser> observablePlayers;
     private ArrayList<Game> games;
     private int ratingDifference;
     private Game game;
@@ -54,11 +54,11 @@ public class Lobby extends Observable implements ILobby, Serializable
         
         this.games = new ArrayList<>();
         this.spectators = new ArrayList<>();
-        observableSpectators = observableList(spectators);
+        //observableSpectators = observableList(spectators);
         this.players = new ArrayList<>();
-        observablePlayers = observableList(players);
+        //observablePlayers = observableList(players);
         this.chatMessages = new ArrayList<>();
-        observableChat = observableList(chatMessages);
+        //observableChat = observableList(chatMessages);
         this.addUser(admin);
 
     }
@@ -68,18 +68,18 @@ public class Lobby extends Observable implements ILobby, Serializable
        return this.lobbyName;       
     }
     
-    public ObservableList<IUser> getPlayersAsUsers() {
-        return (ObservableList<IUser>) FXCollections.unmodifiableObservableList(observablePlayers);
-    }
-    
-    public ObservableList<IUser> getSpectatorsAsUsers() {
-        return (ObservableList<IUser>) FXCollections.unmodifiableObservableList(observableSpectators);
-    }
+//    public ObservableList<IUser> getPlayersAsUsers() {
+//        return (ObservableList<IUser>) FXCollections.unmodifiableObservableList(observablePlayers);
+//    }
+//    
+//    public ObservableList<IUser> getSpectatorsAsUsers() {
+//        return (ObservableList<IUser>) FXCollections.unmodifiableObservableList(observableSpectators);
+//    }
     
     @Override
     public ArrayList<String> getSpectators() {
         ArrayList<String> temp = new ArrayList();  
-        for (IUser u : observableSpectators) {
+        for (IUser u : spectators) {
             try {
                 temp.add(u.getUsername());
             } catch (Exception ex) {
@@ -94,7 +94,7 @@ public class Lobby extends Observable implements ILobby, Serializable
     public ArrayList<String> getPlayers() {
         ArrayList<String> temp = new ArrayList();
         
-        for (IUser u : observablePlayers) {
+        for (IUser u : players) {
             try {
                 temp.add(u.getUsername());
             } catch (Exception ex) {
@@ -112,7 +112,7 @@ public class Lobby extends Observable implements ILobby, Serializable
     @Override
     public void Addchatmessage(String message)
     {
-        observableChat.add(message);
+        chatMessages.add(message);
     }
     
     @Override
@@ -143,22 +143,11 @@ public class Lobby extends Observable implements ILobby, Serializable
     
     @Override
     public boolean addUser(IUser user)
-    {
-        IUser Tempuser = null;
-        
-        for (IUser u : observablePlayers) {
-            try {
-                if (u.getUsername().equals(user)) {
-                    Tempuser = u;
-                }
-            } catch (RemoteException ex) {
-                Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        
-        if(Tempuser != null && !observableSpectators.contains(Tempuser))
+    {        
+        if(user != null && !spectators.contains(user))
         {
-            observableSpectators.add(Tempuser);
+            spectators.add(user);
+            System.out.println("User has been added");
             return true;   
         }
         return false;
@@ -174,7 +163,7 @@ public class Lobby extends Observable implements ILobby, Serializable
     {
         IUser Tempuser = null;
         
-        for (IUser u : observablePlayers) {
+        for (IUser u : players) {
             try {
                 if (u.getUsername().equals(user)) {
                     Tempuser = u;
@@ -186,15 +175,15 @@ public class Lobby extends Observable implements ILobby, Serializable
         
         int removedUser = 0;
         
-        if(observableSpectators.contains(Tempuser)){
-            observableSpectators.remove(Tempuser);
+        if(spectators.contains(Tempuser)){
+            spectators.remove(Tempuser);
             removedUser = 1;
-        }else if (observablePlayers.contains(Tempuser)){
-            observablePlayers.remove(Tempuser);
+        }else if (players.contains(Tempuser)){
+            players.remove(Tempuser);
             removedUser = 1;
         }
-        if (this.admin == Tempuser && observableSpectators.iterator().hasNext()){
-            this.admin = observableSpectators.iterator().next();            
+        if (this.admin == Tempuser && spectators.iterator().hasNext()){
+            this.admin = spectators.iterator().next();            
         } else if (this.admin == Tempuser){
             removedUser = -1;
         }
@@ -208,9 +197,9 @@ public class Lobby extends Observable implements ILobby, Serializable
         System.out.println("I arrived at AssignSlot");
         IUser Tempuser = null;
         
-        System.out.println("Size: " + observableSpectators.size());
+        System.out.println("Size: " + spectators.size());
         
-        for (IUser u : observableSpectators) {
+        for (IUser u : spectators) {
             try {
                 if (u.getUsername().equals(user)) {
                     Tempuser = u;
@@ -220,10 +209,10 @@ public class Lobby extends Observable implements ILobby, Serializable
             }
         }
         
-        if(Tempuser != null && observableSpectators.contains(Tempuser) && !observablePlayers.contains(Tempuser))
+        if(Tempuser != null && spectators.contains(Tempuser) && !players.contains(Tempuser))
         {
-            observablePlayers.add(Tempuser);
-            observableSpectators.remove(Tempuser);
+            players.add(Tempuser);
+            spectators.remove(Tempuser);
             return true;
         }
         return false;
@@ -234,7 +223,7 @@ public class Lobby extends Observable implements ILobby, Serializable
     {
         IUser Tempuser = null;
         
-        for (IUser u : observablePlayers) {
+        for (IUser u : players) {
             try {
                 if (u.getUsername().equals(user)) {
                     Tempuser = u;
@@ -244,10 +233,10 @@ public class Lobby extends Observable implements ILobby, Serializable
             }
         }
         
-        if(!observableSpectators.contains(Tempuser) && observablePlayers.contains(Tempuser))
+        if(!spectators.contains(Tempuser) && players.contains(Tempuser))
         {
-            observableSpectators.add(Tempuser);
-            observablePlayers.remove(Tempuser);
+            spectators.add(Tempuser);
+            players.remove(Tempuser);
             return true;
         }
         return false;
