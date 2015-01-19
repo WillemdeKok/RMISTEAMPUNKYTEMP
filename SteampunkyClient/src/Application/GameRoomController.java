@@ -36,9 +36,13 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import Application.Client;
 import Application.SteampunkyFX;
+import images.ImageSelector;
 import java.rmi.RemoteException;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 
 /**
@@ -111,6 +115,9 @@ public class GameRoomController implements Initializable {
     private Client client;
     private ILobby lobbyinstance;
     private IGameServer ServerMock;
+    private ImageSelector selector;
+    
+    private int level = 0;
 
     public void setApp(SteampunkyFX application, Stage stage, Client client, ILobby l, IGameServer ServerMock) {
         this.ServerMock = ServerMock;
@@ -189,6 +196,7 @@ public class GameRoomController implements Initializable {
         Roomsizeheight = new ArrayList<>();
         Rounds = new ArrayList<>();
         Time = new ArrayList<>();
+        selector = new ImageSelector();
     }
 
     //Methode die er voor zorgt dat een speler een spectator wordt
@@ -249,6 +257,7 @@ public class GameRoomController implements Initializable {
             this.field.setFill(Color.GRAY);
             box.getChildren().add(this.field);   
     }
+    
     //Start de game als de teller op 0 komt wordt het speel veld geladen
     public void Countdown() {
         this.countdown--;
@@ -256,30 +265,157 @@ public class GameRoomController implements Initializable {
         this.LBLGameState.setText(number);
 
         if (this.countdown == 0) 
-        {
+        {            
+            //get random level from 1 to 3
+            Random levelInt = new Random();
+            level = levelInt.nextInt(3) + 1;
+            
             this.SetupDraw();
-            this.setKeyBindings();
-  //          this.game.addPlayer(this.admin);
-   //         this.game.startRound();
+            this.setKeyBindings();                   
         }
     }
     //clears the scene and draws new boxes for every object.
     public void DrawGame(){
-        box.getChildren().clear();
+        box.getChildren().clear();        
+        
+        switch (level)
+        {
+            case 1:
+                this.field.setFill(Color.SADDLEBROWN);
+                this.playfield.setFill(Color.BURLYWOOD);
+                break;
+            case 2:
+                this.field.setFill(Color.DIMGRAY);
+                this.playfield.setFill(Color.LIGHTGRAY);
+                break;
+            case 3:
+                this.field.setFill(Color.PERU);
+                this.playfield.setFill(Color.BEIGE);
+                break;
+        }
+        
         box.getChildren().add(this.field);
         box.getChildren().add(this.playfield);
-         
-//        for (IPosition p : this.game.getGrid())
-//            {
-//                objects = p.getObjects();
-//
-//                for (IObject o : objects)
-//                {
-//                    Shape s;
-//                    s = o.getShape();
-//                    box.getChildren().add(s);
-//                }
-//            }
+        
+        ArrayList<String[]> information = null;
+        
+        try {
+            information = this.lobbyinstance.GetInformation();
+        } catch (RemoteException ex) {
+            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        for (String[] s : information)
+        {
+            String object = "";
+            String type = s[1];
+            int xpos = Integer.parseInt(s[2]);
+            int ypos = Integer.parseInt(s[3]);
+            String direction = s[4];
+            
+            switch(s[0])
+            {
+                case "1":
+                    object = "Character";
+                    break;
+                case "2":
+                    object = "Obstacle";
+                    break;
+                case "3":
+                    object = "PowerUp";
+                    break;
+                case "4":
+                    object = "Ballista";
+                    break;
+                case "5":
+                    object = "Projectile";
+                    break;
+            }
+            
+            Image image = null;
+            ImageView img = null; 
+
+            try
+            {
+                //level nog niet geimplementeerd
+                image = selector.getImage(s, level);
+                img = new ImageView(image);
+                img.setScaleX(this.getScale());
+                img.setScaleY(this.getScale());
+                img.setX((xpos*100*this.getScale()) + (-50 * (1-this.getScale())));
+                img.setY((ypos*100*this.getScale()) + (-50 * (1-this.getScale())));  
+
+                if (object.equals("Projectile") || object.equals("Character"))
+                {
+                    img.setRotate(getRotation(direction));
+                }
+                else
+                {
+                    img.setRotate(0);
+                }
+
+                box.getChildren().add(img);
+            }
+            catch (Exception ex)
+            {
+                System.out.println(ex.getMessage());
+            }
+        }
+    }
+    
+    public double getRotation(String direction)
+    {
+        double rotation = 0;
+
+        switch(direction)
+        {
+            case "Up":
+                rotation = 0;
+                break;
+            case "Right":
+                rotation = 90;
+                break;
+            case "Down":
+                rotation = 180;
+                break;
+            case "Left":
+                rotation = 270;
+                break; 
+        }
+        
+        return rotation;
+    }
+    
+    public double getScale()
+    {
+        try {
+            double scale = 1;
+            
+            //check scale for admin
+            /*for (String name : this.PlayerNames)
+            {
+            if (name.equals(this.admin.getUsername()))
+            {
+            scale = 1;
+            }
+            }
+            
+            for (String name : this.SpectatorNames)
+            {
+            if (name.equals(this.admin.getUsername()))
+            {*/
+            double hoogteScherm = 800;
+            double hoogteSpel = this.lobbyinstance.getHeightPixels();
+            scale = hoogteScherm/hoogteSpel;
+            /*}
+            }*/
+            
+            return scale;
+            
+        } catch (RemoteException ex) {
+            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+            return 1;
+        }
     }
     
     //Sets up the settings needed to draw.
@@ -289,16 +425,19 @@ public class GameRoomController implements Initializable {
         //Moeten groter zijn dan 9; melding?!
         int width = Integer.parseInt(this.CBlevelsizeWidth.getValue().toString());
         int height = Integer.parseInt(this.CBlevelsizeHeight.getValue().toString());
-
         double time = Integer.parseInt(this.CBMinutes.getValue().toString()) * 60;
-        int botdif = 1; //afhankelijk van level spelers, nog niet geimplementeerd
         int rounds = Integer.parseInt(this.CBrounds.getValue().toString());
-
-//        this.game = new IGame(width, height, time, botdif, rounds) {};
-//        this.widthPixels = this.game.getWidthPixels();
-//        this.widthCubes = this.game.getWidthCubes();
-//        this.heightPixels = this.game.getHeightPixels();
-//        this.heightCubes = this.game.getHeightCubes();
+            
+        try {
+            this.PlayerNames = this.lobbyinstance.getPlayers();
+            this.lobbyinstance.createGame(time, 1, level, rounds, width, height);
+            this.widthPixels = this.lobbyinstance.getWidthPixels();        
+            this.widthCubes = this.lobbyinstance.getWidthCubes();
+            this.heightPixels = this.lobbyinstance.getHeightPixels();
+            this.heightCubes = this.lobbyinstance.getHeightCubes();
+        } catch (RemoteException ex) {
+            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         root = new Group();
         Scene scene = new Scene(root, 1700, 900);
@@ -417,10 +556,10 @@ public class GameRoomController implements Initializable {
                 {
                     try
                     {
-           //         game.updateGame();
-                    DrawGame();
+                        lobbyinstance.updateGame();
+                        DrawGame();
                     }
-                    catch(NullPointerException ex)
+                    catch(NullPointerException | RemoteException ex)
                     {
                     
                     }

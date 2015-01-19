@@ -34,7 +34,6 @@ public class Lobby extends Observable implements ILobby, Serializable
     //private transient ObservableList<IUser> observableSpectators;
     private ArrayList<IUser> players;
     //private transient ObservableList<IUser> observablePlayers;
-    private ArrayList<Game> games;
     private int ratingDifference;
     private Game game;
 
@@ -52,7 +51,6 @@ public class Lobby extends Observable implements ILobby, Serializable
         this.password = password;
         this.admin = addedByUser;
         
-        this.games = new ArrayList<>();
         this.spectators = new ArrayList<>();
         //observableSpectators = observableList(spectators);
         this.players = new ArrayList<>();
@@ -129,12 +127,20 @@ public class Lobby extends Observable implements ILobby, Serializable
     }
     
     @Override
-    public boolean createGame(double timelimit, int botDifficulty, String level, int rounds)
+    public boolean createGame(double timelimit, int botDifficulty, int level, int rounds, int width, int height)
     {
         //todo
-        if(timelimit != 0 && botDifficulty != 0 && level != null && rounds != 0)
+        if(timelimit != 0 && botDifficulty != 0 && level > 0 && rounds != 0)
         {
-            games.add(game = new Game(9,9,timelimit,botDifficulty,rounds));
+            game = new Game(width,height,timelimit,botDifficulty,rounds,level);
+            
+            for (IUser u : players)
+            {
+                game.addPlayer(u);
+            }
+                    
+            game.startRound();
+                    
             return true;
         }
       
@@ -240,7 +246,43 @@ public class Lobby extends Observable implements ILobby, Serializable
             return true;
         }
         return false;
-    }   
+    }
+    
+    @Override
+    public void updateGame()
+    {
+        this.game.updateGame();
+    }
+    
+    @Override
+    public int getWidthCubes()
+    {
+        return this.game.getWidthCubes();
+    }
+    
+    @Override
+    public int getHeightCubes()
+    {
+        return this.game.getHeightCubes();
+    }
+    
+    @Override
+    public int getWidthPixels()
+    {
+        return this.game.getWidthPixels();
+    }
+    
+    @Override
+    public int getHeightPixels()
+    {
+        return this.game.getHeightPixels();
+    }
+    
+    @Override
+    public ArrayList<String[]> GetInformation()
+    {
+        return this.game.GetInformation();
+    }
     
     @Override
     public String toString()

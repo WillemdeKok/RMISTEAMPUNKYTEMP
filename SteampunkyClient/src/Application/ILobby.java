@@ -19,10 +19,16 @@ public interface ILobby extends Remote{
     public ArrayList<String> getPlayers() throws RemoteException;
     public ArrayList<String> getChat() throws RemoteException;
     public boolean checkPassword(String password) throws RemoteException;
-    public boolean createGame(double timelimit, int botDifficulty, String level, int rounds) throws RemoteException;
+    public boolean createGame(double timelimit, int botDifficulty, int level, int rounds, int width, int height) throws RemoteException;
     public boolean addUser(IUser user) throws RemoteException;
     public boolean clearSlot(String user) throws RemoteException;
     public boolean assignSlot(String user) throws RemoteException;
     public int removeUser(String user) throws RemoteException;
     public void Addchatmessage(String message)throws RemoteException;
+    public void updateGame()throws RemoteException;
+    public int getWidthCubes()throws RemoteException;
+    public int getHeightCubes()throws RemoteException;
+    public int getWidthPixels()throws RemoteException;
+    public int getHeightPixels()throws RemoteException;
+    public ArrayList<String[]> GetInformation()throws RemoteException;
 }

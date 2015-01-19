@@ -197,7 +197,7 @@ public class Server extends UnicastRemoteObject implements IGameServer {
 
     @Override
     public boolean joinLobby(ILobby lobby, String user, String password) throws RemoteException {
-        if (lobby.addUser(Getuser(user, password))) {
+        if (lobby.addUser(Getuser(user))) {
             return true;
         }
         return false;
@@ -244,13 +244,13 @@ public class Server extends UnicastRemoteObject implements IGameServer {
     }
     
 
-    public IUser Getuser(String username,String password)
+    public IUser Getuser(String username)
     {
         IUser tempuser = null;
         for(IUser user : this.observableUsers)
         {
             try {
-                if(user.getUsername().equals(username) && user.getPassword().equals(password))
+                if(user.getUsername().equals(username))
                 {
                     tempuser = user;
                 }

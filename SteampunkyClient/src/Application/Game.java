@@ -5,7 +5,10 @@
  */
 package Application;
 
+import java.rmi.RemoteException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -28,15 +31,14 @@ public class Game {
     private int totalRounds;
     private int currentRound;
     private boolean gameEnd;
-    private Level currentLevel;
+    private int currentLevel;
 
     private double boxStartTime;
     private boolean fillUp;
 
     private List<Position> grid;
-    private List<Level> levels;
     private List<Object> objects;
-    private List<User> players;
+    private List<IUser> players;
     private List<Bot> bots;
     private List<Character> characters;
 
@@ -50,7 +52,7 @@ public class Game {
      * @param botDifficulty The difficulty of the bots.
      * @param rounds The number of rounds that can be played.
      */
-    public Game(int height, int width, double timelimit, int botDifficulty, int rounds) {
+    public Game(int height, int width, double timelimit, int botDifficulty, int rounds, int level) {
         if ((height % 2 == 1 && width % 2 == 1) && (height >= 9 && width >= 9)) {
             this.heightCubes = height;
             this.heightPixels = (height * 100) + 200;
@@ -62,6 +64,7 @@ public class Game {
             this.totalTime = timelimit;
             this.currentTime = 0;
             this.totalRounds = rounds;
+            this.currentLevel = level;
             this.currentRound = 1;
             this.boxStartTime = 0;
             this.fillUp = false;
@@ -82,7 +85,6 @@ public class Game {
             }
             //</editor-fold>
 
-            this.levels = new ArrayList<>();
             this.objects = new ArrayList<>();
             this.players = new ArrayList<>();
             this.bots = new ArrayList<>();
@@ -241,20 +243,11 @@ public class Game {
     }
 
     /**
-     * Getter of Levels
-     *
-     * @return a list of Levels
-     */
-    public List<Level> getLevels() {
-        return this.levels;
-    }
-
-    /**
      * Getter of current level
      *
      * @return current level
      */
-    public Level getCurrentLevel() {
+    public int getCurrentLevel() {
         return this.currentLevel;
     }
 
@@ -281,20 +274,11 @@ public class Game {
     }
 
     /**
-     * Add level to game
-     *
-     * @param level
-     */
-    public void addLevel(Level level) {
-        this.levels.add(level);
-    }
-
-    /**
      * Add player to game
      *
      * @param player
      */
-    public void addPlayer(User player) {
+    public void addPlayer(IUser player) {
         this.players.add(player);
     }
 
@@ -696,9 +680,13 @@ public class Game {
         int i = 0;
 
         //Add character to player
-        for (User p : this.players) {
+        for (IUser p : this.players) {
             Character c = new Character(1, false, 1, 3, positions[i], true, true, directions[i], this);
-            p.setCharacter(c);
+            try {
+                p.setCharacter(c);
+            } catch (RemoteException ex) {
+                Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+            }
             this.characters.add(c);
             this.objects.add(c);
             i++;
@@ -773,80 +761,36 @@ public class Game {
             this.setObjectInGrid(o);
         });
     }
-
-    public ArrayList<String[]> GetInformation(Character C) {
-
+    
+    public ArrayList<String[]> GetInformation() {
         ArrayList<String[]> information = new ArrayList();
-        List<Position> visiblePositions = new ArrayList();
-
-        //<editor-fold defaultstate="collapsed" desc="Get the for this character visible positions in the grid">
-        int CX = C.getPositionX();
-        int CY = C.getPositionY();
-        grid.stream().forEach((P) -> {
-            int PX = P.getX();
-            int PY = P.getY();
-            int difX;
-            int difY;
-            if (PX >= CX) {
-                difX = PX - CX;
-            } else {
-                difX = CX - PX;
-            }
-            if (PY >= CY) {
-                difY = PY - CY;
-            } else {
-                difY = CY - PY;
-            }
-            if ((difY + difX) <= C.getTorchRange()) {
-                visiblePositions.add(P);
-            }
-        });
-        //</editor-fold>
-
-        //<editor-fold defaultstate="collapsed" desc="For all visible Positions set the objects in an arraylist and put that list in the stringArray information">
-        for (Position p : visiblePositions) {
+        
+	for (Position p : grid) {
             List<Object> TempObjects = this.getObjectsFromGrid(p.getX(), p.getY());
-
+		
             for (Object o : TempObjects) {
                 String[] objectinfo = new String[4];
 
                 if (o instanceof Character) {
                     objectinfo[0] = "1";
-                    objectinfo[1] = o.getObjectType();
-                    objectinfo[2] = o.getPosition().getX() + "";
-                    objectinfo[3] = o.getPosition().getY() + "";
-
                 } else if (o instanceof Obstacle) {
                     objectinfo[0] = "2";
-                    objectinfo[1] = o.getObjectType();
-                    objectinfo[2] = o.getPosition().getX() + "";
-                    objectinfo[3] = o.getPosition().getY() + "";
-
                 } else if (o instanceof PowerUp) {
                     objectinfo[0] = "3";
-                    objectinfo[1] = o.getObjectType();
-                    objectinfo[2] = o.getPosition().getX() + "";
-                    objectinfo[3] = o.getPosition().getY() + "";
-
                 } else if (o instanceof Ballista) {
                     objectinfo[0] = "4";
-                    objectinfo[1] = o.getObjectType();
-                    objectinfo[2] = o.getPosition().getX() + "";
-                    objectinfo[3] = o.getPosition().getY() + "";
-
                 } else if (o instanceof Projectile) {
                     objectinfo[0] = "5";
-                    objectinfo[1] = o.getObjectType();
-                    objectinfo[2] = o.getPosition().getX() + "";
-                    objectinfo[3] = o.getPosition().getY() + "";
-                }
-
+                }	
+                
+                objectinfo[1] = o.getObjectType();
+                objectinfo[2] = o.getPosition().getX() + "";
+                objectinfo[3] = o.getPosition().getY() + "";
+                objectinfo[4] = o.getDirection().name() + "";
+                
                 information.add(objectinfo);
             }
         }
-
-        //</editor-fold>
         return information;
     }
-
 }
