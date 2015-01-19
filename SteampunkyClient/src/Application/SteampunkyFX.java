@@ -100,14 +100,14 @@ public class SteampunkyFX extends Application {
         }
         else if(fxml.equals("Lobby3.fxml"))
         {
-            this.stage.setMinWidth(630);
-            this.stage.setMinHeight(450);
-            scene = new Scene(page, 630, 450); 
+            this.stage.setMinWidth(640);
+            this.stage.setMinHeight(350);
+            scene = new Scene(page, 640, 340); 
         }        
         else if(fxml.equals("GameRoom.fxml"))
         {
-            this.stage.setMinWidth(600);
-            this.stage.setMinHeight(400);
+            this.stage.setMinWidth(640);
+            this.stage.setMinHeight(590);
             scene = new Scene(page, 600, 400); 
         }
         else {

@@ -8,7 +8,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="529.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="Application.GameRoomController">
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="610.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="Application.GameRoomController">
   <children>
     <ListView fx:id="LBSpectators" layoutX="257.0" layoutY="49.0" prefHeight="200.0" prefWidth="127.0" />
     <ListView fx:id="LBPlayers" layoutX="406.0" layoutY="49.0" prefHeight="200.0" prefWidth="127.0" />
@@ -20,7 +20,7 @@
     <Label id="LblCSS" font="$x1" layoutX="441.0" layoutY="14.0" prefHeight="32.0" prefWidth="79.0" text="Players" />
     <Button fx:id="BTSpectator" layoutX="257.0" layoutY="268.0" mnemonicParsing="false" onAction="#becomeSpectator" prefHeight="32.0" prefWidth="127.0" text="Become a Spectator" />
     <Button fx:id="BTPlayer" layoutX="407.0" layoutY="268.0" mnemonicParsing="false" onAction="#becomePlayer" prefHeight="32.0" prefWidth="127.0" text="Become a Player" />
-    <Button fx:id="BTReturn" layoutX="441.0" layoutY="494.0" mnemonicParsing="false" onAction="#ReturnToMenu" text="Return to main menu" />
+    <Button fx:id="BTReturn" layoutX="429.0" layoutY="494.0" mnemonicParsing="false" onAction="#ReturnToMenu" text="Return to main menu" />
     <Label id="LblCSS" fx:id="LBLusername" layoutX="14.0" layoutY="14.0" text="Welcome: UserName" />
     <Label id="LblCSS" fx:id="LBLRemaining" layoutX="436.0" layoutY="249.0" text="Remaining slots: 4" />
     <Label id="LblCSS" fx:id="LBLGameState" layoutX="13.0" layoutY="41.0" text="Waiting for players" textFill="BLACK">
@@ -75,7 +75,7 @@
       </items>
     </ComboBox>
     <Label fx:id="LBLHeight" layoutX="102.0" layoutY="144.0" text="Height" />
-      <Button fx:id="BTstop" layoutX="200.0" layoutY="70.0" mnemonicParsing="false" onAction="#StopGame" text="Stop" />
+    <Button fx:id="BTstop" layoutX="200.0" layoutY="70.0" mnemonicParsing="false" onAction="#StopGame" text="Stop" />
     <Label layoutX="16.0" layoutY="260.0" text="Chat:">
       <font>
         <Font name="System Bold" size="16.0" />
