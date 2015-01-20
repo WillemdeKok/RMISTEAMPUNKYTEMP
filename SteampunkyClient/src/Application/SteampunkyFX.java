@@ -107,8 +107,10 @@ public class SteampunkyFX extends Application {
         }        
         else if(fxml.equals("GameRoom.fxml"))
         {
-            this.stage.setMinWidth(640);
+            this.stage.setMinWidth(1048);
             this.stage.setMinHeight(590);
+            this.stage.setX(100);
+            this.stage.setY(100);
             scene = new Scene(page, 600, 400); 
         }
         else {
