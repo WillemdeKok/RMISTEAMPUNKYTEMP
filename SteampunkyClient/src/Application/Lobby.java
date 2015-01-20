@@ -249,6 +249,16 @@ public class Lobby extends Observable implements ILobby, Serializable
     }
     
     @Override
+    public void move(IUser user, Direction d)
+    {
+        try {
+            user.move(d);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    @Override
     public void updateGame()
     {
         this.game.updateGame();

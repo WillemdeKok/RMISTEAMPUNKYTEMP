@@ -463,39 +463,47 @@ public class GameRoomController implements Initializable {
     
     //Set the keybindings for this Scene
     public void setKeyBindings(){
-//        this.stage.getScene().setOnKeyPressed((KeyEvent keyEvent) -> {
-//            if(keyEvent.getCode().toString().equals("W"))
-//            {
-//                this.game.getCharacter().move(Direction.Up);
-//            }
-//            
-//            if(keyEvent.getCode().toString().equals("A"))
-//            {
-//                this.game.getCharacter().move(Direction.Left);
-//            }
-//            
-//            if(keyEvent.getCode().toString().equals("S"))
-//            {
-//                this.game.getCharacter().move(Direction.Down);
-//            }
-//            
-//            if(keyEvent.getCode().toString().equals("D"))
-//            {
-//                this.game.getCharacter().move(Direction.Right);
-//            }
-//            
-//            if(keyEvent.getCode().toString().equals("Q"))
-//            {
-//                ICharacter c = (ICharacter) game.getCharacter();
-//                c.createBallista(Direction.Right ,4);
-//            }
-//            
-//            if(keyEvent.getCode().toString().equals("E"))
-//            {
-//                ICharacter c = (ICharacter) game.getCharacter();
-//                c.createBallista(Direction.Up ,4);
-//            }
-//        });
+        this.stage.getScene().setOnKeyPressed((KeyEvent keyEvent) -> {
+            try {
+                if(keyEvent.getCode().toString().equals("W"))
+                {
+                    this.lobbyinstance.move(client.getIUser(), Direction.Up);
+                    //this.game.getCharacter().move(Direction.Up);
+                }
+
+                if(keyEvent.getCode().toString().equals("A"))
+                {
+                    this.lobbyinstance.move(client.getIUser(), Direction.Left);
+                    //this.game.getCharacter().move(Direction.Left);
+                }
+
+                if(keyEvent.getCode().toString().equals("S"))
+                {
+                    this.lobbyinstance.move(client.getIUser(), Direction.Down);
+                    //this.game.getCharacter().move(Direction.Down);
+                }
+
+                if(keyEvent.getCode().toString().equals("D"))
+                {
+                    this.lobbyinstance.move(client.getIUser(), Direction.Right);
+                    //this.game.getCharacter().move(Direction.Right);
+                }
+
+                if(keyEvent.getCode().toString().equals("Q"))
+                {
+                    //ICharacter c = (ICharacter) game.getCharacter();
+                    //c.createBallista(Direction.Right ,4);
+                }
+
+                if(keyEvent.getCode().toString().equals("E"))
+                {
+                    //ICharacter c = (ICharacter) game.getCharacter();
+                    //c.createBallista(Direction.Up ,4);
+                }
+            } catch (RemoteException ex) {
+                Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
     }
     
     //Zodra er op ready wordt geklikt start de timer die aftelt tot de game start
