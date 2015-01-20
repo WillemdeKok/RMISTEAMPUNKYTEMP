@@ -129,7 +129,6 @@ public class User extends UnicastRemoteObject implements IUser
         return this.character;
     }
     
-    @Override
     public void setCharacter(Character c) throws RemoteException
     {
         this.character = c;

@@ -704,11 +704,7 @@ public class Game implements IGame{
         //Add character to player
         for (IUser p : this.players) {
             Character c = new Character(1, false, 1, 3, positions[i], true, true, directions[i], this);
-            try {
-                p.setCharacter(c);
-            } catch (RemoteException ex) {
-                Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            p.setCharacter(c);
             this.characters.add(c);
             this.objects.add(c);
             i++;

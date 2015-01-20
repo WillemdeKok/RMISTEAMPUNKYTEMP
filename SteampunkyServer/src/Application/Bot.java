@@ -5,6 +5,7 @@
  */
 package Application;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -12,7 +13,7 @@ import java.util.*;
  * <p>
  * @author Melanie
  */
-public class Bot {
+public class Bot  implements Serializable{
 
     //************************datavelden*************************************
     private int botID;
@@ -88,7 +89,7 @@ public class Bot {
             int Y = this.character.getPosition().getY();
             List<Position> grid = this.game.getGrid();
             List<Position> movableGrid = new ArrayList<>();
-//            movableGrid = getMovableGrid(X, Y, grid, null);
+            movableGrid = getMovableGrid(X, Y, grid, null);
 
             // <editor-fold desc="difficulty 1." defaultstate="collapsed">
             if (this.difficulty == 1) {
@@ -112,39 +113,72 @@ public class Bot {
                         dir.add(Direction.Left);
                     }
                 }
-//                if(i==1){
-//                    this.character.createBallista(Direction.Right,4,this.character.getSpeed());
-//                    this.character.move(dir.get(0));
-//                }else if(i!=0){
+                if(i==1){
+                    
+                this.character.createBallista(Direction.Right, this.character.getSpeed());
+                  this.character.move(dir.get(0));
+                }else if(i!=0){
                 Random rand = new Random();
                 int randomNum = rand.nextInt(i) + 0;
                 this.character.move(dir.get(randomNum));
-//                }
+                }
 
             }
             // </editor-fold>
 
             if (this.difficulty == 2) {
-                List<Position> threat = new ArrayList<>();
+
+                List<Direction> possibleDirections = new ArrayList<>();
+                for(Position P : movableGrid){
+                    if(P.getX()== X && P.getY() == Y+1){
+                        possibleDirections.add(Direction.Down);
+                    }
+                    if(P.getX() == X+1 && P.getY() ==Y){
+                        possibleDirections.add(Direction.Right);
+                    }
+                    if(P.getX() == X && P.getY() ==Y-1){
+                        possibleDirections.add(Direction.Up);
+                    }
+                    if(P.getX() == X-1 && P.getY() ==Y){
+                      possibleDirections.add(Direction.Left);
+                    }
+                }
+                //find threats and set preferred direction
+                List<Position> threats = new ArrayList<>();
                 for (Position P: movableGrid){
                     if(P.getX()== X || P.getY()==Y){
                         for(Object O: P.getObjects()){
                             if (O instanceof Projectile){
                                 Projectile projectile = (Projectile) O;
-                                if(X>P.getX() && projectile.getDirection() == Direction.Left){
-                                    threat.add(P);
-                                }else if (X<P.getX() && projectile.getDirection() == Direction.Right){
-                                threat.add(P);
-                                }
-                                else if (Y<P.getY() && projectile.getDirection() == Direction.Down){
-                                    threat.add(P);
-                                }else if (Y>P.getY() && projectile.getDirection() == Direction.Up){
-                                    threat.add(P);
+                                if(Y==P.getY() && X>P.getX() && projectile.getDirection() == Direction.Left){
+                                    possibleDirections.remove(Direction.Right);
+                                    threats.add(P);
+                                }else if (Y==P.getY() && X<P.getX() && projectile.getDirection() == Direction.Right){
+                                    possibleDirections.remove(Direction.Left);
+                                    threats.add(P);
+                                }else if (X==P.getX() && Y<P.getY() && projectile.getDirection() == Direction.Down){
+                                    possibleDirections.remove(Direction.Up);
+                                    threats.add(P);
+                                }else if (X==P.getX() && Y>P.getY() && projectile.getDirection() == Direction.Up){
+                                    possibleDirections.remove(Direction.Down);
+                                    threats.add(P);
                                 }
                             }
                         }
                    }
                 }
+                
+                if(possibleDirections.size()==1){      
+                this.character.createBallista(Direction.Right, this.character.getSpeed());
+                  this.character.move(possibleDirections.get(0));
+                }else if(!possibleDirections.isEmpty()){
+                Random rand = new Random();
+                int randomNum = rand.nextInt(possibleDirections.size()) + 0;
+                this.character.move(possibleDirections.get(randomNum));
+                }
+               
+                
+                
             }
         }
     }
@@ -291,7 +325,7 @@ public class Bot {
             }
             if (P.getX() == X && P.getY() == Y + 1 && D != Direction.Up ) {
                 if (this.isVisible(X, Y + 1)) {
-                    if (P.getObjects().size()!=0){
+                    if (!P.getObjects().isEmpty()){
                         for (Object O : P.getObjects()) {
                             if ((O instanceof Ballista)==false && (O instanceof Obstacle)==false) {
                                 for(Position Pos : this.getMovableGrid(X, Y + 1, grid,Direction.Down)){

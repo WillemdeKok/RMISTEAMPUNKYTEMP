@@ -5,6 +5,7 @@
  */
 package Application;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -12,7 +13,7 @@ import java.util.ArrayList;
  * <p>
  * @author Melanie
  */
-public class Obstacle extends Object {
+public class Obstacle extends Object implements Serializable {
 
     //************************datavelden*************************************
     private final int interfaceID;

@@ -5,11 +5,13 @@
  */
 package Application;
 
+import java.io.Serializable;
+
 /**
  <p>
  @author Mnesymne
  */
-public enum Direction
+public enum Direction  implements Serializable
 {
     Up, Down, Right, Left,
 

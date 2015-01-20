@@ -5,6 +5,7 @@
  */
 package Application;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
  <p>
  @author Cyril
  */
-public class Position
+public class Position implements Serializable
 {
     private int x;
     private int y;
