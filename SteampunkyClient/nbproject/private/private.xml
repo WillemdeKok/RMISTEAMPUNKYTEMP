@@ -12,8 +12,15 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Melanie/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyClient/src/Application/User.java</file>
-            <file>file:/C:/Users/Melanie/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyClient/src/Application/GameRoomController.java</file>
+            <file>file:/C:/Users/Willem/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyClient/src/Application/Object.java</file>
+            <file>file:/C:/Users/Willem/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyClient/src/Application/Game.java</file>
+            <file>file:/C:/Users/Willem/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyClient/src/Application/GameRoomController.java</file>
+            <file>file:/C:/Users/Willem/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyClient/src/Application/SteampunkyFX.java</file>
+            <file>file:/C:/Users/Willem/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyClient/src/Application/Character.java</file>
+            <file>file:/C:/Users/Willem/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyClient/src/Application/SteampunkFXControllerlobby.java</file>
+            <file>file:/C:/Users/Willem/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyClient/src/Application/Position.java</file>
+            <file>file:/C:/Users/Willem/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyClient/src/Application/Direction.java</file>
+            <file>file:/C:/Users/Willem/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyClient/src/Application/Lobby.java</file>
         </group>
     </open-files>
 </project-private>
