@@ -176,11 +176,25 @@ public class Bot implements Serializable {
 
             // <editor-fold desc="difficulty 3." defaultstate="collapsed">
             if (difficulty == 3) {
-
+                if (!ballistaDropped()) {
+                    shouldIDropBallista(movableGrid);
+                    List<Direction> threats = getThreats(movableGrid);
+                    if (threats != null) {
+                        Direction dir = MoveFrom(threats, movableGrid);
+                        if (dir != null) {
+                            this.character.move(dir);
+                        }
+                    }
+                    if (getPowerUp(movableGrid)!=null){
+                        this.character.move(getPowerUp(movableGrid));
+                    }
+                }
             }
             // </editor-fold>
         }
     }
+
+    
 
     private boolean isVisible(int X, int Y) {
         int x = this.character.getPosition().getX();
@@ -455,7 +469,7 @@ public class Bot implements Serializable {
         return movable < 2 || neighbour;
     }
 
-    private List<Direction> flee(List<Position> movableGrid) {
+    private List<Direction> getThreats(List<Position> movableGrid) {
         //find threats and set preferred direction
         List<Direction> threatPositions = new ArrayList<>();
         int X = this.character.getPositionX();
@@ -542,27 +556,86 @@ public class Bot implements Serializable {
                 return availableDirections.get(randomNum);
             }
         } else {
-            List<Position> Route = getFleeRoute(availableDirections, movableGrid);
+            return getFleeRoute(availableDirections, movableGrid);
         }
-
         return null;
     }
 
-    private List<Position> getFleeRoute(List<Direction> Directions, List<Position> grid) {
+    private Direction getFleeRoute(List<Direction> Directions, List<Position> grid) {
         int X = this.character.getPositionX();
         int Y = this.character.getPositionY();
-        for (int i=0;i<4;i++)
-        {
-            for(Direction D : Directions){
-                if (D==Direction.Up){
-                    for(Position P : grid){
-                        if((P.getX() == X+1 || P.getX() == X-1) && P.getY()== Y+i ){
-                            
+        for (int i = 0; i < 4; i++) {
+            for (Direction D : Directions) {
+                if (D == Direction.Up) {
+                    for (Position P : grid) {
+                        if ((P.getX() == X + 1 || P.getX() == X - 1) && P.getY() == Y + i) {
+                            return Direction.Up;
                         }
                     }
+                }
+                if (D == Direction.Down) {
+                    for (Position P : grid) {
+                        if ((P.getX() == X + 1 || P.getX() == X - 1) && P.getY() == Y - i) {
+                            return Direction.Down;
+                        }
+                    }
+                }
+                if (D == Direction.Right) {
+                    for (Position P : grid) {
+                        if ((P.getY() == Y + 1 || P.getY() == Y - 1) && P.getX() == X + i) {
+                            return Direction.Right;
+                        }
+                    }
+                }
+                if (D == Direction.Left) {
+                    for (Position P : grid) {
+                        if ((P.getY() == Y + 1 || P.getY() == Y - 1) && P.getX() == X - i) {
+                            return Direction.Left;
+                        }
+                    }
+
                 }
             }
         }
         return null;
     }
+    
+    private Direction getPowerUp(List<Position> movableGrid){
+        int X = this.character.getPositionX();
+        int Y = this.character.getPositionY();
+    
+        for (int i = 0; i <= this.character.getTorchRange(); i++) {
+            if (!this.game.getPosition(X + i, Y).getObjects().isEmpty() && movableGrid.contains(this.game.getPosition(X + i, Y))) {
+                for (Object O : this.game.getPosition(X + i, Y).getObjects()) {
+                    if (O instanceof PowerUp) {
+                        return Direction.Right;
+                    }
+                }
+            }
+            if (!this.game.getPosition(X - i, Y).getObjects().isEmpty() && movableGrid.contains(this.game.getPosition(X - i, Y))) {
+                for (Object O : this.game.getPosition(X - i, Y).getObjects()) {
+                    if (O instanceof  PowerUp) {
+                        return Direction.Left;
+                    }
+                }
+            }
+            if (!this.game.getPosition(X, Y + i).getObjects().isEmpty() && movableGrid.contains(this.game.getPosition(X, Y + i))) {
+                for (Object O : this.game.getPosition(X, Y + i).getObjects()) {
+                    if (O instanceof  PowerUp) {
+                        return Direction.Up;
+                    }
+                }
+            }
+            if (!this.game.getPosition(X, Y - i).getObjects().isEmpty() && movableGrid.contains(this.game.getPosition(X, Y - i))) {
+                for (Object O : this.game.getPosition(X, Y - i).getObjects()) {
+                    if (O instanceof  PowerUp) {
+                        return Direction.Down;
+                    }
+                }
+            }
+        
+        }
+        return null;
+    }
+    
 }
