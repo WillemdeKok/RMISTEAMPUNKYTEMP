@@ -34,8 +34,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import Application.Client;
-import Application.SteampunkyFX;
 import images.ImageSelector;
 import java.rmi.RemoteException;
 import java.util.Random;

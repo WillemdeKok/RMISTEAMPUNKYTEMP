@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  *
  * @author Melanie
  */
-public class Game {
+public class Game implements IGame{
 
     //************************datavelden*************************************
     private int heightPixels;
@@ -51,6 +51,7 @@ public class Game {
      * @param timelimit The max amount of time a game can last in seconds.
      * @param botDifficulty The difficulty of the bots.
      * @param rounds The number of rounds that can be played.
+     * @param level
      */
     public Game(int height, int width, double timelimit, int botDifficulty, int rounds, int level) {
         if ((height % 2 == 1 && width % 2 == 1) && (height >= 9 && width >= 9)) {
@@ -109,6 +110,7 @@ public class Game {
      *
      * @return height in pixels
      */
+    @Override
     public int getHeightPixels() {
         return this.heightPixels;
     }
@@ -118,6 +120,7 @@ public class Game {
      *
      * @return height in cubes
      */
+    @Override
     public int getHeightCubes() {
         return this.heightCubes;
     }
@@ -127,6 +130,7 @@ public class Game {
      *
      * @return width in pixels
      */
+    @Override
     public int getWidthPixels() {
         return this.widthPixels;
     }
@@ -136,6 +140,7 @@ public class Game {
      *
      * @return width in cubes
      */
+    @Override
     public int getWidthCubes() {
         return this.widthCubes;
     }
@@ -189,6 +194,7 @@ public class Game {
      *
      * @return an int representing the difficulty level of the bots
      */
+    @Override
     public int getBotDifficulty() {
         return this.botDifficulty;
     }
@@ -198,6 +204,7 @@ public class Game {
      *
      * @return an int with the amount of rounds
      */
+    @Override
     public int getTotalRounds() {
         return this.totalRounds;
     }
@@ -207,6 +214,7 @@ public class Game {
      *
      * @return an int with the value of current round
      */
+    @Override
     public int getCurrentRound() {
         return this.currentRound;
     }
@@ -216,6 +224,7 @@ public class Game {
      *
      * @return a double with the value of the maximum time per round
      */
+    @Override
     public double getTotalTime() {
         return this.totalTime;
     }
@@ -225,6 +234,7 @@ public class Game {
      *
      * @return a double with the value of the current time
      */
+    @Override
     public double getCurrentTime() {
         return this.currentTime;
     }
@@ -247,6 +257,7 @@ public class Game {
      *
      * @return current level
      */
+    @Override
     public int getCurrentLevel() {
         return this.currentLevel;
     }
@@ -256,6 +267,7 @@ public class Game {
      *
      * @return if game ended
      */
+    @Override
     public boolean getGameEnd() {
         return this.gameEnd;
     }
@@ -266,6 +278,7 @@ public class Game {
      * @param difficulty The difficuly of the bots
      * @return a boolean whether raising or lowering difficulty was succesfull
      */
+    @Override
     public boolean setBotDifficulty(int difficulty) {
         this.botDifficulty = difficulty;
 
@@ -278,6 +291,7 @@ public class Game {
      *
      * @param player
      */
+    @Override
     public void addPlayer(IUser player) {
         this.players.add(player);
     }
@@ -397,6 +411,7 @@ public class Game {
         return boxes;
     }
 
+    @Override
     public boolean placeFillupBoxes() {
         int round;
         int maxRounds = 0;
@@ -466,6 +481,7 @@ public class Game {
      *
      * @return if powerup is placed
      */
+    @Override
     public boolean placeRandomPowerup() {
         Random rX = new Random();
         int col = rX.nextInt(this.widthCubes) + 1;
@@ -507,6 +523,7 @@ public class Game {
      * @param perc 0 < perc < 1
      * @return random boolean
      */
+    @Override
     public boolean getRandomBool(double perc) {
         if (perc > 0 && perc < 1) {
             Random r = new Random();
@@ -532,6 +549,7 @@ public class Game {
     /**
      * Setter of current time in seconds
      */
+    @Override
     public void setCurrentTime() {
         this.currentTime++;
     }
@@ -541,6 +559,7 @@ public class Game {
      *
      * @return If total game is ended, so when there are no more rounds
      */
+    @Override
     public boolean setGameEnd() {
         this.gameEnd = true;
 
@@ -556,6 +575,7 @@ public class Game {
     /**
      * Start round of game
      */
+    @Override
     public void startRound() {
         /**
          * this creates positions and puts them in the grid.
@@ -574,6 +594,7 @@ public class Game {
     /**
      * Update method of the game
      */
+    @Override
     public void updateGame() {
         this.objects.clear();
         List<Character> tempCharacters = new ArrayList();
@@ -655,6 +676,7 @@ public class Game {
     /**
      * Setup at begin of the game
      */
+    @Override
     public void setupGame() {
         String[] namen = new String[4];
         namen[0] = "Hans";
@@ -728,6 +750,7 @@ public class Game {
     /**
      * Setup at begin of new level
      */
+    @Override
     public void setupLevel() {
         this.objects.clear();
 
@@ -762,6 +785,7 @@ public class Game {
         });
     }
     
+    @Override
     public ArrayList<String[]> GetInformation() {
         ArrayList<String[]> information = new ArrayList();
         
