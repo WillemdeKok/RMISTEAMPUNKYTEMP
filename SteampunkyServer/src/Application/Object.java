@@ -179,8 +179,8 @@ public abstract class Object implements Serializable{
         if (this.myGame.getPosition(posX, posY) != null) {
             if (!this.myGame.getObjectsFromGrid(posX, posY).isEmpty()) {
                 List<Object> objects = this.myGame.getObjectsFromGrid(posX, posY);
-                //if this is a Character
-                if (this instanceof Character) {
+                //if this is a CharacterPlayer
+                if (this instanceof CharacterPlayer) {
                     //for every object on the desired position
                     for (Object O : objects) {
                         //if the Object is a Projectile
@@ -228,8 +228,8 @@ public abstract class Object implements Serializable{
     }
 
     public void RemoveFromGame() {
-        if (this instanceof Character) {
-            Character C = (Character) this;
+        if (this instanceof CharacterPlayer) {
+            CharacterPlayer C = (CharacterPlayer) this;
             C.setDead(true);
         } else if (this instanceof Obstacle) {
             Obstacle O = (Obstacle) this;
@@ -241,8 +241,8 @@ public abstract class Object implements Serializable{
     }
 
     private void PickUp(String type) {
-        if (this instanceof Character) {
-            Character c = (Character) this;
+        if (this instanceof CharacterPlayer) {
+            CharacterPlayer c = (CharacterPlayer) this;
             int t;
             if (type.equals("Torch")) {
                 t = c.getTorchRange();

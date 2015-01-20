@@ -26,7 +26,7 @@ public class User extends UnicastRemoteObject implements IUser
     private int wins;
     private int losses;
     //relaties
-    private Character character;
+    private CharacterPlayer character;
     private Lobby currentLobby;
 
     //***********************constructoren***********************************
@@ -129,8 +129,8 @@ public class User extends UnicastRemoteObject implements IUser
         return this.character;
     }
     
-    //@Override
-    public void setCharacter(Character c) throws RemoteException
+    @Override
+    public void setCharacter(CharacterPlayer c) throws RemoteException
     {
         this.character = c;
     }

@@ -23,6 +23,7 @@ public class Ballista extends Object implements Serializable {
     private int shots;
     private int shotsShot;
     private double projectileSpeed;
+    private int delay;
 
     /**
      * The constructor of the Object Ballista, when this object is made a number
@@ -61,14 +62,16 @@ public class Ballista extends Object implements Serializable {
                 this.shots = shots;
                 this.shotsShot = 0;
                 this.projectileSpeed = projectileSpeed;
+                this.delay = 3000;
 
                 Timer ProjectileTimer = new Timer();
                 ProjectileTimer.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        shootProjectile();
-                    }
-                }, 2000
+                        System.out.println("JAP");
+                            shootProjectile();
+                        }
+                }, delay
                 );
 
                 //While # of shots fired is less then maxNumber of shots, continues through loop
@@ -78,21 +81,11 @@ public class Ballista extends Object implements Serializable {
     }
 
     private void shootProjectile() {
-        while (shotsShot < shots) {
-            if (direction == Direction.Up || this.direction == Direction.Down) {
-                createProjectile(Direction.Up);
-                createProjectile(Direction.Down);
-                createProjectile(Direction.Left);
-                createProjectile(Direction.Right);
-                shotsShot += 4;
-            } else {
-                createProjectile(Direction.Left);
-                createProjectile(Direction.Right);
-                createProjectile(Direction.Up);
-                createProjectile(Direction.Down);
-                shotsShot += 4;
-            }
-        }
+        createProjectile(Direction.Up);
+        createProjectile(Direction.Down);
+        createProjectile(Direction.Left);
+        createProjectile(Direction.Right);
+        shotsShot += 4;
     }
 
     //**********************methoden****************************************
@@ -108,6 +101,10 @@ public class Ballista extends Object implements Serializable {
     public String getType() {
         return this.ballistaType;
     }
+    
+    public int getShotsFired() {
+        return this.shotsShot;
+    }
 
     /**
      * The getter of shots.
@@ -118,6 +115,8 @@ public class Ballista extends Object implements Serializable {
     public int getShots() {
         return this.shots;
     }
+    
+    
 
     /**
      * An Method that creates a projectile with the given direction.

@@ -419,7 +419,18 @@ public class GameRoomController implements Initializable {
     
     //Sets up the settings needed to draw.
     public void SetupDraw(){
-        
+        //
+        //
+        //
+        //
+        //
+        //      HIER VERANDER JE DE BOTDIFFICULTY
+        //
+        //
+        //
+        //
+        //
+        //
         //Teken code hier aan toevoegen
         //Moeten groter zijn dan 9; melding?!
         int width = Integer.parseInt(this.CBlevelsizeWidth.getValue().toString());
@@ -547,14 +558,14 @@ public class GameRoomController implements Initializable {
 
     public void GameUpdate()
     {
-        this.gameTickTimer = new Timer();        
+        this.gameTickTimer = new Timer();  
+        System.out.println("Fail");
         //Level opnieuw uittekenen met nieuwe posities      
        
         //Geeft momenteel ConcurrentModificationException error
         // Maar deze timer zou dus voor updaten moeten zijn.
         
-        this.gameTickTimer.scheduleAtFixedRate(new TimerTask()
-        {
+        this.gameTickTimer.scheduleAtFixedRate(new TimerTask() {
             
             @Override
             public void run()
@@ -569,16 +580,12 @@ public class GameRoomController implements Initializable {
                     catch(NullPointerException | RemoteException ex)
                     {
                         ex.printStackTrace();
-                    }
-                    
-                });
-                
-            }
-           
+                    }                    
+                });                
+            }           
         },500,500);
-            
     }
-
+            
     //Initialiseert de combo boxen
     public void InitCombos() {
         this.LBSpectators.getItems().clear();

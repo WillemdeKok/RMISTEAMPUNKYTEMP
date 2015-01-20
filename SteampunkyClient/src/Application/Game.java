@@ -41,7 +41,7 @@ public class Game implements IGame, Serializable{
     private ArrayList<Object> objects;
     private ArrayList<IUser> players;
     private ArrayList<Bot> bots;
-    private ArrayList<Character> characters;
+    private ArrayList<CharacterPlayer> characters;
 
     //***********************constructoren***********************************
     /**
@@ -243,7 +243,7 @@ public class Game implements IGame, Serializable{
     /**
      * Getter of Characters
      *
-     * @return a list of objects with the type Character
+     * @return a list of objects with the type CharacterPlayer
      */
     public ArrayList<Object> getObjects() {
         return this.objects;
@@ -598,7 +598,7 @@ public class Game implements IGame, Serializable{
     @Override
     public synchronized void updateGame() {
         this.objects.clear();
-        ArrayList<Character> tempCharacters = new ArrayList();
+        ArrayList<CharacterPlayer> tempCharacters = new ArrayList();
         ArrayList<Projectile> tempProjectiles = new ArrayList();
         ArrayList<PowerUp> tempPowerUps = new ArrayList();
 
@@ -609,8 +609,8 @@ public class Game implements IGame, Serializable{
                 }
                 return o;
             }).map((o) -> {
-                if (o instanceof Character && !tempCharacters.contains((Character) o)) {
-                    tempCharacters.add((Character) o);
+                if (o instanceof CharacterPlayer && !tempCharacters.contains((CharacterPlayer) o)) {
+                    tempCharacters.add((CharacterPlayer) o);
                 }
                 return o;
             }).map((o) -> {
@@ -704,7 +704,7 @@ public class Game implements IGame, Serializable{
 
         //Add character to player
         for (IUser p : this.players) {
-            Character c = new Character(1, false, 1, 3, positions[i], true, true, directions[i], this);
+            CharacterPlayer c = new CharacterPlayer(1, false, 1, 3, positions[i], true, true, directions[i], this);
             try {
                 p.setCharacter(c);
             } catch (RemoteException ex) {
@@ -723,7 +723,7 @@ public class Game implements IGame, Serializable{
                 Bot b = new Bot(namen[k], this.botDifficulty, this);
                 this.bots.add(b);
 
-                Character c = new Character(1, false, 1, 3, positions[k], true, true, directions[k], this);
+                CharacterPlayer c = new CharacterPlayer(1, false, 1, 3, positions[k], true, true, directions[k], this);
                 b.setCharacter(c);
                 this.objects.add(c);
             }
@@ -770,7 +770,7 @@ public class Game implements IGame, Serializable{
         int i = 0;
 
         //reset position of characters
-        for (Character c : this.characters) {
+        for (CharacterPlayer c : this.characters) {
             c.setPosition(positions[i]);
             c.setDirection(directions[i]);
             i++;
@@ -796,7 +796,7 @@ public class Game implements IGame, Serializable{
             for (Object o : TempObjects) {
                 String[] objectinfo = new String[5];
 
-                if (o instanceof Character) {
+                if (o instanceof CharacterPlayer) {
                     objectinfo[0] = "1";
                 } else if (o instanceof Obstacle) {
                     objectinfo[0] = "2";

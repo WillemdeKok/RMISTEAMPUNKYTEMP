@@ -20,7 +20,7 @@ public class Bot implements Serializable {
     private int nextBotID = 1;
     private final String name;
     private int difficulty;
-    private Character character;
+    private CharacterPlayer character;
     private final Game game;
 
     //***********************constructoren***********************************
@@ -67,7 +67,7 @@ public class Bot implements Serializable {
         return this.difficulty;
     }
 
-    public Character getCharacter() {
+    public CharacterPlayer getCharacter() {
         return this.character;
     }
 
@@ -80,7 +80,7 @@ public class Bot implements Serializable {
         this.difficulty = difficulty;
     }
 
-    public void setCharacter(Character character) {
+    public void setCharacter(CharacterPlayer character) {
         this.character = character;
     }
 
@@ -320,7 +320,7 @@ public class Bot implements Serializable {
             if (P.getX() == X && P.getY() == Y + 1) {
                 if (!P.getObjects().isEmpty()) {
                     for (Object O : P.getObjects()) {
-                        if (O instanceof Character) {
+                        if (O instanceof CharacterPlayer) {
                             neighbour = true;
                         }
                     }
@@ -331,7 +331,7 @@ public class Bot implements Serializable {
                 movable++;
                 if (!P.getObjects().isEmpty()) {
                     for (Object O : P.getObjects()) {
-                        if (O instanceof Character) {
+                        if (O instanceof CharacterPlayer) {
                             neighbour = true;
                         }
                     }
@@ -341,7 +341,7 @@ public class Bot implements Serializable {
                 movable++;
                 if (!P.getObjects().isEmpty()) {
                     for (Object O : P.getObjects()) {
-                        if (O instanceof Character) {
+                        if (O instanceof CharacterPlayer) {
                             neighbour = true;
                         }
                     }
@@ -351,7 +351,7 @@ public class Bot implements Serializable {
                 movable++;
                 if (!P.getObjects().isEmpty()) {
                     for (Object O : P.getObjects()) {
-                        if (O instanceof Character) {
+                        if (O instanceof CharacterPlayer) {
                             neighbour = true;
                         }
                     }
