@@ -790,7 +790,7 @@ public class Game implements IGame, Serializable{
             ArrayList<Object> TempObjects = this.getObjectsFromGrid(p.getX(), p.getY());
 		
             for (Object o : TempObjects) {
-                String[] objectinfo = new String[4];
+                String[] objectinfo = new String[5];
 
                 if (o instanceof Character) {
                     objectinfo[0] = "1";
