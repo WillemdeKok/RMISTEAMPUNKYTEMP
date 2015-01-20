@@ -21,4 +21,5 @@ public interface IUser extends Remote {
     public void setPassword(String password) throws RemoteException;
     public void setRating(int rating) throws RemoteException;
     public boolean checkPassword(String password) throws RemoteException;
+    public void setCharacter(Character c) throws RemoteException;
 }

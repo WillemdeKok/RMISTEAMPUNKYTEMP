@@ -18,7 +18,7 @@ public class Position implements Serializable
 {
     private int x;
     private int y;
-    private List<Object> objects;
+    private ArrayList<Object> objects;
 
     /**
      The Constructor of Position
@@ -58,9 +58,9 @@ public class Position implements Serializable
      <p>
      @return a list of objects in this instance
      */
-    public List<Object> getObjects()
+    public ArrayList<Object> getObjects()
     {
-        return Collections.unmodifiableList(objects);
+        return this.objects;
     }
 
     /**

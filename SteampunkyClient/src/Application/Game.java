@@ -5,6 +5,7 @@
  */
 package Application;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.logging.Level;
@@ -14,7 +15,7 @@ import java.util.logging.Logger;
  *
  * @author Melanie
  */
-public class Game implements IGame{
+public class Game implements IGame, Serializable{
 
     //************************datavelden*************************************
     private int heightPixels;
@@ -36,11 +37,11 @@ public class Game implements IGame{
     private double boxStartTime;
     private boolean fillUp;
 
-    private List<Position> grid;
-    private List<Object> objects;
-    private List<IUser> players;
-    private List<Bot> bots;
-    private List<Character> characters;
+    private ArrayList<Position> grid;
+    private ArrayList<Object> objects;
+    private ArrayList<IUser> players;
+    private ArrayList<Bot> bots;
+    private ArrayList<Character> characters;
 
     //***********************constructoren***********************************
     /**
@@ -153,7 +154,7 @@ public class Game implements IGame{
      * @return the list of objects on the position(x,y), if there are no objects
      * returns null.
      */
-    public List<Object> getObjectsFromGrid(int x, int y) {
+    public ArrayList<Object> getObjectsFromGrid(int x, int y) {
         for (Position p : grid) {
             if (p.getX() == x && p.getY() == y) {
                 return p.getObjects();
@@ -185,7 +186,7 @@ public class Game implements IGame{
      *
      * @return grid; list of positions
      */
-    public List<Position> getGrid() {
+    public ArrayList<Position> getGrid() {
         return this.grid;
     }
 
@@ -244,7 +245,7 @@ public class Game implements IGame{
      *
      * @return a list of objects with the type Character
      */
-    public List<Object> getObjects() {
+    public ArrayList<Object> getObjects() {
         return this.objects;
     }
 
@@ -310,9 +311,9 @@ public class Game implements IGame{
      *
      * @return list of cubes
      */
-    public List<Object> getCubes() {
+    public ArrayList<Object> getCubes() {
         //field op positie 200x200 pixels
-        List<Object> cubes = new ArrayList<>();
+        ArrayList<Object> cubes = new ArrayList<>();
         int row = 2;
         int col = 2;
 
@@ -338,8 +339,8 @@ public class Game implements IGame{
      *
      * @return list of boxes
      */
-    public List<Object> getBoxes() {
-        List<Object> boxes = new ArrayList<>();
+    public ArrayList<Object> getBoxes() {
+        ArrayList<Object> boxes = new ArrayList<>();
         int row = 1;
         int col = 1;
 
@@ -597,9 +598,9 @@ public class Game implements IGame{
     @Override
     public void updateGame() {
         this.objects.clear();
-        List<Character> tempCharacters = new ArrayList();
-        List<Projectile> tempProjectiles = new ArrayList();
-        List<PowerUp> tempPowerUps = new ArrayList();
+        ArrayList<Character> tempCharacters = new ArrayList();
+        ArrayList<Projectile> tempProjectiles = new ArrayList();
+        ArrayList<PowerUp> tempPowerUps = new ArrayList();
 
         this.grid.stream().forEach((p) -> {
             p.getObjects().stream().map((o) -> {
@@ -704,11 +705,7 @@ public class Game implements IGame{
         //Add character to player
         for (IUser p : this.players) {
             Character c = new Character(1, false, 1, 3, positions[i], true, true, directions[i], this);
-            try {
-                p.setCharacter(c);
-            } catch (RemoteException ex) {
-                Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            //
             this.characters.add(c);
             this.objects.add(c);
             i++;
@@ -790,7 +787,7 @@ public class Game implements IGame{
         ArrayList<String[]> information = new ArrayList();
         
 	for (Position p : grid) {
-            List<Object> TempObjects = this.getObjectsFromGrid(p.getX(), p.getY());
+            ArrayList<Object> TempObjects = this.getObjectsFromGrid(p.getX(), p.getY());
 		
             for (Object o : TempObjects) {
                 String[] objectinfo = new String[4];
