@@ -205,15 +205,11 @@ public class Character extends Object implements Serializable{
             this.ballistas.add(newBallista);
             Position p = super.getPosition();
             p.addObject(newBallista);
-            Timer t = new Timer();
-            t.schedule(new TimerTask() {
-
-                @Override
-                public void run() {
+            if(newBallista.getShots() == newBallista.getShotsFire())
+            {
                     p.removeObject(newBallista);
                     ballistas.remove(newBallista);
-                }
-            }, 3000);
+            }
         }
     }
 
