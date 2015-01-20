@@ -596,7 +596,7 @@ public class Game implements IGame, Serializable{
      * Update method of the game
      */
     @Override
-    public void updateGame() {
+    public synchronized void updateGame() {
         this.objects.clear();
         ArrayList<Character> tempCharacters = new ArrayList();
         ArrayList<Projectile> tempProjectiles = new ArrayList();
@@ -807,7 +807,15 @@ public class Game implements IGame, Serializable{
                 objectinfo[1] = o.getObjectType();
                 objectinfo[2] = o.getPosition().getX() + "";
                 objectinfo[3] = o.getPosition().getY() + "";
-                objectinfo[4] = o.getDirection().name() + "";
+                
+                if (o.getDirection() != null)
+                {
+                    objectinfo[4] = o.getDirection().name() + "";
+                }
+                else
+                {
+                    objectinfo[4] = Direction.Up.name() + "";
+                }
                 
                 information.add(objectinfo);
             }
