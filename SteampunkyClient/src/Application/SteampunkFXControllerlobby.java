@@ -92,7 +92,8 @@ public class SteampunkFXControllerlobby implements Initializable {
     }
 
     public void JoinLobbyFromLV(Event evt) {
-        String s = (String) this.CBjoinlobby.getSelectionModel().getSelectedItem();
+        System.out.println("Event triggered");
+        String s = this.Lblobby.getSelectionModel().getSelectedItem().toString();
         System.out.println(s);
         try {
             for (ILobby l : this.ServerMock.getLobbies()) {

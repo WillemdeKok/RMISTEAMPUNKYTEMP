@@ -5,6 +5,7 @@
  */
 package Application;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,11 +14,11 @@ import java.util.List;
  <p>
  @author Cyril
  */
-public class Position
+public class Position implements Serializable
 {
     private int x;
     private int y;
-    private List<Object> objects;
+    private ArrayList<Object> objects;
 
     /**
      The Constructor of Position
@@ -57,9 +58,9 @@ public class Position
      <p>
      @return a list of objects in this instance
      */
-    public List<Object> getObjects()
+    public ArrayList<Object> getObjects()
     {
-        return Collections.unmodifiableList(objects);
+        return this.objects;
     }
 
     /**

@@ -13,7 +13,7 @@ import java.util.*;
  * <p>
  * @author Linda
  */
-public class Character extends Object implements Serializable{
+public class Character extends Object implements Serializable, ICharacter{
 
     //************************datavelden*************************************
     private int characterID;
@@ -205,11 +205,15 @@ public class Character extends Object implements Serializable{
             this.ballistas.add(newBallista);
             Position p = super.getPosition();
             p.addObject(newBallista);
-            if(newBallista.getShots() == newBallista.getShotsFire())
-            {
+            Timer t = new Timer();
+            t.schedule(new TimerTask() {
+
+                @Override
+                public void run() {
                     p.removeObject(newBallista);
                     ballistas.remove(newBallista);
-            }
+                }
+            }, 3000);
         }
     }
 

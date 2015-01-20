@@ -5,11 +5,13 @@
  */
 package Application;
 
+import java.io.Serializable;
+
 /**
  * <p>
  * @author Melanie
  */
-public class PowerUp extends Object {
+public class PowerUp extends Object implements Serializable {
 
     //************************datavelden*************************************
     private int powerUpID;

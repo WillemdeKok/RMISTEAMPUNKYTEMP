@@ -5,14 +5,9 @@
  */
 package Application;
 
-import java.io.Serializable;
-
 /**
- <p>
- @author Mnesymne
+ *
+ * @author Willem
  */
-public enum Direction  implements Serializable
-{
-    Up, Down, Right, Left,
-
+public interface ICharacter {
 }

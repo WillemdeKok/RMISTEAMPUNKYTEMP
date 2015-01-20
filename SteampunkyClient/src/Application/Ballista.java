@@ -5,24 +5,22 @@
  */
 package Application;
 
+import java.io.Serializable;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * OK
  * <p>
  * @author Nick van der Mullen
  */
-public class Ballista extends Object {
+public class Ballista extends Object implements Serializable {
 
     //************************datavelden*************************************
     private int ballistaID;
     private Direction direction;
     private String ballistaType;
     private int shots;
-    private int waitTime;
     private int shotsShot;
     private double projectileSpeed;
 
@@ -56,7 +54,7 @@ public class Ballista extends Object {
         if (type != null) {
             //Check if type isn't empty
             if (!type.isEmpty()) {
-                this.waitTime = 2000;
+
                 this.ballistaID = super.getInterfaceID();
                 this.ballistaType = type;
                 this.direction = direction;
@@ -68,13 +66,9 @@ public class Ballista extends Object {
                 ProjectileTimer.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        
-                        while (shotsShot < shots) {
                         shootProjectile();
-                        waitTime -= 1000;
-                        }
                     }
-                }, waitTime
+                }, 2000
                 );
 
                 //While # of shots fired is less then maxNumber of shots, continues through loop
@@ -84,11 +78,21 @@ public class Ballista extends Object {
     }
 
     private void shootProjectile() {
+        while (shotsShot < shots) {
+            if (direction == Direction.Up || this.direction == Direction.Down) {
                 createProjectile(Direction.Up);
                 createProjectile(Direction.Down);
                 createProjectile(Direction.Left);
                 createProjectile(Direction.Right);
                 shotsShot += 4;
+            } else {
+                createProjectile(Direction.Left);
+                createProjectile(Direction.Right);
+                createProjectile(Direction.Up);
+                createProjectile(Direction.Down);
+                shotsShot += 4;
+            }
+        }
     }
 
     //**********************methoden****************************************
@@ -113,11 +117,6 @@ public class Ballista extends Object {
      */
     public int getShots() {
         return this.shots;
-    }
-    
-    public int getShotsFire()
-    {
-        return this.shotsShot;
     }
 
     /**

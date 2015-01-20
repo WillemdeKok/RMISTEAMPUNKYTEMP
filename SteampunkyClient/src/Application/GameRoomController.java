@@ -34,8 +34,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import Application.Client;
-import Application.SteampunkyFX;
 import images.ImageSelector;
 import java.rmi.RemoteException;
 import java.util.Random;
@@ -271,7 +269,8 @@ public class GameRoomController implements Initializable {
             level = levelInt.nextInt(3) + 1;
             
             this.SetupDraw();
-            this.setKeyBindings();                   
+            this.setKeyBindings();  
+            GameUpdate();
         }
     }
     //clears the scene and draws new boxes for every object.
@@ -450,11 +449,11 @@ public class GameRoomController implements Initializable {
         box = new AnchorPane();
         s1.setContent(box);
 
-        this.field = new Rectangle(this.widthPixels, this.heightPixels);
+        this.field = new Rectangle(this.widthPixels*this.getScale(), this.heightPixels*this.getScale());
         this.field.setFill(Color.GRAY);      
 
-        this.playfield = new Rectangle(100, 100, (this.widthCubes*100), (this.heightCubes*100));
-        this.playfield.setFill(Color.WHITE);
+        this.playfield = new Rectangle(100*this.getScale(), 100*this.getScale(), (this.widthCubes*100*this.getScale()), (this.heightCubes*100*this.getScale()));
+        this.playfield.setFill(Color.WHITE);  
 
         root.getChildren().add(s1);
         this.stage.setMinHeight(900);
@@ -520,7 +519,7 @@ public class GameRoomController implements Initializable {
                 });
             }
         }, 0, 1000);
-        GameUpdate();
+        //GameUpdate();
     }
     
     public void LVupdate() {
@@ -561,7 +560,7 @@ public class GameRoomController implements Initializable {
                     }
                     catch(NullPointerException | RemoteException ex)
                     {
-                    
+                        ex.printStackTrace();
                     }
                     
                 });

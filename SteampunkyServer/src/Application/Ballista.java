@@ -5,6 +5,7 @@
  */
 package Application;
 
+import java.io.Serializable;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -13,7 +14,7 @@ import java.util.TimerTask;
  * <p>
  * @author Nick van der Mullen
  */
-public class Ballista extends Object {
+public class Ballista extends Object implements Serializable {
 
     //************************datavelden*************************************
     private int ballistaID;

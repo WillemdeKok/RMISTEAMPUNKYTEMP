@@ -5,13 +5,14 @@
  */
 package Application;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * <p>
  * @author Melanie
  */
-public abstract class Object {
+public abstract class Object implements Serializable{
     //************************datavelden*************************************
 
     private int interfaceID = 0;

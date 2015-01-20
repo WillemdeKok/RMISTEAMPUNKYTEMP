@@ -5,12 +5,14 @@
  */
 package Application;
 
+import java.io.Serializable;
+
 /**
  * OK
  * <p>
  * @author Nick van der Mullen
  */
-public class Projectile extends Object {
+public class Projectile extends Object implements Serializable{
 
     //************************datavelden*************************************
     private final int projectileID;

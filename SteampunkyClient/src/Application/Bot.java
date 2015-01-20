@@ -5,6 +5,7 @@
  */
 package Application;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -12,7 +13,7 @@ import java.util.*;
  * <p>
  * @author Melanie
  */
-public class Bot {
+public class Bot  implements Serializable{
 
     //************************datavelden*************************************
     private int botID;

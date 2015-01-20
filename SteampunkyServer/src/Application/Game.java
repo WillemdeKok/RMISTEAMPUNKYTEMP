@@ -5,6 +5,7 @@
  */
 package Application;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.logging.Level;
@@ -14,7 +15,7 @@ import java.util.logging.Logger;
  *
  * @author Melanie
  */
-public class Game {
+public class Game implements IGame, Serializable{
 
     //************************datavelden*************************************
     private int heightPixels;
@@ -23,8 +24,8 @@ public class Game {
     private int widthCubes;
 
     private int botDifficulty;
-    private Timer timer;
-    private TimerTask task;
+    private transient Timer timer;
+    private transient TimerTask task;
     private double currentTime;
     private double totalTime;
 
@@ -36,11 +37,11 @@ public class Game {
     private double boxStartTime;
     private boolean fillUp;
 
-    private List<Position> grid;
-    private List<Object> objects;
-    private List<IUser> players;
-    private List<Bot> bots;
-    private List<Character> characters;
+    private ArrayList<Position> grid;
+    private ArrayList<Object> objects;
+    private ArrayList<IUser> players;
+    private ArrayList<Bot> bots;
+    private ArrayList<Character> characters;
 
     //***********************constructoren***********************************
     /**
@@ -51,6 +52,7 @@ public class Game {
      * @param timelimit The max amount of time a game can last in seconds.
      * @param botDifficulty The difficulty of the bots.
      * @param rounds The number of rounds that can be played.
+     * @param level
      */
     public Game(int height, int width, double timelimit, int botDifficulty, int rounds, int level) {
         if ((height % 2 == 1 && width % 2 == 1) && (height >= 9 && width >= 9)) {
@@ -109,6 +111,7 @@ public class Game {
      *
      * @return height in pixels
      */
+    @Override
     public int getHeightPixels() {
         return this.heightPixels;
     }
@@ -118,6 +121,7 @@ public class Game {
      *
      * @return height in cubes
      */
+    @Override
     public int getHeightCubes() {
         return this.heightCubes;
     }
@@ -127,6 +131,7 @@ public class Game {
      *
      * @return width in pixels
      */
+    @Override
     public int getWidthPixels() {
         return this.widthPixels;
     }
@@ -136,6 +141,7 @@ public class Game {
      *
      * @return width in cubes
      */
+    @Override
     public int getWidthCubes() {
         return this.widthCubes;
     }
@@ -148,7 +154,7 @@ public class Game {
      * @return the list of objects on the position(x,y), if there are no objects
      * returns null.
      */
-    public List<Object> getObjectsFromGrid(int x, int y) {
+    public ArrayList<Object> getObjectsFromGrid(int x, int y) {
         for (Position p : grid) {
             if (p.getX() == x && p.getY() == y) {
                 return p.getObjects();
@@ -180,7 +186,7 @@ public class Game {
      *
      * @return grid; list of positions
      */
-    public List<Position> getGrid() {
+    public ArrayList<Position> getGrid() {
         return this.grid;
     }
 
@@ -189,6 +195,7 @@ public class Game {
      *
      * @return an int representing the difficulty level of the bots
      */
+    @Override
     public int getBotDifficulty() {
         return this.botDifficulty;
     }
@@ -198,6 +205,7 @@ public class Game {
      *
      * @return an int with the amount of rounds
      */
+    @Override
     public int getTotalRounds() {
         return this.totalRounds;
     }
@@ -207,6 +215,7 @@ public class Game {
      *
      * @return an int with the value of current round
      */
+    @Override
     public int getCurrentRound() {
         return this.currentRound;
     }
@@ -216,6 +225,7 @@ public class Game {
      *
      * @return a double with the value of the maximum time per round
      */
+    @Override
     public double getTotalTime() {
         return this.totalTime;
     }
@@ -225,6 +235,7 @@ public class Game {
      *
      * @return a double with the value of the current time
      */
+    @Override
     public double getCurrentTime() {
         return this.currentTime;
     }
@@ -234,7 +245,7 @@ public class Game {
      *
      * @return a list of objects with the type Character
      */
-    public List<Object> getObjects() {
+    public ArrayList<Object> getObjects() {
         return this.objects;
     }
 
@@ -247,6 +258,7 @@ public class Game {
      *
      * @return current level
      */
+    @Override
     public int getCurrentLevel() {
         return this.currentLevel;
     }
@@ -256,6 +268,7 @@ public class Game {
      *
      * @return if game ended
      */
+    @Override
     public boolean getGameEnd() {
         return this.gameEnd;
     }
@@ -266,6 +279,7 @@ public class Game {
      * @param difficulty The difficuly of the bots
      * @return a boolean whether raising or lowering difficulty was succesfull
      */
+    @Override
     public boolean setBotDifficulty(int difficulty) {
         this.botDifficulty = difficulty;
 
@@ -278,6 +292,7 @@ public class Game {
      *
      * @param player
      */
+    @Override
     public void addPlayer(IUser player) {
         this.players.add(player);
     }
@@ -296,9 +311,9 @@ public class Game {
      *
      * @return list of cubes
      */
-    public List<Object> getCubes() {
+    public ArrayList<Object> getCubes() {
         //field op positie 200x200 pixels
-        List<Object> cubes = new ArrayList<>();
+        ArrayList<Object> cubes = new ArrayList<>();
         int row = 2;
         int col = 2;
 
@@ -324,8 +339,8 @@ public class Game {
      *
      * @return list of boxes
      */
-    public List<Object> getBoxes() {
-        List<Object> boxes = new ArrayList<>();
+    public ArrayList<Object> getBoxes() {
+        ArrayList<Object> boxes = new ArrayList<>();
         int row = 1;
         int col = 1;
 
@@ -397,6 +412,7 @@ public class Game {
         return boxes;
     }
 
+    @Override
     public boolean placeFillupBoxes() {
         int round;
         int maxRounds = 0;
@@ -466,6 +482,7 @@ public class Game {
      *
      * @return if powerup is placed
      */
+    @Override
     public boolean placeRandomPowerup() {
         Random rX = new Random();
         int col = rX.nextInt(this.widthCubes) + 1;
@@ -507,6 +524,7 @@ public class Game {
      * @param perc 0 < perc < 1
      * @return random boolean
      */
+    @Override
     public boolean getRandomBool(double perc) {
         if (perc > 0 && perc < 1) {
             Random r = new Random();
@@ -532,6 +550,7 @@ public class Game {
     /**
      * Setter of current time in seconds
      */
+    @Override
     public void setCurrentTime() {
         this.currentTime++;
     }
@@ -541,6 +560,7 @@ public class Game {
      *
      * @return If total game is ended, so when there are no more rounds
      */
+    @Override
     public boolean setGameEnd() {
         this.gameEnd = true;
 
@@ -556,6 +576,7 @@ public class Game {
     /**
      * Start round of game
      */
+    @Override
     public void startRound() {
         /**
          * this creates positions and puts them in the grid.
@@ -574,11 +595,12 @@ public class Game {
     /**
      * Update method of the game
      */
-    public void updateGame() {
+    @Override
+    public synchronized void updateGame() {
         this.objects.clear();
-        List<Character> tempCharacters = new ArrayList();
-        List<Projectile> tempProjectiles = new ArrayList();
-        List<PowerUp> tempPowerUps = new ArrayList();
+        ArrayList<Character> tempCharacters = new ArrayList();
+        ArrayList<Projectile> tempProjectiles = new ArrayList();
+        ArrayList<PowerUp> tempPowerUps = new ArrayList();
 
         this.grid.stream().forEach((p) -> {
             p.getObjects().stream().map((o) -> {
@@ -655,6 +677,7 @@ public class Game {
     /**
      * Setup at begin of the game
      */
+    @Override
     public void setupGame() {
         String[] namen = new String[4];
         namen[0] = "Hans";
@@ -728,6 +751,7 @@ public class Game {
     /**
      * Setup at begin of new level
      */
+    @Override
     public void setupLevel() {
         this.objects.clear();
 
@@ -762,14 +786,15 @@ public class Game {
         });
     }
     
+    @Override
     public ArrayList<String[]> GetInformation() {
         ArrayList<String[]> information = new ArrayList();
         
 	for (Position p : grid) {
-            List<Object> TempObjects = this.getObjectsFromGrid(p.getX(), p.getY());
+            ArrayList<Object> TempObjects = this.getObjectsFromGrid(p.getX(), p.getY());
 		
             for (Object o : TempObjects) {
-                String[] objectinfo = new String[4];
+                String[] objectinfo = new String[5];
 
                 if (o instanceof Character) {
                     objectinfo[0] = "1";
@@ -786,7 +811,15 @@ public class Game {
                 objectinfo[1] = o.getObjectType();
                 objectinfo[2] = o.getPosition().getX() + "";
                 objectinfo[3] = o.getPosition().getY() + "";
-                objectinfo[4] = o.getDirection().name() + "";
+                
+                if (o.getDirection() != null)
+                {
+                    objectinfo[4] = o.getDirection().name() + "";
+                }
+                else
+                {
+                    objectinfo[4] = Direction.Up.name() + "";
+                }
                 
                 information.add(objectinfo);
             }
