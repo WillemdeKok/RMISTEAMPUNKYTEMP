@@ -8,31 +8,31 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="610.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="Application.GameRoomController">
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="1048.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="Application.GameRoomController">
   <children>
-    <ListView fx:id="LBSpectators" layoutX="257.0" layoutY="49.0" prefHeight="200.0" prefWidth="127.0" />
-    <ListView fx:id="LBPlayers" layoutX="406.0" layoutY="49.0" prefHeight="200.0" prefWidth="127.0" />
-    <Label id="LblCSS" layoutX="284.0" layoutY="14.0" prefHeight="32.0" prefWidth="101.0" text="Spectators">
+    <ListView fx:id="LBSpectators" layoutX="257.0" layoutY="49.0" prefHeight="200.0" prefWidth="300.0" />
+    <ListView fx:id="LBPlayers" layoutX="650.0" layoutY="50.0" prefHeight="200.0" prefWidth="300.0" />
+    <Label id="LblCSS" layoutX="264.0" layoutY="14.0" prefHeight="32.0" prefWidth="101.0" text="Spectators">
       <font>
         <Font size="15.0" fx:id="x1" />
       </font>
     </Label>
-    <Label id="LblCSS" font="$x1" layoutX="441.0" layoutY="14.0" prefHeight="32.0" prefWidth="79.0" text="Players" />
-    <Button fx:id="BTSpectator" layoutX="257.0" layoutY="268.0" mnemonicParsing="false" onAction="#becomeSpectator" prefHeight="32.0" prefWidth="127.0" text="Become a Spectator" />
-    <Button fx:id="BTPlayer" layoutX="407.0" layoutY="268.0" mnemonicParsing="false" onAction="#becomePlayer" prefHeight="32.0" prefWidth="127.0" text="Become a Player" />
-    <Button fx:id="BTReturn" layoutX="429.0" layoutY="494.0" mnemonicParsing="false" onAction="#ReturnToMenu" text="Return to main menu" />
+    <Label id="LblCSS" font="$x1" layoutX="657.0" layoutY="14.0" prefHeight="32.0" prefWidth="79.0" text="Players" />
+    <Button fx:id="BTSpectator" layoutX="257.0" layoutY="261.0" mnemonicParsing="false" onAction="#becomeSpectator" prefHeight="32.0" prefWidth="127.0" text="Become a Spectator" />
+    <Button fx:id="BTPlayer" layoutX="650.0" layoutY="260.0" mnemonicParsing="false" onAction="#becomePlayer" prefHeight="32.0" prefWidth="127.0" text="Become a Player" />
+    <Button fx:id="BTReturn" layoutX="884.0" layoutY="494.0" mnemonicParsing="false" onAction="#ReturnToMenu" text="Return to main menu" />
     <Label id="LblCSS" fx:id="LBLusername" layoutX="14.0" layoutY="14.0" text="Welcome: UserName" />
-    <Label id="LblCSS" fx:id="LBLRemaining" layoutX="436.0" layoutY="249.0" text="Remaining slots: 4" />
+    <Label id="LblCSS" fx:id="LBLRemaining" layoutX="850.0" layoutY="250.0" text="Remaining slots: 4" />
     <Label id="LblCSS" fx:id="LBLGameState" layoutX="13.0" layoutY="41.0" text="Waiting for players" textFill="BLACK">
       <font>
         <Font size="16.0" />
       </font>
     </Label>
     <Button fx:id="BTReady" layoutX="136.0" layoutY="70.0" mnemonicParsing="false" onAction="#Gameready" text="Ready!" />
-    <Label id="LblCSS" fx:id="LBLPlayer1Status" layoutX="544.0" layoutY="55.0" text="Waiting" />
-    <Label id="LblCSS" fx:id="LBLPlayer2Status" layoutX="545.0" layoutY="77.0" text="Ready" />
-    <Label id="LblCSS" fx:id="LBLPlayer3Status" layoutX="545.0" layoutY="100.0" text="Ready" />
-    <Label id="LblCSS" fx:id="LBLPlayer4Status" layoutX="545.0" layoutY="125.0" text="Ready" />
+    <Label id="LblCSS" fx:id="LBLPlayer1Status" layoutX="958.0" layoutY="56.0" text="Waiting" />
+    <Label id="LblCSS" fx:id="LBLPlayer2Status" layoutX="959.0" layoutY="78.0" text="Ready" />
+    <Label id="LblCSS" fx:id="LBLPlayer3Status" layoutX="959.0" layoutY="101.0" text="Ready" />
+    <Label id="LblCSS" fx:id="LBLPlayer4Status" layoutX="959.0" layoutY="126.0" text="Ready" />
     <Label id="LblCSS" layoutX="16.0" layoutY="74.0" text="Press ready to begin" />
     <ComboBox id="CBlevelsize" fx:id="CBlevelsizeWidth" layoutX="147.0" layoutY="112.0" prefHeight="21.0" prefWidth="79.0">
       <items>
@@ -76,13 +76,13 @@
     </ComboBox>
     <Label fx:id="LBLHeight" layoutX="102.0" layoutY="144.0" text="Height" />
     <Button fx:id="BTstop" layoutX="200.0" layoutY="70.0" mnemonicParsing="false" onAction="#StopGame" text="Stop" />
-    <Label layoutX="16.0" layoutY="260.0" text="Chat:">
+    <Label layoutX="16.0" layoutY="302.0" text="Chat:">
       <font>
         <Font name="System Bold" size="16.0" />
       </font>
     </Label>
-    <ListView fx:id="LVChats" layoutX="14.0" layoutY="284.0" prefHeight="200.0" prefWidth="200.0" />
-    <TextField fx:id="TFChatInsert" layoutX="13.0" layoutY="494.0" prefWidth="199.0" />
-    <Button fx:id="BTNSend" layoutX="217.0" layoutY="494.0" mnemonicParsing="false" text="Send" />
+    <ListView fx:id="LVChats" layoutX="14.0" layoutY="332.0" prefHeight="152.0" prefWidth="482.0" />
+    <TextField fx:id="TFChatInsert" layoutX="13.0" layoutY="494.0" prefWidth="421.0" />
+    <Button fx:id="BTNSend" layoutX="449.0" layoutY="495.0" mnemonicParsing="false" text="Send" />
   </children>
 </AnchorPane>
