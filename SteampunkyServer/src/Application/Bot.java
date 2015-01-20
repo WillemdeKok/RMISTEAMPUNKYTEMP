@@ -177,7 +177,10 @@ public class Bot implements Serializable {
             // <editor-fold desc="difficulty 3." defaultstate="collapsed">
             if (difficulty == 3) {
                 if (!ballistaDropped()) {
-                    shouldIDropBallista(movableGrid);
+                    if(shouldIDropBallista(movableGrid))
+                    {
+                        this.character.createBallista(Direction.Right, this.character.getSpeed());
+                    }
                     List<Direction> threats = getThreats(movableGrid);
                     if (threats != null) {
                         Direction dir = MoveFrom(threats, movableGrid);
@@ -185,7 +188,7 @@ public class Bot implements Serializable {
                             this.character.move(dir);
                         }
                     }
-                    if (getPowerUp(movableGrid)!=null){
+                    if (getPowerUp(movableGrid) != null) {
                         this.character.move(getPowerUp(movableGrid));
                     }
                 }
@@ -193,8 +196,6 @@ public class Bot implements Serializable {
             // </editor-fold>
         }
     }
-
-    
 
     private boolean isVisible(int X, int Y) {
         int x = this.character.getPosition().getX();
@@ -226,115 +227,6 @@ public class Bot implements Serializable {
             }
         }
         return false;
-    }
-
-    private List<Position> getDirectMovableGrid(List<Position> grid) {
-        int x = this.character.getPosition().getX();
-        int y = this.character.getPosition().getY();
-        int t = this.character.getTorchRange();
-        List<Position> tempList = new ArrayList<>();
-        if (this.character.getMove()) {
-            boolean blockUp = false;
-            boolean blockRight = false;
-            boolean blockDown = false;
-            boolean blockLeft = false;
-
-            for (Position P : grid) {
-                boolean breakdown = false;
-                for (int i = 0; i >= t; i++) {
-                    if (P.getX() == x + i && P.getY() == y && !blockRight) {
-                        if (!P.getObjects().isEmpty()) {
-                            for (Object O : P.getObjects()) {
-                                if ((O instanceof Ballista) == false && (O instanceof Obstacle) == false) {
-                                    if (!tempList.contains(P)) {
-                                        tempList.add(P);
-                                        breakdown = true;
-                                    }
-                                }
-                                if (breakdown) {
-                                    break;
-                                }
-                            }
-                        } else {
-                            if (!tempList.contains(P)) {
-                                tempList.add(P);
-                                breakdown = true;
-                            }
-                        }
-                    }
-                    if (breakdown) {
-                        break;
-                    }
-                    if (P.getX() == x - i && P.getY() == y && !blockLeft) {
-                        if (!P.getObjects().isEmpty()) {
-                            for (Object O : P.getObjects()) {
-                                if ((O instanceof Ballista) == false && (O instanceof Obstacle) == false) {
-                                    if (!tempList.contains(P)) {
-                                        tempList.add(P);
-                                        breakdown = true;
-                                    }
-                                }
-                                if (breakdown) {
-                                    break;
-                                }
-                            }
-                        } else {
-                            if (!tempList.contains(P)) {
-                                tempList.add(P);
-                                breakdown = true;
-                            }
-                        }
-                    }
-                    if (breakdown) {
-                        break;
-                    }
-                    if (P.getX() == x && P.getY() == y + i && !blockUp) {
-                        if (!P.getObjects().isEmpty()) {
-                            for (Object O : P.getObjects()) {
-                                if ((O instanceof Ballista) == false && (O instanceof Obstacle) == false) {
-                                    if (!tempList.contains(P)) {
-                                        tempList.add(P);
-                                        breakdown = true;
-                                    }
-                                }
-                                if (breakdown) {
-                                    break;
-                                }
-                            }
-                        } else {
-                            if (!tempList.contains(P)) {
-                                tempList.add(P);
-                                breakdown = true;
-                            }
-                        }
-                    }
-                    if (breakdown) {
-                        break;
-                    }
-                    if (P.getX() == x && P.getY() == y - i && !blockDown) {
-                        if (!P.getObjects().isEmpty()) {
-                            for (Object O : P.getObjects()) {
-                                if ((O instanceof Ballista) == false && (O instanceof Obstacle) == false) {
-                                    if (!tempList.contains(P)) {
-                                        tempList.add(P);
-                                        breakdown = true;
-                                    }
-                                }
-                                if (breakdown) {
-                                    break;
-                                }
-                            }
-                        } else {
-                            if (!tempList.contains(P)) {
-                                tempList.add(P);
-                                breakdown = true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return tempList;
     }
 
     private List<Position> getMovableGrid(int X, int Y, List<Position> grid, Direction D) {
@@ -599,11 +491,11 @@ public class Bot implements Serializable {
         }
         return null;
     }
-    
-    private Direction getPowerUp(List<Position> movableGrid){
+
+    private Direction getPowerUp(List<Position> movableGrid) {
         int X = this.character.getPositionX();
         int Y = this.character.getPositionY();
-    
+
         for (int i = 0; i <= this.character.getTorchRange(); i++) {
             if (!this.game.getPosition(X + i, Y).getObjects().isEmpty() && movableGrid.contains(this.game.getPosition(X + i, Y))) {
                 for (Object O : this.game.getPosition(X + i, Y).getObjects()) {
@@ -614,28 +506,28 @@ public class Bot implements Serializable {
             }
             if (!this.game.getPosition(X - i, Y).getObjects().isEmpty() && movableGrid.contains(this.game.getPosition(X - i, Y))) {
                 for (Object O : this.game.getPosition(X - i, Y).getObjects()) {
-                    if (O instanceof  PowerUp) {
+                    if (O instanceof PowerUp) {
                         return Direction.Left;
                     }
                 }
             }
             if (!this.game.getPosition(X, Y + i).getObjects().isEmpty() && movableGrid.contains(this.game.getPosition(X, Y + i))) {
                 for (Object O : this.game.getPosition(X, Y + i).getObjects()) {
-                    if (O instanceof  PowerUp) {
+                    if (O instanceof PowerUp) {
                         return Direction.Up;
                     }
                 }
             }
             if (!this.game.getPosition(X, Y - i).getObjects().isEmpty() && movableGrid.contains(this.game.getPosition(X, Y - i))) {
                 for (Object O : this.game.getPosition(X, Y - i).getObjects()) {
-                    if (O instanceof  PowerUp) {
+                    if (O instanceof PowerUp) {
                         return Direction.Down;
                     }
                 }
             }
-        
+
         }
         return null;
     }
-    
+
 }
