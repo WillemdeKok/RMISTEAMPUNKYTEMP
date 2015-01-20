@@ -135,6 +135,11 @@ public class User extends UnicastRemoteObject implements IUser
         this.character = c;
     }
     
+    /**
+     The Setter of this Users Password
+     <p>
+     @param password A String which is the new password of this User.
+     */
     @Override
     public void setPassword(String password)
     {
@@ -153,16 +158,6 @@ public class User extends UnicastRemoteObject implements IUser
     }
 
     /**
-     The Setter of this Users Password
-     <p>
-     @param password A String which is the new password of this User.
-     */
-    
-    {
-        this.password = password;
-    }
-
-    /**
      A Method for checking if entered password is this Users password
      <p>
      @param password A String which is the password that has been entered.
@@ -178,6 +173,12 @@ public class User extends UnicastRemoteObject implements IUser
             correct = true;
         }
         return correct;
+    }
+    
+    @Override
+    public void move(Direction d)
+    {
+        this.character.move(d);
     }
     
     @Override
