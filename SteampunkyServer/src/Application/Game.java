@@ -24,8 +24,8 @@ public class Game implements IGame, Serializable{
     private int widthCubes;
 
     private int botDifficulty;
-    private Timer timer;
-    private TimerTask task;
+    private transient Timer timer;
+    private transient TimerTask task;
     private double currentTime;
     private double totalTime;
 
@@ -596,7 +596,7 @@ public class Game implements IGame, Serializable{
      * Update method of the game
      */
     @Override
-    public void updateGame() {
+    public synchronized void updateGame() {
         this.objects.clear();
         ArrayList<Character> tempCharacters = new ArrayList();
         ArrayList<Projectile> tempProjectiles = new ArrayList();
@@ -705,7 +705,11 @@ public class Game implements IGame, Serializable{
         //Add character to player
         for (IUser p : this.players) {
             Character c = new Character(1, false, 1, 3, positions[i], true, true, directions[i], this);
-            //
+            try {
+                p.setCharacter(c);
+            } catch (RemoteException ex) {
+                Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+            }
             this.characters.add(c);
             this.objects.add(c);
             i++;
@@ -807,7 +811,15 @@ public class Game implements IGame, Serializable{
                 objectinfo[1] = o.getObjectType();
                 objectinfo[2] = o.getPosition().getX() + "";
                 objectinfo[3] = o.getPosition().getY() + "";
-                objectinfo[4] = o.getDirection().name() + "";
+                
+                if (o.getDirection() != null)
+                {
+                    objectinfo[4] = o.getDirection().name() + "";
+                }
+                else
+                {
+                    objectinfo[4] = Direction.Up.name() + "";
+                }
                 
                 information.add(objectinfo);
             }
