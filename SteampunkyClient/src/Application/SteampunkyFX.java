@@ -41,6 +41,7 @@ public class SteampunkyFX extends Application {
             this.stage.setTitle("SteamPunky");
             this.stage.setMinWidth(100);
             this.stage.setMinHeight(100);
+            stage.setResizable(false);
             gotoLoginselect();
             
 
@@ -95,7 +96,7 @@ public class SteampunkyFX extends Application {
         if(fxml.equals("LoginProftaak2.fxml"))
         {
             this.stage.setMinWidth(300);
-            this.stage.setMinHeight(268);
+            this.stage.setMinHeight(268);           
             scene = new Scene(page, 300, 268); 
         }
         else if(fxml.equals("Lobby3.fxml"))
