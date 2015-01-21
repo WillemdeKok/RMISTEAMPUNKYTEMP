@@ -321,7 +321,7 @@ public class Bot implements Serializable {
         for (Position P : grid) {
             if (P.getX() == X && P.getY() == Y + 1) {
                 if (!P.getObjects().isEmpty()) {
-                    for (Object O : P.getObjects()) {
+                    for (ObjectForGame O : P.getObjects()) {
                         if (O instanceof CharacterPlayer) {
                             neighbour = true;
                         }
@@ -332,7 +332,7 @@ public class Bot implements Serializable {
             if (P.getX() == X + 1 && P.getY() == Y) {
                 movable++;
                 if (!P.getObjects().isEmpty()) {
-                    for (Object O : P.getObjects()) {
+                    for (ObjectForGame O : P.getObjects()) {
                         if (O instanceof CharacterPlayer) {
                             neighbour = true;
                         }
@@ -342,7 +342,7 @@ public class Bot implements Serializable {
             if (P.getX() == X && P.getY() == Y - 1) {
                 movable++;
                 if (!P.getObjects().isEmpty()) {
-                    for (Object O : P.getObjects()) {
+                    for (ObjectForGame O : P.getObjects()) {
                         if (O instanceof CharacterPlayer) {
                             neighbour = true;
                         }
@@ -352,7 +352,7 @@ public class Bot implements Serializable {
             if (P.getX() == X - 1 && P.getY() == Y) {
                 movable++;
                 if (!P.getObjects().isEmpty()) {
-                    for (Object O : P.getObjects()) {
+                    for (ObjectForGame O : P.getObjects()) {
                         if (O instanceof CharacterPlayer) {
                             neighbour = true;
                         }
@@ -370,28 +370,28 @@ public class Bot implements Serializable {
         int Y = this.character.getPositionY();
         for (int i = 0; i <= this.character.getTorchRange(); i++) {
             if (!this.game.getPosition(X + i, Y).getObjects().isEmpty()) {
-                for (Object O : this.game.getPosition(X + i, Y).getObjects()) {
+                for (ObjectForGame O : this.game.getPosition(X + i, Y).getObjects()) {
                     if (O instanceof Projectile && O.getDirection() == Direction.Left) {
                         threatPositions.add(Direction.Right);
                     }
                 }
             }
             if (!this.game.getPosition(X - i, Y).getObjects().isEmpty()) {
-                for (Object O : this.game.getPosition(X - i, Y).getObjects()) {
+                for (ObjectForGame O : this.game.getPosition(X - i, Y).getObjects()) {
                     if (O instanceof Projectile && O.getDirection() == Direction.Right) {
                         threatPositions.add(Direction.Left);
                     }
                 }
             }
             if (!this.game.getPosition(X, Y + i).getObjects().isEmpty()) {
-                for (Object O : this.game.getPosition(X, Y + i).getObjects()) {
+                for (ObjectForGame O : this.game.getPosition(X, Y + i).getObjects()) {
                     if (O instanceof Projectile && O.getDirection() == Direction.Down) {
                         threatPositions.add(Direction.Up);
                     }
                 }
             }
             if (!this.game.getPosition(X, Y - i).getObjects().isEmpty()) {
-                for (Object O : this.game.getPosition(X, Y - i).getObjects()) {
+                for (ObjectForGame O : this.game.getPosition(X, Y - i).getObjects()) {
                     if (O instanceof Projectile && O.getDirection() == Direction.Up) {
                         threatPositions.add(Direction.Down);
                     }
@@ -500,28 +500,28 @@ public class Bot implements Serializable {
 
         for (int i = 0; i <= this.character.getTorchRange(); i++) {
             if (!this.game.getPosition(X + i, Y).getObjects().isEmpty() && movableGrid.contains(this.game.getPosition(X + i, Y))) {
-                for (Object O : this.game.getPosition(X + i, Y).getObjects()) {
+                for (ObjectForGame O : this.game.getPosition(X + i, Y).getObjects()) {
                     if (O instanceof PowerUp) {
                         return Direction.Right;
                     }
                 }
             }
             if (!this.game.getPosition(X - i, Y).getObjects().isEmpty() && movableGrid.contains(this.game.getPosition(X - i, Y))) {
-                for (Object O : this.game.getPosition(X - i, Y).getObjects()) {
+                for (ObjectForGame O : this.game.getPosition(X - i, Y).getObjects()) {
                     if (O instanceof PowerUp) {
                         return Direction.Left;
                     }
                 }
             }
             if (!this.game.getPosition(X, Y + i).getObjects().isEmpty() && movableGrid.contains(this.game.getPosition(X, Y + i))) {
-                for (Object O : this.game.getPosition(X, Y + i).getObjects()) {
+                for (ObjectForGame O : this.game.getPosition(X, Y + i).getObjects()) {
                     if (O instanceof PowerUp) {
                         return Direction.Up;
                     }
                 }
             }
             if (!this.game.getPosition(X, Y - i).getObjects().isEmpty() && movableGrid.contains(this.game.getPosition(X, Y - i))) {
-                for (Object O : this.game.getPosition(X, Y - i).getObjects()) {
+                for (ObjectForGame O : this.game.getPosition(X, Y - i).getObjects()) {
                     if (O instanceof PowerUp) {
                         return Direction.Down;
                     }

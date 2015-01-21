@@ -13,7 +13,7 @@ import java.util.*;
  * <p>
  * @author Linda
  */
-public class CharacterPlayer extends Object implements Serializable, ICharacter{
+public class CharacterPlayer extends ObjectForGame implements Serializable, ICharacter{
 
     //************************datavelden*************************************
     private int characterID;

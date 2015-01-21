@@ -18,7 +18,7 @@ public class Position implements Serializable
 {
     private int x;
     private int y;
-    private ArrayList<Object> objects;
+    private ArrayList<ObjectForGame> objects;
 
     /**
      The Constructor of Position
@@ -58,7 +58,7 @@ public class Position implements Serializable
      <p>
      @return a list of objects in this instance
      */
-    public ArrayList<Object> getObjects()
+    public ArrayList<ObjectForGame> getObjects()
     {
         return this.objects;
     }
@@ -70,7 +70,7 @@ public class Position implements Serializable
      <p>
      @return true if this object is removed else return false.
      */
-    public boolean removeObject(Object o)
+    public boolean removeObject(ObjectForGame o)
     {
         try
         {
@@ -89,7 +89,7 @@ public class Position implements Serializable
      <p>
      @return the object that has been added.
      */
-    public Object addObject(Object o)
+    public Object addObject(ObjectForGame o)
     {
         if (o == null)
         {
@@ -106,8 +106,8 @@ public class Position implements Serializable
 
     public void clearAllObjects()
     {
-        ArrayList<Object> templist = new ArrayList<>();
-        for (Object o : objects) {
+        ArrayList<ObjectForGame> templist = new ArrayList<>();
+        for (ObjectForGame o : objects) {
             templist.add(o);
         }
         

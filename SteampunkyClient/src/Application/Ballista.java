@@ -14,7 +14,7 @@ import java.util.TimerTask;
  * <p>
  * @author Nick van der Mullen
  */
-public class Ballista extends Object implements Serializable {
+public class Ballista extends ObjectForGame implements Serializable {
 
     //************************datavelden*************************************
     private int ballistaID;
@@ -26,8 +26,8 @@ public class Ballista extends Object implements Serializable {
     private int delay;
 
     /**
-     * The constructor of the Object Ballista, when this object is made a number
-     * of Projectiles is made to match shots. Depending on the direction give it
+     * The constructor of the ObjectForGame Ballista, when this object is made a number
+ of Projectiles is made to match shots. Depending on the direction give it
      * depends which direction is made first.
      * <p>
      * @param type The type thats give so the ballista knows what type of
@@ -35,12 +35,12 @@ public class Ballista extends Object implements Serializable {
      * @param shots The number of shots a ballista can fire, must be a multitude
      * of 4.
      * @param projectileSpeed The speed of the Projectiles the ballista makes.
-     * @param position An attribute of Object that holds the Position of this
-     * Ballista.
-     * @param active An attribute of Object that sets if an Object is active or
-     * not.
-     * @param direction An attribute of Object that is used to decide which way
-     * to shoot first.
+     * @param position An attribute of ObjectForGame that holds the Position of this
+ Ballista.
+     * @param active An attribute of ObjectForGame that sets if an ObjectForGame is active or
+ not.
+     * @param direction An attribute of ObjectForGame that is used to decide which way
+ to shoot first.
      * @param game An object of Game in which this Ballista is made.
      *
      */

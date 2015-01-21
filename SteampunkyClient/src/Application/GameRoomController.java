@@ -562,6 +562,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
 
                         if (countdown == 0) {
                             timer.cancel();
+                            StartGame();
                         }
                     }
                 });

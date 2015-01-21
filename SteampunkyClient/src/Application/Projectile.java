@@ -12,7 +12,7 @@ import java.io.Serializable;
  * <p>
  * @author Nick van der Mullen
  */
-public class Projectile extends Object implements Serializable{
+public class Projectile extends ObjectForGame implements Serializable{
 
     //************************datavelden*************************************
     private final int projectileID;
@@ -21,16 +21,16 @@ public class Projectile extends Object implements Serializable{
     private Direction direction;
 
     /**
-     * The constructor for making a Object of the Type Projectile
+     * The constructor for making a ObjectForGame of the Type Projectile
      * <p>
      * @param type the type of the projectile f.ex slow/fast
      * @param speed the speed of the projectile.
-     * @param position An Object of the Class Position which holds the position
-     * of this Projectile.
+     * @param position An ObjectForGame of the Class Position which holds the position
+ of this Projectile.
      * @param active A boolean to check if the projectile is on screen.
      * @param movable A boolean to check if the object can move.
-     * @param direction An Object of the Class Direction which holds the
-     * direction in which this projectile will move.
+     * @param direction An ObjectForGame of the Class Direction which holds the
+ direction in which this projectile will move.
      * @param game
      */
     public Projectile(String type, double speed, Position position, boolean active, boolean movable, Direction direction, Game game) {

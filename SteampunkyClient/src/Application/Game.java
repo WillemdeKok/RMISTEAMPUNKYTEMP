@@ -38,7 +38,7 @@ public class Game implements IGame, Serializable{
     private boolean fillUp;
 
     private ArrayList<Position> grid;
-    private ArrayList<Object> objects;
+    private ArrayList<ObjectForGame> objects;
     private ArrayList<IUser> players;
     private ArrayList<Bot> bots;
     private ArrayList<CharacterPlayer> characters;
@@ -154,7 +154,7 @@ public class Game implements IGame, Serializable{
      * @return the list of objects on the position(x,y), if there are no objects
      * returns null.
      */
-    public ArrayList<Object> getObjectsFromGrid(int x, int y) {
+    public ArrayList<ObjectForGame> getObjectsFromGrid(int x, int y) {
         for (Position p : grid) {
             if (p.getX() == x && p.getY() == y) {
                 return p.getObjects();
@@ -245,11 +245,11 @@ public class Game implements IGame, Serializable{
      *
      * @return a list of objects with the type CharacterPlayer
      */
-    public ArrayList<Object> getObjects() {
+    public ArrayList<ObjectForGame> getObjects() {
         return this.objects;
     }
 
-    public Object getCharacter() {
+    public ObjectForGame getCharacter() {
         return this.characters.get(0);
     }
 
@@ -302,7 +302,7 @@ public class Game implements IGame, Serializable{
      *
      * @param object
      */
-    public void addObject(Object object) {
+    public void addObject(ObjectForGame object) {
         this.objects.add(object);
     }
 
@@ -311,9 +311,9 @@ public class Game implements IGame, Serializable{
      *
      * @return list of cubes
      */
-    public ArrayList<Object> getCubes() {
+    public ArrayList<ObjectForGame> getCubes() {
         //field op positie 200x200 pixels
-        ArrayList<Object> cubes = new ArrayList<>();
+        ArrayList<ObjectForGame> cubes = new ArrayList<>();
         int row = 2;
         int col = 2;
 
@@ -322,7 +322,7 @@ public class Game implements IGame, Serializable{
 
             while (col < this.widthCubes) {
                 Position p = getPosition(col, row);
-                Object ob = new Obstacle("cube", false, p, true, false, this);
+                ObjectForGame ob = new Obstacle("cube", false, p, true, false, this);
                 p.addObject(ob);
                 cubes.add(ob);
                 col += 2;
@@ -339,8 +339,8 @@ public class Game implements IGame, Serializable{
      *
      * @return list of boxes
      */
-    public ArrayList<Object> getBoxes() {
-        ArrayList<Object> boxes = new ArrayList<>();
+    public ArrayList<ObjectForGame> getBoxes() {
+        ArrayList<ObjectForGame> boxes = new ArrayList<>();
         int row = 1;
         int col = 1;
 
@@ -353,7 +353,7 @@ public class Game implements IGame, Serializable{
 
         //first boxes around player
         Position p = getPosition(3, 1);
-        Object ob = new Obstacle("box", false, p, true, false, this);
+        ObjectForGame ob = new Obstacle("box", false, p, true, false, this);
         boxes.add(ob);
         p = getPosition(1, 3);
         ob = new Obstacle("box", false, p, true, false, this);
@@ -434,7 +434,7 @@ public class Game implements IGame, Serializable{
             for (round = 1; round < maxRounds; round++) {
                 while (x <= maxWidth) {
                     Position p = getPosition(x, y);
-                    Object ob = new Obstacle("cube", false, p, true, false, this);
+                    ObjectForGame ob = new Obstacle("cube", false, p, true, false, this);
                     this.objects.add(ob);
                     x++;
                 }
@@ -443,7 +443,7 @@ public class Game implements IGame, Serializable{
 
                 while (y <= maxHeight) {
                     Position p = getPosition(x, y);
-                    Object ob = new Obstacle("cube", false, p, true, false, this);
+                    ObjectForGame ob = new Obstacle("cube", false, p, true, false, this);
                     this.objects.add(ob);
                     y++;
                 }
@@ -452,7 +452,7 @@ public class Game implements IGame, Serializable{
 
                 while (x >= minWidth) {
                     Position p = getPosition(x, y);
-                    Object ob = new Obstacle("cube", false, p, true, false, this);
+                    ObjectForGame ob = new Obstacle("cube", false, p, true, false, this);
                     this.objects.add(ob);
                     x--;
                 }
@@ -461,7 +461,7 @@ public class Game implements IGame, Serializable{
 
                 while (y >= minHeight) {
                     Position p = getPosition(x, y);
-                    Object ob = new Obstacle("cube", false, p, true, false, this);
+                    ObjectForGame ob = new Obstacle("cube", false, p, true, false, this);
                     this.objects.add(ob);
                     y--;
                 }
@@ -509,7 +509,7 @@ public class Game implements IGame, Serializable{
                     || (row > 3 && row < (this.widthCubes - 2)))
                     && ((row % 2 == 1 && col % 2 == 0) || (row % 2 == 0 && col % 2 == 1) || (row % 2 == 1 && col % 2 == 1))) {
                 //place boxes random
-                Object ob = new PowerUp("test", types[intType], "test desc", true, p, true, false, Direction.Right, this);
+                ObjectForGame ob = new PowerUp("test", types[intType], "test desc", true, p, true, false, Direction.Right, this);
                 this.objects.add(ob);
                 return true;
             }
@@ -541,7 +541,7 @@ public class Game implements IGame, Serializable{
      *
      * @param object object to be put into the grid
      */
-    public void setObjectInGrid(Object object) {
+    public void setObjectInGrid(ObjectForGame object) {
         this.grid.stream().filter((p) -> (p.getX() == object.getPositionX() && p.getY() == object.getPositionY())).forEach((p) -> {
             p.addObject(object);
         });
@@ -791,9 +791,9 @@ public class Game implements IGame, Serializable{
         ArrayList<String[]> information = new ArrayList();
         
 	for (Position p : grid) {
-            ArrayList<Object> TempObjects = this.getObjectsFromGrid(p.getX(), p.getY());
+            ArrayList<ObjectForGame> TempObjects = this.getObjectsFromGrid(p.getX(), p.getY());
 		
-            for (Object o : TempObjects) {
+            for (ObjectForGame o : TempObjects) {
                 String[] objectinfo = new String[5];
 
                 if (o instanceof CharacterPlayer) {
