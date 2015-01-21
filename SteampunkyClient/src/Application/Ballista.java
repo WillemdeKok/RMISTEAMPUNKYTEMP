@@ -81,11 +81,13 @@ public class Ballista extends ObjectForGame implements Serializable {
     }
 
     private void shootProjectile() {
+        if(shotsShot<shots){
         createProjectile(Direction.Up);
         createProjectile(Direction.Down);
         createProjectile(Direction.Left);
         createProjectile(Direction.Right);
         shotsShot += 4;
+        }
     }
 
     //**********************methoden****************************************

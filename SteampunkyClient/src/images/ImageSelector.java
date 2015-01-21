@@ -37,13 +37,13 @@ public class ImageSelector
             {
                 switch (level)
                 {
-                    case 0:
+                    case 1:
                         url = "box01.png";
                         break;
-                    case 1:
+                    case 2:
                         url = "box02.png";
                         break;
-                    case 2:
+                    case 3:
                         url = "box03.png";
                         break;
                 }
@@ -66,6 +66,9 @@ public class ImageSelector
                     url = "powerup05.png";
                     break;
             }
+        }else if (object[0].equals("4"))
+        {
+            url = "ballista.png";
         }
         else if (object[0].equals("5"))
         {

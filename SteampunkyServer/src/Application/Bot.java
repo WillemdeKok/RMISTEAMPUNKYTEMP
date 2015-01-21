@@ -189,10 +189,12 @@ public class Bot implements Serializable {
                             if (dir != null) {
                                 this.character.move(dir);
                             }
-                        }
-                        if (getPowerUp(movableGrid) != null) {
+                        } else if (getPowerUp(movableGrid) != null) {
                             this.character.move(getPowerUp(movableGrid));
+                        } else {
+                            randomMove(movableGrid);
                         }
+
                     }
                 }
             }
@@ -370,31 +372,39 @@ public class Bot implements Serializable {
         int X = this.character.getPositionX();
         int Y = this.character.getPositionY();
         for (int i = 0; i <= this.character.getTorchRange(); i++) {
-            if (!this.game.getPosition(X + i, Y).getObjects().isEmpty()) {
-                for (ObjectForGame O : this.game.getPosition(X + i, Y).getObjects()) {
-                    if (O instanceof Projectile && O.getDirection() == Direction.Left) {
-                        threatPositions.add(Direction.Right);
+            if (this.game.getPosition(X + i, Y) != null) {
+                if (!this.game.getPosition(X + i, Y).getObjects().isEmpty()) {
+                    for (ObjectForGame O : this.game.getPosition(X + i, Y).getObjects()) {
+                        if (O instanceof Projectile && O.getDirection() == Direction.Left) {
+                            threatPositions.add(Direction.Right);
+                        }
                     }
                 }
             }
-            if (!this.game.getPosition(X - i, Y).getObjects().isEmpty()) {
-                for (ObjectForGame O : this.game.getPosition(X - i, Y).getObjects()) {
-                    if (O instanceof Projectile && O.getDirection() == Direction.Right) {
-                        threatPositions.add(Direction.Left);
+            if (this.game.getPosition(X - i, Y) != null) {
+                if (!this.game.getPosition(X - i, Y).getObjects().isEmpty()) {
+                    for (ObjectForGame O : this.game.getPosition(X - i, Y).getObjects()) {
+                        if (O instanceof Projectile && O.getDirection() == Direction.Right) {
+                            threatPositions.add(Direction.Left);
+                        }
                     }
                 }
             }
-            if (!this.game.getPosition(X, Y + i).getObjects().isEmpty()) {
-                for (ObjectForGame O : this.game.getPosition(X, Y + i).getObjects()) {
-                    if (O instanceof Projectile && O.getDirection() == Direction.Down) {
-                        threatPositions.add(Direction.Up);
+            if (this.game.getPosition(X, Y + i) != null) {
+                if (!this.game.getPosition(X, Y + i).getObjects().isEmpty()) {
+                    for (ObjectForGame O : this.game.getPosition(X, Y + i).getObjects()) {
+                        if (O instanceof Projectile && O.getDirection() == Direction.Down) {
+                            threatPositions.add(Direction.Up);
+                        }
                     }
                 }
             }
-            if (!this.game.getPosition(X, Y - i).getObjects().isEmpty()) {
-                for (ObjectForGame O : this.game.getPosition(X, Y - i).getObjects()) {
-                    if (O instanceof Projectile && O.getDirection() == Direction.Up) {
-                        threatPositions.add(Direction.Down);
+            if (this.game.getPosition(X, Y - i) != null) {
+                if (!this.game.getPosition(X, Y - i).getObjects().isEmpty()) {
+                    for (ObjectForGame O : this.game.getPosition(X, Y - i).getObjects()) {
+                        if (O instanceof Projectile && O.getDirection() == Direction.Up) {
+                            threatPositions.add(Direction.Down);
+                        }
                     }
                 }
             }
@@ -442,7 +452,7 @@ public class Bot implements Serializable {
         if (availableDirections.isEmpty()) {
             return null;
         } else if (availableDirections.size() == 1) {
-            return availableDirections.get(1);
+            return availableDirections.get(0);
         } else if (availableDirections.size() == 3) {
             if (MoveFrom.get(1) == Direction.Left) {
                 availableDirections.remove(Direction.Right);
@@ -500,37 +510,76 @@ public class Bot implements Serializable {
         int Y = this.character.getPositionY();
 
         for (int i = 0; i <= this.character.getTorchRange(); i++) {
-            if (!this.game.getPosition(X + i, Y).getObjects().isEmpty() && movableGrid.contains(this.game.getPosition(X + i, Y))) {
-                for (ObjectForGame O : this.game.getPosition(X + i, Y).getObjects()) {
-                    if (O instanceof PowerUp) {
-                        return Direction.Right;
+            if (this.game.getPosition(X + i, Y) != null) {
+                if (!this.game.getPosition(X + i, Y).getObjects().isEmpty() && movableGrid.contains(this.game.getPosition(X + i, Y))) {
+                    for (ObjectForGame O : this.game.getPosition(X + i, Y).getObjects()) {
+                        if (O instanceof PowerUp) {
+                            return Direction.Right;
+                        }
                     }
                 }
             }
-            if (!this.game.getPosition(X - i, Y).getObjects().isEmpty() && movableGrid.contains(this.game.getPosition(X - i, Y))) {
-                for (ObjectForGame O : this.game.getPosition(X - i, Y).getObjects()) {
-                    if (O instanceof PowerUp) {
-                        return Direction.Left;
+            if (this.game.getPosition(X - i, Y) != null) {
+                if (!this.game.getPosition(X - i, Y).getObjects().isEmpty() && movableGrid.contains(this.game.getPosition(X - i, Y))) {
+                    for (ObjectForGame O : this.game.getPosition(X - i, Y).getObjects()) {
+                        if (O instanceof PowerUp) {
+                            return Direction.Left;
+                        }
                     }
                 }
             }
-            if (!this.game.getPosition(X, Y + i).getObjects().isEmpty() && movableGrid.contains(this.game.getPosition(X, Y + i))) {
-                for (ObjectForGame O : this.game.getPosition(X, Y + i).getObjects()) {
-                    if (O instanceof PowerUp) {
-                        return Direction.Up;
+            if (this.game.getPosition(X, Y + i) != null) {
+                if (!this.game.getPosition(X, Y + i).getObjects().isEmpty() && movableGrid.contains(this.game.getPosition(X, Y + i))) {
+                    for (ObjectForGame O : this.game.getPosition(X, Y + i).getObjects()) {
+                        if (O instanceof PowerUp) {
+                            return Direction.Up;
+                        }
                     }
                 }
             }
-            if (!this.game.getPosition(X, Y - i).getObjects().isEmpty() && movableGrid.contains(this.game.getPosition(X, Y - i))) {
-                for (ObjectForGame O : this.game.getPosition(X, Y - i).getObjects()) {
-                    if (O instanceof PowerUp) {
-                        return Direction.Down;
+            if (this.game.getPosition(X, Y - i) != null) {
+                if (!this.game.getPosition(X, Y - i).getObjects().isEmpty() && movableGrid.contains(this.game.getPosition(X, Y - i))) {
+                    for (ObjectForGame O : this.game.getPosition(X, Y - i).getObjects()) {
+                        if (O instanceof PowerUp) {
+                            return Direction.Down;
+                        }
                     }
                 }
             }
 
         }
         return null;
+    }
+
+    private void randomMove(List<Position> movableGrid) {
+        int X = this.character.getPositionX();
+        int Y = this.character.getPositionY();
+        ArrayList<Direction> dir = new ArrayList<>();
+        movableGrid.stream().map((P) -> {
+            if (P.getX() == X && P.getY() == Y + 1) {
+                dir.add(Direction.Down);
+            }
+            return P;
+        }).map((P) -> {
+            if (P.getX() == X + 1 && P.getY() == Y) {
+                dir.add(Direction.Right);
+            }
+            return P;
+        }).map((P) -> {
+            if (P.getX() == X && P.getY() == Y - 1) {
+                dir.add(Direction.Up);
+            }
+            return P;
+        }).filter((P) -> (P.getX() == X - 1 && P.getY() == Y)).forEach((_item) -> {
+            dir.add(Direction.Left);
+        });
+        if (dir.size() == 1) {
+            this.character.move(dir.get(0));
+        } else if (!dir.isEmpty()) {
+            Random rand = new Random();
+            int randomNum = rand.nextInt(dir.size()) + 0;
+            this.character.move(dir.get(randomNum));
+        }
     }
 
 }

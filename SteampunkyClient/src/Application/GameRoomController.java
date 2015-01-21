@@ -282,7 +282,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         {            
             //get random level from 1 to 3
             Random levelInt = new Random();
-            level = levelInt.nextInt(3)+0;
+            level = levelInt.nextInt(3)+1;
             
             this.StartGame();
             this.setKeyBindings();        
@@ -326,6 +326,9 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
             int xpos = Integer.parseInt(s[2]);
             int ypos = Integer.parseInt(s[3]);
             String direction = s[4];
+            if(this.level != Integer.parseInt(s[5])){
+                this.level = Integer.parseInt(s[5]);
+            }
             
             switch(s[0])
             {
@@ -442,7 +445,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         int rounds = Integer.parseInt(this.CBrounds.getValue().toString());
         
         try {
-            this.lobbyinstance.createGame(time, 1, level, rounds, width, height);
+            this.lobbyinstance.createGame(time, 3, level, rounds, width, height);
             SetupDraw();
         } catch (RemoteException ex) {
             Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);

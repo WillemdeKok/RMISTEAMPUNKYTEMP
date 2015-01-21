@@ -208,7 +208,7 @@ public class CharacterPlayer extends ObjectForGame implements Serializable, ICha
             System.out.println("fancy");
             if (newBallista.getShotsFired() == shots) {
                 p.removeObject(newBallista);
-                ballistas.remove(newBallista);
+                this.ballistas.remove(newBallista);
             }
 
         }

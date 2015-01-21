@@ -6,13 +6,14 @@
 package Application;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * <p>
  * @author Melanie
  */
-public abstract class ObjectForGame implements Serializable{
+public abstract class ObjectForGame implements Serializable {
     //************************datavelden*************************************
 
     private int interfaceID = 0;
@@ -91,7 +92,7 @@ public abstract class ObjectForGame implements Serializable{
      * The Getter of this Objects Position.
      * <p>
      * @return An ObjectForGame of the Class Position which holds this Objects
- Position.
+     * Position.
      */
     public Position getPosition() {
         return this.position;
@@ -113,8 +114,8 @@ public abstract class ObjectForGame implements Serializable{
     /**
      * The Setter of this Objects Position.
      * <p>
-     * @param position A ObjectForGame of the Class Position which holds the new p of
- this ObjectForGame.
+     * @param position A ObjectForGame of the Class Position which holds the new
+     * p of this ObjectForGame.
      */
     public void setPosition(Position position) {
         this.position = position;
@@ -143,7 +144,7 @@ public abstract class ObjectForGame implements Serializable{
      * A Method for moving this ObjectForGame
      * <p>
      * @param direction A ObjectForGame of the Class Direction which holds the
- direction in which direction this ObjectForGame is moving.
+     * direction in which direction this ObjectForGame is moving.
      */
     public synchronized void move(Direction direction) {
         int nextX = this.getPositionX();
@@ -182,13 +183,14 @@ public abstract class ObjectForGame implements Serializable{
                 //if this is a CharacterPlayer
                 if (this instanceof CharacterPlayer) {
                     //for every object on the desired position
+                    List<ObjectForGame> removeObjects = new ArrayList<>();
                     for (ObjectForGame O : objects) {
                         //if the ObjectForGame is a Projectile
                         if (O instanceof Projectile) {
                             //if the direction of this character is opposite to the direciton of the projectile.
-                            if ((this.direction == Direction.Up && this.direction == Direction.Down) || (this.direction == Direction.Right && this.direction == Direction.Left) || (this.direction == Direction.Down && this.direction == Direction.Up) || (this.direction == Direction.Left && this.direction == Direction.Right)) {
-                                O.RemoveFromGame();
-                                this.RemoveFromGame();
+                            if ((this.direction == Direction.Up && O.getDirection() == Direction.Down) || (this.direction == Direction.Right && O.getDirection() == Direction.Left) || (this.direction == Direction.Down && O.getDirection() == Direction.Up) || (this.direction == Direction.Left && O.getDirection() == Direction.Right)) {
+                                removeObjects.add(O);
+                                removeObjects.add(this);
                                 Movable = false;
                             }
                         } else if (O instanceof Ballista || O instanceof Obstacle) {
@@ -196,32 +198,42 @@ public abstract class ObjectForGame implements Serializable{
                         } else if (O instanceof PowerUp) {
                             PowerUp tempPowerUp = (PowerUp) O;
                             PickUp(tempPowerUp.getPowerUpType());
-                            O.RemoveFromGame();
+                            removeObjects.add(O);
                         }
                     }
+                    removeObjects.stream().forEach((O) -> {
+                        O.RemoveFromGame();
+                    });
                     // if this is Projectile
                 } else if (this instanceof Projectile) {
                     //for every object on desired position
+                    List<ObjectForGame> removeObjects = new ArrayList<>();
                     for (ObjectForGame O : objects) {
                         if (O instanceof Obstacle) {
                             Obstacle tempObstacle = (Obstacle) O;
                             if (tempObstacle.getType().matches("cube")) {
-                                this.RemoveFromGame();
+                                removeObjects.add(this);
                                 Movable = false;
                             } else {
-                                this.RemoveFromGame();
-                                O.RemoveFromGame();
+                                removeObjects.add(O);
+                                removeObjects.add(this);
                                 Movable = false;
                             }
                         } else {
-                            O.RemoveFromGame();
-                            this.RemoveFromGame();
+                            removeObjects.add(O);
+                            removeObjects.add(this);
                             Movable = false;
                         }
                     }
+                    removeObjects.stream().forEach((O) -> {
+                        O.RemoveFromGame();
+                    });
                 }
             }
         } else {
+            if (this instanceof Projectile){
+                this.RemoveFromGame();
+            }
             Movable = false;
         }
         return Movable;

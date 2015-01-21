@@ -29,6 +29,7 @@ public class Game implements IGame, Serializable{
     private double currentTime;
     private double totalTime;
     private Timer gameTickTimer;
+    static boolean isRunning = false;
 
     private int totalRounds;
     private int currentRound;
@@ -625,18 +626,20 @@ public class Game implements IGame, Serializable{
             });
         });
 
-        tempCharacters.stream().forEach((C) -> {
-            C.move(C.getDirection());
-        });
+//        tempCharacters.stream().forEach((C) -> {
+//            C.move(C.getDirection());
+//        });
 
         tempProjectiles.stream().forEach((P) -> {
             P.move(P.getDirection());
         });
-
-        this.bots.stream().forEach((B) -> {
-            B.AI();
+        bots.stream().forEach((B) -> {
+            if(!B.getCharacter().getDead()){
+                B.AI();
+            } else {
+                System.out.println("dead");
+            }
         });
-
         int dead = 0;
 
         //Check if characters are dead
@@ -796,7 +799,7 @@ public class Game implements IGame, Serializable{
             ArrayList<ObjectForGame> TempObjects = this.getObjectsFromGrid(p.getX(), p.getY());
 		
             for (ObjectForGame o : TempObjects) {
-                String[] objectinfo = new String[5];
+                String[] objectinfo = new String[6];
 
                 if (o instanceof CharacterPlayer) {
                     objectinfo[0] = "1";
@@ -822,7 +825,7 @@ public class Game implements IGame, Serializable{
                 {
                     objectinfo[4] = Direction.Up.name() + "";
                 }
-                
+                objectinfo[5] = ""+ this.currentLevel;
                 information.add(objectinfo);
             }
         }
@@ -831,7 +834,7 @@ public class Game implements IGame, Serializable{
     
     public void GameTimer(){
         this.gameTickTimer = new Timer();  
-        System.out.println("Tick");
+        System.out.println("Fail");
         //Level opnieuw uittekenen met nieuwe posities      
        
         //Geeft momenteel ConcurrentModificationException error
@@ -841,12 +844,15 @@ public class Game implements IGame, Serializable{
             
             @Override
             public void run()
-            {
-
+            { 
+                if (isRunning == false) {
+                isRunning = true;
+                
                     {
                         updateGame();
-                    }               
-                              
+                    }    
+                    isRunning=false;
+                }
             }           
         },500,500);
     }
