@@ -285,9 +285,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
             level = levelInt.nextInt(3) + 1;
             
             this.StartGame();
-            this.setKeyBindings();  
-            GameUpdate();
-            
+            this.setKeyBindings();        
         }
     }
     //clears the scene and draws new boxes for every object.
@@ -445,6 +443,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         
         try {
             this.lobbyinstance.createGame(time, 1, level, rounds, width, height);
+            SetupDraw();
         } catch (RemoteException ex) {
             Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -452,18 +451,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
     //Sets up the settings needed to draw.
             
     public synchronized void SetupDraw(){
-        //
-        //
-        //
-        //
-        //
-        //      HIER VERANDER JE DE BOTDIFFICULTY
-        //
-        //
-        //
-        //
-        //
-        //
+        System.out.println("ik ben ook een timer");
         //Teken code hier aan toevoegen
         //Moeten groter zijn dan 9; melding?!
         
@@ -499,8 +487,12 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         this.stage.setMinHeight(900);
         this.stage.setMinWidth(1700);
         this.stage.setScene(scene);
+        this.GameUpdate();
     }
     
+    public void drawTimer(){
+        
+    }
     //Set the keybindings for this Scene
     public synchronized void setKeyBindings(){
         this.stage.getScene().setOnKeyPressed((KeyEvent keyEvent) -> {
@@ -602,15 +594,10 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
             {
                 javafx.application.Platform.runLater(() -> 
                 {
-                    try
                     {
-                        lobbyinstance.updateGame();
                         DrawGame();
-                    }
-                    catch(NullPointerException | RemoteException ex)
-                    {
-                        ex.printStackTrace();
-                    }                    
+                        System.out.print("ik ben een timer");
+                    }               
                 });                
             }           
         },500,500);
