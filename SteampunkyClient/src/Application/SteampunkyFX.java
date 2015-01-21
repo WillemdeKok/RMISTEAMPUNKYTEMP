@@ -111,7 +111,7 @@ public class SteampunkyFX extends Application {
             this.stage.setMinHeight(590);
             this.stage.setX(100);
             this.stage.setY(100);
-            scene = new Scene(page, 600, 400); 
+            scene = new Scene(page, 1048, 590); 
         }
         else {
             System.out.println("FATAL GUI ERROR");
