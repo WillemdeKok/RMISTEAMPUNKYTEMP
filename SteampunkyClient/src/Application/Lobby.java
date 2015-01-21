@@ -68,6 +68,7 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
         //observablePlayers = observableList(players);
         this.chatMessages = new ArrayList<>();
         //observableChat = observableList(chatMessages);
+        this.chatMessages.add("Welkom Bij Steampunky u bevindt zich in de volgende lobby: " + this.lobbyName);
     }
 
     @Override
@@ -120,6 +121,7 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
     public void Addchatmessage(String message)
     {
         chatMessages.add(message);
+        this.publisher.inform(this, "lobby", "", "Message");
     }
     
     @Override

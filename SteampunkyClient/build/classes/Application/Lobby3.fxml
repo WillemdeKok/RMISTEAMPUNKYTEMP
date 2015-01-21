@@ -35,5 +35,6 @@
     <Label id="joinlobbynamelb" layoutX="230.0" layoutY="263.0" text="Lobby Name" />
     <Label font="$x1" layoutX="230.0" layoutY="11.0" text="Lobbies:" />
     <Label fx:id="LBLLobbyWelcome" layoutX="14.0" layoutY="12.0" text="Welcome: username" />
+    <Label id="LblCSS" fx:id="LBRating" layoutX="130.0" layoutY="12.0" text="Player Rating: 0" />
   </children>
 </AnchorPane>
