@@ -186,7 +186,7 @@ public abstract class ObjectForGame implements Serializable{
                         //if the ObjectForGame is a Projectile
                         if (O instanceof Projectile) {
                             //if the direction of this character is opposite to the direciton of the projectile.
-                            if ((this.direction == Direction.Up && this.direction == Direction.Down) || (this.direction == Direction.Right && this.direction == Direction.Left) || (this.direction == Direction.Down && this.direction == Direction.Up) || (this.direction == Direction.Left && this.direction == Direction.Right)) {
+                            if ((this.direction == Direction.Up && O.getDirection() == Direction.Down) || (this.direction == Direction.Right && O.getDirection() == Direction.Left) || (this.direction == Direction.Down && O.getDirection() == Direction.Up) || (this.direction == Direction.Left && O.getDirection() == Direction.Right)) {
                                 O.RemoveFromGame();
                                 this.RemoveFromGame();
                                 Movable = false;
