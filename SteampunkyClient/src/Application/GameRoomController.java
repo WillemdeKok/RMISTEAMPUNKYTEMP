@@ -319,13 +319,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         if (this.countdown == 0) {
             //get random level from 1 to 3
             Random levelInt = new Random();
-<<<<<<< HEAD
             level = levelInt.nextInt(3)+1;
-            
-=======
-            level = levelInt.nextInt(3) + 0;
-
->>>>>>> origin/master
             this.StartGame();
             this.setKeyBindings();
         }
@@ -367,17 +361,10 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
             int xpos = Integer.parseInt(s[2]);
             int ypos = Integer.parseInt(s[3]);
             String direction = s[4];
-<<<<<<< HEAD
             if(this.level != Integer.parseInt(s[5])){
                 this.level = Integer.parseInt(s[5]);
             }
-            
-            switch(s[0])
-            {
-=======
-
             switch (s[0]) {
->>>>>>> origin/master
                 case "1":
                     object = "Character";
                     break;
