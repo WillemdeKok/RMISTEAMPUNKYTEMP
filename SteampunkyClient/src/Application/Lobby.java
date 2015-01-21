@@ -6,8 +6,12 @@
 
 package Application;
 
+import Application.FontysObserver.BasicPublisher;
+import Application.FontysObserver.RemotePropertyListener;
+import Application.FontysObserver.RemotePublisher;
 import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,7 +23,7 @@ import javafx.collections.ObservableList;
  * OK
  * @author Bart
  */
-public class Lobby extends Observable implements ILobby, Serializable
+public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublisher
 {
     //************************datavelden*************************************
     private int lobbyID;
@@ -36,12 +40,15 @@ public class Lobby extends Observable implements ILobby, Serializable
     //private transient ObservableList<IUser> observablePlayers;
     private int ratingDifference;
     private Game game;
+    
+    private String[] lobbyArray;
+    private BasicPublisher publisher;
 
     //***********************constructoren***********************************
     /**
      * creates a lobby with ...
      */
-    public Lobby(String lobbyname, IUser addedByUser, String password)
+    public Lobby(String lobbyname, IUser addedByUser, String password) throws RemoteException
     {      
         System.out.println("Lobby has been created");
         this.lobbyName = lobbyname;
@@ -51,14 +58,16 @@ public class Lobby extends Observable implements ILobby, Serializable
         this.password = password;
         this.admin = addedByUser;
         
+        this.lobbyArray = new String[1];
+        this.lobbyArray[0] = "lobby";
+        this.publisher = new BasicPublisher(this.lobbyArray);
+        
         this.spectators = new ArrayList<>();
         //observableSpectators = observableList(spectators);
         this.players = new ArrayList<>();
         //observablePlayers = observableList(players);
         this.chatMessages = new ArrayList<>();
         //observableChat = observableList(chatMessages);
-        this.addUser(admin);
-
     }
 
     @Override
@@ -140,6 +149,7 @@ public class Lobby extends Observable implements ILobby, Serializable
             }
                     
             game.startRound();
+            publisher.inform(this, "lobby", "", "start");
                     
             return true;
         }
@@ -154,6 +164,7 @@ public class Lobby extends Observable implements ILobby, Serializable
         {
             spectators.add(user);
             System.out.println("User has been added");
+            publisher.inform(this, "lobby", "", "new");
             return true;   
         }
         return false;
@@ -183,9 +194,11 @@ public class Lobby extends Observable implements ILobby, Serializable
         
         if(spectators.contains(Tempuser)){
             spectators.remove(Tempuser);
+            publisher.inform(this, "lobby", "", "new");
             removedUser = 1;
         }else if (players.contains(Tempuser)){
             players.remove(Tempuser);
+            publisher.inform(this, "lobby", "", "new");
             removedUser = 1;
         }
         if (this.admin == Tempuser && spectators.iterator().hasNext()){
@@ -219,6 +232,7 @@ public class Lobby extends Observable implements ILobby, Serializable
         {
             players.add(Tempuser);
             spectators.remove(Tempuser);
+            publisher.inform(this, "lobby", "", "new");
             return true;
         }
         return false;
@@ -243,6 +257,7 @@ public class Lobby extends Observable implements ILobby, Serializable
         {
             spectators.add(Tempuser);
             players.remove(Tempuser);
+            publisher.inform(this, "lobby", "", "new");
             return true;
         }
         return false;
@@ -259,37 +274,37 @@ public class Lobby extends Observable implements ILobby, Serializable
     }
     
     @Override
-    public void updateGame()
+    public synchronized void updateGame()
     {
         this.game.updateGame();
     }
     
     @Override
-    public int getWidthCubes()
+    public synchronized int getWidthCubes()
     {
         return this.game.getWidthCubes();
     }
     
     @Override
-    public int getHeightCubes()
+    public synchronized int getHeightCubes()
     {
         return this.game.getHeightCubes();
     }
     
     @Override
-    public int getWidthPixels()
+    public synchronized int getWidthPixels()
     {
         return this.game.getWidthPixels();
     }
     
     @Override
-    public int getHeightPixels()
+    public synchronized int getHeightPixels()
     {
         return this.game.getHeightPixels();
     }
     
     @Override
-    public ArrayList<String[]> GetInformation()
+    public synchronized ArrayList<String[]> GetInformation()
     {
         return this.game.GetInformation();
     }
@@ -298,5 +313,15 @@ public class Lobby extends Observable implements ILobby, Serializable
     public String toString()
     {
        return this.lobbyName; 
+    }
+
+    @Override
+    public void addListener(RemotePropertyListener listener, String property) throws RemoteException {
+        this.publisher.addListener(listener, property);
+    }
+
+    @Override
+    public void removeListener(RemotePropertyListener listener, String property) throws RemoteException {
+        this.publisher.removeListener(listener, property);
     }
 }

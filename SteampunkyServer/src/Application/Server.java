@@ -186,13 +186,18 @@ public class Server extends UnicastRemoteObject implements IGameServer {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (lobbyName != null && admin != null) {
-            Lobby lobby;
-            this.observableLobbies.add(lobby = new Lobby(lobbyName, admin, password));
-            return true;
+            try {
+                Lobby lobby;
+                this.observableLobbies.add(lobby = new Lobby(lobbyName, admin, password));
+                return true;
+            } catch (RemoteException ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } else {
             System.out.println("Admin of lobbyname is null");
             return false;
         }
+        return false;
     }
 
     @Override

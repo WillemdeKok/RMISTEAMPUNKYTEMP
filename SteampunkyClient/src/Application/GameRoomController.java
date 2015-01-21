@@ -6,6 +6,8 @@
 
 package Application;
 
+import Application.FontysObserver.RemotePropertyListener;
+import Application.FontysObserver.RemotePublisher;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +37,10 @@ import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import images.ImageSelector;
+import java.beans.PropertyChangeEvent;
+import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,7 +53,7 @@ import javafx.scene.image.ImageView;
  *
  * @author Bart
  */
-public class GameRoomController implements Initializable {
+public class GameRoomController extends UnicastRemoteObject implements Initializable,  RemotePropertyListener {
 
     //JAVAFX CONTROLS
     @FXML private Font x1;
@@ -117,6 +122,9 @@ public class GameRoomController implements Initializable {
     
     private int level = 0;
 
+    public GameRoomController() throws RemoteException {
+    }
+    
     public void setApp(SteampunkyFX application, Stage stage, Client client, ILobby l, IGameServer ServerMock) {
         this.ServerMock = ServerMock;
         this.lobbyinstance = l;
@@ -128,6 +136,14 @@ public class GameRoomController implements Initializable {
         this.LBLRemaining.setText("Remaining slots: " + this.slotsleft);
         this.BTReady.setDisable(true);
         this.BTSpectator.setDisable(true);
+                
+        try {
+        RemotePublisher publisher = (RemotePublisher) this.lobbyinstance;
+        publisher.addListener(this, "lobby");
+        } catch (Exception ex) {
+            System.out.println("Publisher not initialized, consider changing the adress??");
+            ex.printStackTrace();
+        }
 
         this.LBLsize.setDisable(true);
         this.LBLHeight.setDisable(true);
@@ -268,9 +284,10 @@ public class GameRoomController implements Initializable {
             Random levelInt = new Random();
             level = levelInt.nextInt(3) + 1;
             
-            this.SetupDraw();
+            this.StartGame();
             this.setKeyBindings();  
             GameUpdate();
+            
         }
     }
     //clears the scene and draws new boxes for every object.
@@ -417,8 +434,24 @@ public class GameRoomController implements Initializable {
         }
     }
     
+    /**
+     *
+     */
+    public void StartGame() {
+        int width = Integer.parseInt(this.CBlevelsizeWidth.getValue().toString());
+        int height = Integer.parseInt(this.CBlevelsizeHeight.getValue().toString());
+        double time = Integer.parseInt(this.CBMinutes.getValue().toString()) * 60;
+        int rounds = Integer.parseInt(this.CBrounds.getValue().toString());
+        
+        try {
+            this.lobbyinstance.createGame(time, 1, level, rounds, width, height);
+        } catch (RemoteException ex) {
+            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     //Sets up the settings needed to draw.
-    public void SetupDraw(){
+            
+    public synchronized void SetupDraw(){
         //
         //
         //
@@ -433,14 +466,10 @@ public class GameRoomController implements Initializable {
         //
         //Teken code hier aan toevoegen
         //Moeten groter zijn dan 9; melding?!
-        int width = Integer.parseInt(this.CBlevelsizeWidth.getValue().toString());
-        int height = Integer.parseInt(this.CBlevelsizeHeight.getValue().toString());
-        double time = Integer.parseInt(this.CBMinutes.getValue().toString()) * 60;
-        int rounds = Integer.parseInt(this.CBrounds.getValue().toString());
+        
             
         try {
             this.PlayerNames = this.lobbyinstance.getPlayers();
-            this.lobbyinstance.createGame(time, 1, level, rounds, width, height);
             this.widthPixels = this.lobbyinstance.getWidthPixels();        
             this.widthCubes = this.lobbyinstance.getWidthCubes();
             this.heightPixels = this.lobbyinstance.getHeightPixels();
@@ -473,7 +502,7 @@ public class GameRoomController implements Initializable {
     }
     
     //Set the keybindings for this Scene
-    public void setKeyBindings(){
+    public synchronized void setKeyBindings(){
         this.stage.getScene().setOnKeyPressed((KeyEvent keyEvent) -> {
             try {
                 if(keyEvent.getCode().toString().equals("W"))
@@ -556,7 +585,7 @@ public class GameRoomController implements Initializable {
         }, 0, 2000);
     }
 
-    public void GameUpdate()
+    public synchronized void GameUpdate()
     {
         this.gameTickTimer = new Timer();  
         System.out.println("Fail");
@@ -587,18 +616,7 @@ public class GameRoomController implements Initializable {
     }
             
     //Initialiseert de combo boxen
-    public void InitCombos() {
-        this.LBSpectators.getItems().clear();
-        this.LBPlayers.getItems().clear();
-
-//        for (IUser u : this.lobby.getPlayers()) {
-//            this.PlayerNames.add(u.toString());
-//        }
-//
-//        for (IUser u : this.lobby.getSpectators()) {
-//            this.SpectatorNames.add(u.toString());
-//        }
-        
+    public void InitCombos() {       
         this.CBlevelsizeWidth.setItems(this.observableRoomsizewidth);
         this.CBlevelsizeHeight.setItems(this.observableRoomsizeheight);
         this.CBMinutes.setItems(this.observableTime);
@@ -606,7 +624,11 @@ public class GameRoomController implements Initializable {
         UpdateForms();
     }
     
-    public void UpdateForms() {
+    public void UpdateForms() {       
+        
+        this.LBSpectators.getItems().clear();
+        this.LBPlayers.getItems().clear();
+        
         ArrayList<String> temp = new ArrayList<>();
         ArrayList<String> temp2 = new ArrayList<>();
         
@@ -629,19 +651,23 @@ public class GameRoomController implements Initializable {
         
         this.LBSpectators.setItems(FXCollections.observableList(temp));
         this.LBPlayers.setItems(FXCollections.observableList(temp2));
-           
-        //this.CBjoinlobby.setItems(FXCollections.observableArrayList(temp));
-        //this.Lblobby.setItems(FXCollections.observableArrayList(temp));
     }
-    
-    
-    
-//    public void UpdateForms() {
-//        try {
-//            this.LBSpectators.setItems(FXCollections.observableList(this.lobbyinstance.getSpectators()));
-//            this.LBPlayers.setItems(FXCollections.observableList(this.lobbyinstance.getPlayers()));
-//        } catch (RemoteException ex) {
-//            System.out.println("Remote exception with updating GUI");
-//        }
-//    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) throws RemoteException {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Property change event recorded");
+                if (evt.getNewValue().equals("new")) {
+                    System.out.println("Item added");
+                    InitCombos();
+                }
+                else if (evt.getNewValue().equals("start")) {
+                    System.out.println("Game started");
+                    SetupDraw();
+                }
+            }
+        });
+    }
 }

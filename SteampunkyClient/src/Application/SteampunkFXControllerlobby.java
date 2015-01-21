@@ -10,6 +10,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -35,7 +36,7 @@ import javax.swing.JOptionPane;
  *
  * @author Bart
  */
-public class SteampunkFXControllerlobby implements Initializable {
+public class SteampunkFXControllerlobby extends UnicastRemoteObject implements Initializable {
 
     //Lobby
     @FXML
@@ -78,7 +79,10 @@ public class SteampunkFXControllerlobby implements Initializable {
 
     private static final String bindingName = "serverMock";
 
-    public void setApp(SteampunkyFX application, Client client, IGameServer ServerMock) {
+    public SteampunkFXControllerlobby() throws RemoteException {
+    }
+    
+    public void setApp(SteampunkyFX application, Client client, IGameServer ServerMock) throws RemoteException {
         this.ServerMock = ServerMock;
         this.clientInfo = client;
         this.main = application;
@@ -97,8 +101,8 @@ public class SteampunkFXControllerlobby implements Initializable {
         System.out.println(s);
         try {
             for (ILobby l : this.ServerMock.getLobbies()) {
-                System.out.println(l.toString());
-                if (l.toString().equals(s)) {
+                System.out.println(l.GetLobbyname());
+                if (l.GetLobbyname().equals(s)) {
                     l.addUser(this.clientInfo.getIUser());
                     this.main.gotoGameRoomselect(clientInfo, l, this.ServerMock);
                 }
@@ -116,7 +120,7 @@ public class SteampunkFXControllerlobby implements Initializable {
 
     //Maakt een lobby 
     @FXML
-    public void AddLobby() {
+    public void AddLobby() throws RemoteException {
         if (TfCreatename.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Please enter a valid name.");
         } else {
@@ -135,6 +139,7 @@ public class SteampunkFXControllerlobby implements Initializable {
 
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "Lobby creation has failed " + ex.getMessage());
+                ex.printStackTrace();
                 System.out.println("Failed " + ex.getMessage());
             }
         }
@@ -155,15 +160,16 @@ public class SteampunkFXControllerlobby implements Initializable {
         }
     }
     
-    public void UpdateForms() {
+    public void UpdateForms() throws RemoteException {
         ArrayList<String> temp = new ArrayList<>();
         
         try {
             for (ILobby i : ServerMock.getLobbies()) {
-                temp.add(i.toString());
+                temp.add(i.GetLobbyname());
             }
         } catch (RemoteException ex) {
             System.out.println("Remote Exception");
+            ex.printStackTrace();
         }
         
         this.CBjoinlobby.setItems(FXCollections.observableArrayList(temp));
