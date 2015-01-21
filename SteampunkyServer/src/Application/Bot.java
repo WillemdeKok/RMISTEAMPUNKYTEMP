@@ -119,7 +119,7 @@ public class Bot implements Serializable {
                     this.character.move(dir.get(0));
                 } else if (i != 0) {
                     Random rand = new Random();
-                    int randomNum = rand.nextInt(i) + 0;
+                    int randomNum = 0 + rand.nextInt(i);
                     this.character.move(dir.get(randomNum));
                 }
 
@@ -170,6 +170,8 @@ public class Bot implements Serializable {
                     Random rand = new Random();
                     int randomNum = rand.nextInt(possibleDirections.size()) + 0;
                     this.character.move(possibleDirections.get(randomNum));
+                } else {
+                    this.character.createBallista(Direction.Right, this.character.getSpeed());
                 }
             }
             // </editor-fold>
@@ -177,8 +179,7 @@ public class Bot implements Serializable {
             // <editor-fold desc="difficulty 3." defaultstate="collapsed">
             if (difficulty == 3) {
                 if (!ballistaDropped()) {
-                    if(shouldIDropBallista(movableGrid))
-                    {
+                    if (shouldIDropBallista(movableGrid)) {
                         this.character.createBallista(Direction.Right, this.character.getSpeed());
                     }
                     List<Direction> threats = getThreats(movableGrid);
@@ -187,10 +188,12 @@ public class Bot implements Serializable {
                         if (dir != null) {
                             this.character.move(dir);
                         }
-                    }
-                    if (getPowerUp(movableGrid) != null) {
+                    } else if (getPowerUp(movableGrid) != null) {
                         this.character.move(getPowerUp(movableGrid));
+                    } else {
+                        randomMove(movableGrid);
                     }
+
                 }
             }
             // </editor-fold>
@@ -528,6 +531,37 @@ public class Bot implements Serializable {
 
         }
         return null;
+    }
+
+    private void randomMove(List<Position> movableGrid) {
+        int X = this.character.getPositionX();
+        int Y = this.character.getPositionY();
+        ArrayList<Direction> dir = new ArrayList<>();
+        movableGrid.stream().map((P) -> {
+            if (P.getX() == X && P.getY() == Y + 1) {
+                dir.add(Direction.Down);
+            }
+            return P;
+        }).map((P) -> {
+            if (P.getX() == X + 1 && P.getY() == Y) {
+                dir.add(Direction.Right);
+            }
+            return P;
+        }).map((P) -> {
+            if (P.getX() == X && P.getY() == Y - 1) {
+                dir.add(Direction.Up);
+            }
+            return P;
+        }).filter((P) -> (P.getX() == X - 1 && P.getY() == Y)).forEach((_item) -> {
+            dir.add(Direction.Left);
+        });
+        if (dir.size() == 1) {
+            this.character.move(dir.get(0));
+        } else if (!dir.isEmpty()) {
+            Random rand = new Random();
+            int randomNum = rand.nextInt(dir.size()) + 0;
+            this.character.move(dir.get(randomNum));
+        }
     }
 
 }
