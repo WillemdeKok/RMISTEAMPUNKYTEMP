@@ -787,7 +787,7 @@ public class Game implements IGame, Serializable{
     }
     
     @Override
-    public ArrayList<String[]> GetInformation() {
+    public synchronized ArrayList<String[]> GetInformation() {
         ArrayList<String[]> information = new ArrayList();
         
 	for (Position p : grid) {

@@ -451,7 +451,6 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
     //Sets up the settings needed to draw.
             
     public synchronized void SetupDraw(){
-        System.out.println("ik ben ook een timer");
         //Teken code hier aan toevoegen
         //Moeten groter zijn dan 9; melding?!
         
@@ -596,7 +595,6 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                 {
                     {
                         DrawGame();
-                        System.out.print("ik ben een timer");
                     }               
                 });                
             }           

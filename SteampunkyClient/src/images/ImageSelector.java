@@ -37,13 +37,13 @@ public class ImageSelector
             {
                 switch (level)
                 {
-                    case 1:
+                    case 0:
                         url = "box01.png";
                         break;
-                    case 2:
+                    case 1:
                         url = "box02.png";
                         break;
-                    case 3:
+                    case 2:
                         url = "box03.png";
                         break;
                 }
