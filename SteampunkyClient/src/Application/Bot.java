@@ -92,7 +92,7 @@ public class Bot implements Serializable {
             List<Position> movableGrid = getMovableGrid(X, Y, grid, null);
 
             System.out.println(X + " bij " + Y);
-            
+
             // <editor-fold desc="difficulty 1." defaultstate="collapsed">
             if (this.difficulty == 1) {
                 int i = 0;
@@ -179,19 +179,20 @@ public class Bot implements Serializable {
             // <editor-fold desc="difficulty 3." defaultstate="collapsed">
             if (difficulty == 3) {
                 if (!ballistaDropped()) {
-                    if(shouldIDropBallista(movableGrid))
-                    {
+                    if (shouldIDropBallista(movableGrid)) {
                         this.character.createBallista(Direction.Right, this.character.getSpeed());
                     }
-                    List<Direction> threats = getThreats(movableGrid);
-                    if (threats != null) {
-                        Direction dir = MoveFrom(threats, movableGrid);
-                        if (dir != null) {
-                            this.character.move(dir);
+                    if (!ballistaDropped()) {
+                        List<Direction> threats = getThreats(movableGrid);
+                        if (threats != null) {
+                            Direction dir = MoveFrom(threats, movableGrid);
+                            if (dir != null) {
+                                this.character.move(dir);
+                            }
                         }
-                    }
-                    if (getPowerUp(movableGrid) != null) {
-                        this.character.move(getPowerUp(movableGrid));
+                        if (getPowerUp(movableGrid) != null) {
+                            this.character.move(getPowerUp(movableGrid));
+                        }
                     }
                 }
             }

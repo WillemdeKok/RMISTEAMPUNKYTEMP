@@ -28,6 +28,7 @@ public class Game implements IGame, Serializable{
     private transient TimerTask task;
     private double currentTime;
     private double totalTime;
+    private Timer gameTickTimer;
 
     private int totalRounds;
     private int currentRound;
@@ -590,6 +591,7 @@ public class Game implements IGame, Serializable{
         } else {
             setupLevel();
         }
+        this.GameTimer();
     }
 
     /**
@@ -825,5 +827,27 @@ public class Game implements IGame, Serializable{
             }
         }
         return information;
+    }
+    
+    public void GameTimer(){
+        this.gameTickTimer = new Timer();  
+        System.out.println("Tick");
+        //Level opnieuw uittekenen met nieuwe posities      
+       
+        //Geeft momenteel ConcurrentModificationException error
+        // Maar deze timer zou dus voor updaten moeten zijn.
+        
+        this.gameTickTimer.scheduleAtFixedRate(new TimerTask() {
+            
+            @Override
+            public void run()
+            {
+
+                    {
+                        updateGame();
+                    }               
+                              
+            }           
+        },500,500);
     }
 }

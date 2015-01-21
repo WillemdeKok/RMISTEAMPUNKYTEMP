@@ -282,7 +282,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         {            
             //get random level from 1 to 3
             Random levelInt = new Random();
-            level = levelInt.nextInt(3) + 1;
+            level = levelInt.nextInt(3)+0;
             
             this.StartGame();
             this.setKeyBindings();        
@@ -294,15 +294,15 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         
         switch (level)
         {
-            case 1:
+            case 0:
                 this.field.setFill(Color.SADDLEBROWN);
                 this.playfield.setFill(Color.BURLYWOOD);
                 break;
-            case 2:
+            case 1:
                 this.field.setFill(Color.DIMGRAY);
                 this.playfield.setFill(Color.LIGHTGRAY);
                 break;
-            case 3:
+            case 2:
                 this.field.setFill(Color.PERU);
                 this.playfield.setFill(Color.BEIGE);
                 break;
