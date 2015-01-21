@@ -42,6 +42,8 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
     @FXML
     Label Creatlobbynamelb;
     @FXML
+    Label LBRating;
+    @FXML
     Label Creatlobbypasswordlb;
     @FXML
     Label joinlobbynamelb;
@@ -144,20 +146,6 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
             }
         }
         this.UpdateForms();
-    }
-
-    @FXML
-    public void AddChatmessage(ILobby l, String s) {
-        if (TFchat.getText().equals("")) {
-            JOptionPane.showMessageDialog(null, "Please enter a chat message");
-        } else {
-            try {
-                l.Addchatmessage(s);
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Server connection failed" + ex.getMessage());
-                System.out.println("Failed" + ex.getMessage());
-            }
-        }
     }
     
     public void UpdateForms() throws RemoteException {
