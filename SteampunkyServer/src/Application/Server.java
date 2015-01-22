@@ -38,6 +38,8 @@ public class Server extends UnicastRemoteObject implements IGameServer {
     private Connection con;
     private User newuser;
     private static Server server = null;
+    private int StartRating = 100;
+    private int GetRating = 0;
 
     //***********************constructoren***********************************
     /**
@@ -120,10 +122,11 @@ public class Server extends UnicastRemoteObject implements IGameServer {
         if (adduser == true) {
             try {
                 Connectionstring();
-                String querywrite = "INSERT INTO USERS VALUES (2,?,?)";
+                String querywrite = "INSERT INTO USERS VALUES (2,?,?,?)";
                 PreparedStatement stat2 = con.prepareStatement(querywrite);
                 stat2.setString(1, username);
                 stat2.setString(2, password);
+                stat2.setInt(3, StartRating);
                 stat2.execute();
                 System.out.println("Aanmaken van de user is gelukt: ");
                 con.close();
@@ -134,6 +137,32 @@ public class Server extends UnicastRemoteObject implements IGameServer {
             }
         }
         return false;
+    }
+    
+    @Override
+    public int GetRating(String username) {
+        try {
+            Connectionstring();
+            System.out.println("Verbing maken is geslaagd voor het ophalen van de Rating");
+            String queryread = "SELECT NAAM,RATING FROM USERS";
+            PreparedStatement stat2 = con.prepareStatement(queryread);
+            ResultSet rs = stat2.executeQuery();
+            while (rs.next()) {
+                if (rs.getString("NAAM").equals(username)) {
+                    GetRating = rs.getInt("Rating");
+                    System.out.println("Rating gevonden");                  
+                    return GetRating;
+                }
+            }
+            con.close();
+            
+            
+        } catch (Exception ex) {
+            System.out.println("Gebruiker niet gevonden voor rating" + ex);
+            return 0;
+        }
+        System.out.println("Rating ophalen is mislukt");
+        return 0;
     }
 
     @Override

@@ -24,4 +24,5 @@ public interface IGameServer extends Remote {
     public boolean leaveLobby(ILobby lobby, String user)throws RemoteException;
     public boolean deleteLobby(ILobby lobby) throws RemoteException; 
     public IUser Getuser(String username) throws RemoteException;
+    public int GetRating(String username) throws RemoteException;
 }

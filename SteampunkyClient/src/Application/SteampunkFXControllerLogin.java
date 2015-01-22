@@ -183,6 +183,7 @@ public class SteampunkFXControllerLogin implements Initializable {
                     try {
                         clientInfo.setUser(TFUsernamelogin.getText());
                         clientInfo.setPassword(TFWachtwoordlogin.getText());
+                        clientInfo.setRating(this.ServerMock.GetRating(TFUsernamelogin.getText()));
                         clientInfo.setIUser(this.ServerMock.Getuser(clientInfo.getUser()));
                         main.gotoLobbyselect(this.clientInfo, this.ServerMock);
                     } catch (Exception ex) {

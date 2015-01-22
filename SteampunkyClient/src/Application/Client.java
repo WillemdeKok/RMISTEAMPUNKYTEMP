@@ -13,8 +13,17 @@ public class Client {
 
     private String user;
     private String password;
+    private int rating;
     private IUser Iuser;
 
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+    
     public Client() {
 
     }

@@ -92,7 +92,7 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
         this.ipAddress = ipAddress;
         this.portNumber = portNumber;
         this.main = application;
-
+        this.LBRating.setText("Rating: " + this.clientInfo.getRating());
         this.LobbyTimer();
         UpdateForms();
     }

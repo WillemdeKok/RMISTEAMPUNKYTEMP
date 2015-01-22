@@ -167,6 +167,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
 
         this.LBLusername.setText("Welcome: " + client.getUser());
         this.LBLRemaining.setText("Remaining slots: " + this.slotsleft);
+        this.LBRating.setText("Rating: " + this.client.getRating());
         this.BTReady.setDisable(true);
         this.BTSpectator.setDisable(true);
 
