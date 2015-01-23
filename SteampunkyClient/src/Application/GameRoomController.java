@@ -23,6 +23,11 @@ import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -139,6 +144,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
     private ArrayList<String> Time;
     private transient ObservableList<String> observableRounds;
     private transient ObservableList<String> observableTime;
+    private ArrayList<String[]> information;
     private transient ObservableList<String> observableRoomsizewidth;
     private transient ObservableList<String> observableRoomsizeheight;
 
@@ -152,25 +158,25 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
     private ILobby lobbyinstance;
     private IGameServer ServerMock;
     private ImageSelector selector;
-    
+
     private int level = 0;
-    
+
     public GameRoomController() throws RemoteException {
     }
-    
+
     public void setApp(SteampunkyFX application, Stage stage, Client client, ILobby l, IGameServer ServerMock) {
         this.ServerMock = ServerMock;
         this.lobbyinstance = l;
         this.stage = stage;
         this.main = application;
         this.client = client;
-        
+
         this.LBLusername.setText("Welcome: " + client.getUser());
         this.LBLRemaining.setText("Remaining slots: " + this.slotsleft);
         this.LBRating.setText("Rating: " + this.client.getRating());
         this.BTReady.setDisable(true);
         this.BTSpectator.setDisable(true);
-        
+
         try {
             RemotePublisher publisher = (RemotePublisher) this.lobbyinstance;
             publisher.addListener(this, "lobby");
@@ -178,7 +184,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
             System.out.println("Publisher not initialized, consider changing the adress??");
             ex.printStackTrace();
         }
-        
+
         this.LBLsize.setDisable(true);
         this.LBLHeight.setDisable(true);
         this.LBLWidth.setDisable(true);
@@ -204,7 +210,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         }
 
         // vult de hoogte en breedte lijst van het speelveld in de combobox
-        for (int widthheight = 9; widthheight < 20; widthheight++) {
+        for (int widthheight = 9; widthheight < 14; widthheight++) {
             if (widthheight % 2 != 0) {
                 String temp = "" + widthheight;
                 observableRoomsizewidth.add(temp);
@@ -218,7 +224,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         this.CBrounds.getSelectionModel().select(0);
         this.CBlevelsizeWidth.getSelectionModel().select(0);
         this.CBlevelsizeHeight.getSelectionModel().select(0);
-        
+
         try {
             this.LVChats.setItems(FXCollections.observableArrayList(lobbyinstance.getChat()));
         } catch (RemoteException ex) {
@@ -239,7 +245,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
 //            }
 //        }
     }
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 //        server = (IServer) getServer();
@@ -304,7 +310,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         this.BTstop.setDisable(true);
         this.BTReady.setDisable(false);
     }
-    
+
     public void SetupStage() {
         this.field = new Rectangle(this.widthPixels, this.heightPixels);
         this.field.setFill(Color.GRAY);
@@ -316,7 +322,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         this.countdown--;
         String number = "Game wil start in: " + this.countdown;
         this.LBLGameState.setText(number);
-        
+
         if (this.countdown == 0) {
             //get random level from 1 to 3
             Random levelInt = new Random();
@@ -327,95 +333,113 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
     }
 
     //clears the scene and draws new boxes for every object.
-    public void DrawGame() {
-        box.getChildren().clear();
-        
-        switch (level) {
-            case 0:
-                this.field.setFill(Color.SADDLEBROWN);
-                this.playfield.setFill(Color.BURLYWOOD);
-                break;
-            case 1:
-                this.field.setFill(Color.DIMGRAY);
-                this.playfield.setFill(Color.LIGHTGRAY);
-                break;
-            case 2:
-                this.field.setFill(Color.PERU);
-                this.playfield.setFill(Color.BEIGE);
-                break;
-        }
-        
-        box.getChildren().add(this.field);
-        box.getChildren().add(this.playfield);
-        
-        ArrayList<String[]> information = null;
-        
-        try {
-            information = this.lobbyinstance.GetInformation();
-        } catch (RemoteException ex) {
-            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        for (String[] s : information) {
-            String object = "";
-            String type = s[1];
-            int xpos = Integer.parseInt(s[2]);
-            int ypos = Integer.parseInt(s[3]);
-            String direction = s[4];
-            if (this.level != Integer.parseInt(s[5])) {
-                this.level = Integer.parseInt(s[5]);
-            }
-            switch (s[0]) {
-                case "1":
-                    object = "Character";
+    public void DrawGame() throws InterruptedException, ExecutionException {
+        {
+            box.getChildren().clear();
+
+            switch (level) {
+                case 0:
+                    this.field.setFill(Color.SADDLEBROWN);
+                    this.playfield.setFill(Color.BURLYWOOD);
                     break;
-                case "2":
-                    object = "Obstacle";
+                case 1:
+                    this.field.setFill(Color.DIMGRAY);
+                    this.playfield.setFill(Color.LIGHTGRAY);
                     break;
-                case "3":
-                    object = "PowerUp";
-                    break;
-                case "4":
-                    object = "Ballista";
-                    break;
-                case "5":
-                    object = "Projectile";
+                case 2:
+                    this.field.setFill(Color.PERU);
+                    this.playfield.setFill(Color.BEIGE);
                     break;
             }
-            
-            Image image = null;
-            ImageView img = null;
-            
-            try {
-                //level nog niet geimplementeerd
-                image = selector.getImage(s, level);
-                img = new ImageView(image);
-                img.setScaleX(this.getScale());
-                img.setScaleY(this.getScale());
-                img.setX((xpos * 100 * this.getScale()) + (-50 * (1 - this.getScale())));
-                img.setY((ypos * 100 * this.getScale()) + (-50 * (1 - this.getScale())));
-                
-                if (object.equals("Projectile") || object.equals("Character")) {
-                    img.setRotate(getRotation(direction));
-                } else {
-                    img.setRotate(0);
+
+            box.getChildren().add(this.field);
+            box.getChildren().add(this.playfield);
+
+            information = null;
+
+            ExecutorService service = Executors.newSingleThreadExecutor();
+            Future<ArrayList<String[]>> future = service.submit(new Callable() {
+                @Override
+                public Object call() throws Exception {
+                    try {
+                        information = lobbyinstance.GetInformation();
+                        return information;
+                    } catch (RemoteException ex) {
+                        Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+                        return null;
+                    }
                 }
-                
-                box.getChildren().add(img);
-            } catch (Exception ex) {
-                System.out.println(ex.getMessage());
             }
-        }
-        try {
-            this.lobbyinstance.move(this.client.getUser(), Direction.Right);
-        } catch (RemoteException ex) {
-            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+            );
+            information = future.get();
+
+            //Informationthread.start();
+            for (String[] s : information) {
+                String object = "";
+                String type = s[1];
+                int xpos = Integer.parseInt(s[2]);
+                int ypos = Integer.parseInt(s[3]);
+                String direction = s[4];
+                if (this.level != Integer.parseInt(s[5])) {
+                    this.level = Integer.parseInt(s[5]);
+                }
+                switch (s[0]) {
+                    case "1":
+                        object = "Character";
+                        break;
+                    case "2":
+                        object = "Obstacle";
+                        break;
+                    case "3":
+                        object = "PowerUp";
+                        break;
+                    case "4":
+                        object = "Ballista";
+                        break;
+                    case "5":
+                        object = "Projectile";
+                        break;
+                }
+
+                Image image = null;
+                ImageView img = null;
+
+                try {
+                    //level nog niet geimplementeerd
+                    image = selector.getImage(s, level);
+                    img = new ImageView(image);
+                    img.setScaleX(this.getScale());
+                    img.setScaleY(this.getScale());
+                    img.setX((xpos * 100 * this.getScale()) + (-50 * (1 - this.getScale())));
+                    img.setY((ypos * 100 * this.getScale()) + (-50 * (1 - this.getScale())));
+
+                    if (object.equals("Projectile") || object.equals("Character")) {
+                        img.setRotate(getRotation(direction));
+                    } else {
+                        img.setRotate(0);
+                    }
+
+                    box.getChildren().add(img);
+                } catch (Exception ex) {
+                    System.out.println(ex.getMessage());
+                }
+            }
+            try {
+                this.lobbyinstance.move(this.client.getUser(), Direction.Right);
+            } catch (RemoteException ex) {
+                Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
-    
+
+    /**
+     *
+     * @param direction
+     * @return
+     */
     public double getRotation(String direction) {
         double rotation = 0;
-        
+
         switch (direction) {
             case "Up":
                 rotation = 0;
@@ -430,10 +454,10 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                 rotation = 270;
                 break;
         }
-        
+
         return rotation;
     }
-    
+
     public double getScale() {
         try {
             double scale = 1;
@@ -456,9 +480,9 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
             scale = hoogteScherm / hoogteSpel;
             /*}
              }*/
-            
+
             return scale;
-            
+
         } catch (RemoteException ex) {
             Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
             return 1;
@@ -473,7 +497,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         int height = Integer.parseInt(this.CBlevelsizeHeight.getValue().toString());
         double time = Integer.parseInt(this.CBMinutes.getValue().toString()) * 60;
         int rounds = Integer.parseInt(this.CBrounds.getValue().toString());
-        
+
         try {
             this.lobbyinstance.createGame(time, 3, level, rounds, width, height);
             SetupDraw();
@@ -496,33 +520,33 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         } catch (RemoteException ex) {
             Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         root = new Group();
         Scene scene = new Scene(root, 1700, 900);
-        
+
         s1 = new ScrollPane();
         s1.setLayoutX(50);
         s1.setLayoutY(50);
         s1.setPrefSize(1600, 800);
-        
+
         box = new AnchorPane();
         s1.setContent(box);
-        
+
         this.field = new Rectangle(this.widthPixels * this.getScale(), this.heightPixels * this.getScale());
         this.field.setFill(Color.GRAY);
-        
+
         this.playfield = new Rectangle(100 * this.getScale(), 100 * this.getScale(), (this.widthCubes * 100 * this.getScale()), (this.heightCubes * 100 * this.getScale()));
         this.playfield.setFill(Color.WHITE);
-        
+
         root.getChildren().add(s1);
         this.stage.setMinHeight(900);
         this.stage.setMinWidth(1700);
         this.stage.setScene(scene);
         this.GameUpdate();
     }
-    
+
     public void drawTimer() {
-        
+
     }
 
     //Set the keybindings for this Scene
@@ -534,26 +558,26 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                     System.out.println("moveup");
                     //this.game.getCharacter().move(Direction.Up);
                 }
-                
+
                 if (keyEvent.getCode().toString().equals("A")) {
                     this.client.getIUser().move(Direction.Left);
                     //this.game.getCharacter().move(Direction.Left);
                 }
-                
+
                 if (keyEvent.getCode().toString().equals("S")) {
                     this.client.getIUser().move(Direction.Down);
                     //this.game.getCharacter().move(Direction.Down);
                 }
-                
+
                 if (keyEvent.getCode().toString().equals("D")) {
                     this.client.getIUser().move(Direction.Right);
                     //this.game.getCharacter().move(Direction.Right);
                 }
-                
+
                 if (keyEvent.getCode().toString().equals("Q")) {
                     //c.createBallista(Direction.Right ,4);
                 }
-                
+
                 if (keyEvent.getCode().toString().equals("E")) {
                     //ICharacter c = (ICharacter) game.getCharacter();
                     //c.createBallista(Direction.Up ,4);
@@ -587,7 +611,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         }, 0, 1000);
         //GameUpdate();
     }
-    
+
     public void LVupdate() {
         this.timer = new Timer();
         this.timer.scheduleAtFixedRate(new TimerTask() {
@@ -602,7 +626,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
             }
         }, 0, 2000);
     }
-    
+
     public synchronized void GameUpdate() {
         this.gameTickTimer = new Timer();
         System.out.println("Fail");
@@ -611,12 +635,18 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         //Geeft momenteel ConcurrentModificationException error
         // Maar deze timer zou dus voor updaten moeten zijn.
         this.gameTickTimer.scheduleAtFixedRate(new TimerTask() {
-            
+
             @Override
             public void run() {
                 javafx.application.Platform.runLater(() -> {
                     {
-                        DrawGame();
+                        try {
+                            DrawGame();
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (ExecutionException ex) {
+                            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                 });
             }
@@ -631,15 +661,15 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         this.CBrounds.setItems(this.observableRounds);
         UpdateForms();
     }
-    
+
     public void UpdateForms() {
-        
+
         this.LBSpectators.getItems().clear();
         this.LBPlayers.getItems().clear();
-        
+
         ArrayList<String> temp = new ArrayList<>();
         ArrayList<String> temp2 = new ArrayList<>();
-        
+
         try {
             for (String s : this.lobbyinstance.getSpectators()) {
                 temp.add(s);
@@ -647,7 +677,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         } catch (RemoteException ex) {
             System.out.println("Remote Exception");
         }
-        
+
         try {
             for (String p : this.lobbyinstance.getPlayers()) {
                 temp2.add(p);
@@ -655,11 +685,11 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         } catch (RemoteException ex) {
             System.out.println("Remote Exception");
         }
-        
+
         this.LBSpectators.setItems(FXCollections.observableList(temp));
         this.LBPlayers.setItems(FXCollections.observableList(temp2));
     }
-    
+
     @FXML
     public void AddChatmessage() {
         if (TFChatInsert.getText().equals("")) {
@@ -670,18 +700,18 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                 Calendar cal = Calendar.getInstance();
                 cal.getTime();
                 SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-                
+
                 chatbericht = sdf.format(cal.getTime()) + " | " + client.getUser() + ": " + TFChatInsert.getText();
                 this.lobbyinstance.Addchatmessage(chatbericht);
                 TFChatInsert.setText("");
-                
+
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "Server connection failed" + ex.getMessage());
                 System.out.println("Failed" + ex.getMessage());
             }
         }
     }
-    
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) throws RemoteException {
         Platform.runLater(new Runnable() {
