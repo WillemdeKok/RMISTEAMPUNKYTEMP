@@ -129,6 +129,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
     private AnchorPane box;
     private Rectangle field;
     private Rectangle playfield;
+    private Color backColor;
 
     //Listen die nodig zijn voor de gui te updaten
     private ArrayList<String> SpectatorNames;
@@ -328,82 +329,94 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
 
     //clears the scene and draws new boxes for every object.
     public void DrawGame() {
-        box.getChildren().clear();
-
-        switch (level) {
-            case 0:
-                this.field.setFill(Color.SADDLEBROWN);
-                this.playfield.setFill(Color.BURLYWOOD);
-                break;
-            case 1:
-                this.field.setFill(Color.DIMGRAY);
-                this.playfield.setFill(Color.LIGHTGRAY);
-                break;
-            case 2:
-                this.field.setFill(Color.PERU);
-                this.playfield.setFill(Color.BEIGE);
-                break;
+        
+        if (PlayerNames.contains(client.getUser()))
+        {
+            
         }
+        
+        if (SpectatorNames.contains(client.getUser()))
+        {
+            box.getChildren().clear();
 
-        box.getChildren().add(this.field);
-        box.getChildren().add(this.playfield);
-
-        ArrayList<String[]> information = null;
-
-        try {
-            information = this.lobbyinstance.GetInformation();
-        } catch (RemoteException ex) {
-            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        for (String[] s : information) {
-            String object = "";
-            String type = s[1];
-            int xpos = Integer.parseInt(s[2]);
-            int ypos = Integer.parseInt(s[3]);
-            String direction = s[4];
-            if(this.level != Integer.parseInt(s[5])){
-                this.level = Integer.parseInt(s[5]);
-            }
-            switch (s[0]) {
-                case "1":
-                    object = "Character";
+            switch (level) {
+                case 0:
+                    this.backColor = Color.SADDLEBROWN;
+                    this.field.setFill(backColor);                
+                    this.playfield.setFill(Color.BURLYWOOD);
                     break;
-                case "2":
-                    object = "Obstacle";
+                case 1:
+                    this.backColor = Color.DIMGRAY;
+                    this.field.setFill(backColor);
+                    this.playfield.setFill(Color.LIGHTGRAY);
                     break;
-                case "3":
-                    object = "PowerUp";
-                    break;
-                case "4":
-                    object = "Ballista";
-                    break;
-                case "5":
-                    object = "Projectile";
+                case 2:
+                    this.backColor = Color.PERU;
+                    this.field.setFill(backColor);
+                    this.playfield.setFill(Color.BEIGE);
                     break;
             }
 
-            Image image = null;
-            ImageView img = null;
+            box.getChildren().add(this.field);
+            box.getChildren().add(this.playfield);
+
+            ArrayList<String[]> information = null;
 
             try {
-                //level nog niet geimplementeerd
-                image = selector.getImage(s, level);
-                img = new ImageView(image);
-                img.setScaleX(this.getScale());
-                img.setScaleY(this.getScale());
-                img.setX((xpos * 100 * this.getScale()) + (-50 * (1 - this.getScale())));
-                img.setY((ypos * 100 * this.getScale()) + (-50 * (1 - this.getScale())));
+                information = this.lobbyinstance.GetInformation();
+            } catch (RemoteException ex) {
+                Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
-                if (object.equals("Projectile") || object.equals("Character")) {
-                    img.setRotate(getRotation(direction));
-                } else {
-                    img.setRotate(0);
+            for (String[] s : information) {
+                String object = "";
+                String type = s[1];
+                int xpos = Integer.parseInt(s[2]);
+                int ypos = Integer.parseInt(s[3]);
+                String direction = s[4];
+                if(this.level != Integer.parseInt(s[5])){
+                    this.level = Integer.parseInt(s[5]);
+                }
+                switch (s[0]) {
+                    case "1":
+                        object = "Character";
+                        break;
+                    case "2":
+                        object = "Obstacle";
+                        break;
+                    case "3":
+                        object = "PowerUp";
+                        break;
+                    case "4":
+                        object = "Ballista";
+                        break;
+                    case "5":
+                        object = "Projectile";
+                        break;
                 }
 
-                box.getChildren().add(img);
-            } catch (Exception ex) {
-                System.out.println(ex.getMessage());
+                Image image = null;
+                ImageView img = null;
+
+                try {
+                    //level nog niet geimplementeerd
+                    image = selector.getImage(s, level);
+                    img = new ImageView(image);
+                    img.setScaleX(this.getScale());
+                    img.setScaleY(this.getScale());
+                    img.setX((xpos * 100 * this.getScale()) + (-50 * (1 - this.getScale())));
+                    img.setY((ypos * 100 * this.getScale()) + (-50 * (1 - this.getScale())));
+
+                    if (object.equals("Projectile") || object.equals("Character")) {
+                        img.setRotate(getRotation(direction));
+                    } else {
+                        img.setRotate(0);
+                    }
+
+                    box.getChildren().add(img);
+                } catch (Exception ex) {
+                    System.out.println(ex.getMessage());
+                }
             }
         }
     }
@@ -433,24 +446,13 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         try {
             double scale = 1;
 
-            //check scale for admin
-            /*for (String name : this.PlayerNames)
-             {
-             if (name.equals(this.admin.getUsername()))
-             {
-             scale = 1;
-             }
-             }
-            
-             for (String name : this.SpectatorNames)
-             {
-             if (name.equals(this.admin.getUsername()))
-             {*/
-            double hoogteScherm = 800;
-            double hoogteSpel = this.lobbyinstance.getHeightPixels();
-            scale = hoogteScherm / hoogteSpel;
-            /*}
-             }*/
+            //check scale for user
+            if (SpectatorNames.contains(client.getUser()))
+            {
+                double hoogteScherm = 800;
+                double hoogteSpel = this.lobbyinstance.getHeightPixels();
+                scale = hoogteScherm / hoogteSpel;
+            }
 
             return scale;
 
@@ -484,6 +486,8 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
 
         try {
             this.PlayerNames = this.lobbyinstance.getPlayers();
+            this.SpectatorNames = this.lobbyinstance.getSpectators();
+            
             this.widthPixels = this.lobbyinstance.getWidthPixels();
             this.widthCubes = this.lobbyinstance.getWidthCubes();
             this.heightPixels = this.lobbyinstance.getHeightPixels();
@@ -502,7 +506,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
 
         box = new AnchorPane();
         s1.setContent(box);
-
+        
         this.field = new Rectangle(this.widthPixels * this.getScale(), this.heightPixels * this.getScale());
         this.field.setFill(Color.GRAY);
 
@@ -515,6 +519,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         this.stage.setScene(scene);
         this.GameUpdate();
     }
+        
 
     public void drawTimer() {
 
@@ -581,7 +586,6 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                 });
             }
         }, 0, 1000);
-        //GameUpdate();
     }
 
     public void LVupdate() {
