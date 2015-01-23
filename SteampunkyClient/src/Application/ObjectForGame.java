@@ -48,7 +48,7 @@ public abstract class ObjectForGame implements Serializable {
         if (!movable) {
             this.direction = null;
         }
-
+        
         this.interfaceID++;
     }
 
@@ -61,7 +61,7 @@ public abstract class ObjectForGame implements Serializable {
     public int getInterfaceID() {
         return this.interfaceID;
     }
-
+    
     public String getObjectType() {
         return this.objectType;
     }
@@ -83,7 +83,7 @@ public abstract class ObjectForGame implements Serializable {
     public int getPositionY() {
         return this.position.getY();
     }
-
+    
     public boolean getMove() {
         return this.movable;
     }
@@ -97,7 +97,7 @@ public abstract class ObjectForGame implements Serializable {
     public Position getPosition() {
         return this.position;
     }
-
+    
     public Direction getDirection() {
         return this.direction;
     }
@@ -239,7 +239,7 @@ public abstract class ObjectForGame implements Serializable {
         }
         return Movable;
     }
-
+    
     public void RemoveFromGame() {
         if (this instanceof CharacterPlayer) {
             CharacterPlayer C = (CharacterPlayer) this;
@@ -247,12 +247,16 @@ public abstract class ObjectForGame implements Serializable {
         } else if (this instanceof Obstacle) {
             Obstacle O = (Obstacle) this;
             O.setBroken(true);
+        } else if (this instanceof Ballista) {
+            Ballista B = (Ballista) this;
+            CharacterPlayer C = B.getOwner();
+            C.removeBallista(B);
         }
         this.setActive(false);
         this.position.removeObject(this);
         this.myGame.getObjects().remove(this);
     }
-
+    
     private void PickUp(String type) {
         if (this instanceof CharacterPlayer) {
             CharacterPlayer c = (CharacterPlayer) this;

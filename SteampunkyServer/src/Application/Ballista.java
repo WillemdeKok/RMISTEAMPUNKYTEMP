@@ -24,6 +24,8 @@ public class Ballista extends ObjectForGame implements Serializable {
     private int shotsShot;
     private double projectileSpeed;
     private int delay;
+    private CharacterPlayer owner;
+    private boolean shotsenabled = false;
 
     /**
      * The constructor of the ObjectForGame Ballista, when this object is made a
@@ -62,14 +64,14 @@ public class Ballista extends ObjectForGame implements Serializable {
                 this.shots = shots;
                 this.shotsShot = 0;
                 this.projectileSpeed = projectileSpeed;
-                this.delay = 3000;
+                this.delay = 2000;
 
                 Timer ProjectileTimer = new Timer();
                 ProjectileTimer.schedule(new TimerTask() {
                     @Override
                     public void run() {
                         System.out.println("JAP");
-                        shootProjectile();
+                        shotsenabled = true;
                     }
                 }, delay
                 );
@@ -80,13 +82,22 @@ public class Ballista extends ObjectForGame implements Serializable {
         }
     }
 
-    private void shootProjectile() {
+    public void shootProjectile() {
+        if (shotsenabled) {
             createProjectile(Direction.Up);
             createProjectile(Direction.Down);
             createProjectile(Direction.Left);
             createProjectile(Direction.Right);
             shotsShot += 4;
+        }
+    }
 
+    public CharacterPlayer getOwner() {
+        return this.owner;
+    }
+
+    public void setOwner(CharacterPlayer C) {
+        this.owner = C;
     }
 
     //**********************methoden****************************************

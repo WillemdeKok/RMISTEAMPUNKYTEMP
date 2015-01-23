@@ -8,10 +8,6 @@ package Application;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -621,6 +617,7 @@ public class Game implements IGame, Serializable {
         ArrayList<CharacterPlayer> tempCharacters = new ArrayList();
         ArrayList<Projectile> tempProjectiles = new ArrayList();
         ArrayList<PowerUp> tempPowerUps = new ArrayList();
+        ArrayList<Ballista> tempBallistas = new ArrayList();
 
         this.grid.stream().forEach((p) -> {
             p.getObjects().stream().map((o) -> {
@@ -631,6 +628,11 @@ public class Game implements IGame, Serializable {
             }).map((o) -> {
                 if (o instanceof CharacterPlayer && !tempCharacters.contains((CharacterPlayer) o)) {
                     tempCharacters.add((CharacterPlayer) o);
+                }
+                return o;
+            }).map((o) -> {
+                if (o instanceof Ballista && !tempBallistas.contains((Ballista) o)) {
+                    tempBallistas.add((Ballista) o);
                 }
                 return o;
             }).map((o) -> {
@@ -648,9 +650,16 @@ public class Game implements IGame, Serializable {
         tempProjectiles.stream().forEach((P) -> {
             P.move(P.getDirection());
         });
+        tempBallistas.stream().forEach((B) -> {
+            if (B.getShotsFired() == B.getShots()) {
+                B.RemoveFromGame();
+            } else {
+                B.shootProjectile();
+            }
+        });
         bots.stream().forEach((B) -> {
             if (!B.getCharacter().getDead()) {
-                B.AI();// starten van thread 
+                B.AI();
             } else {
                 System.out.println("dead");
             }
@@ -740,19 +749,7 @@ public class Game implements IGame, Serializable {
         //Add bots for missing players
         for (int k = i; k < 4; k++) {
             if (k >= count) {
-                //Bot b = new Bot(namen[k], this.botDifficulty, this);
-                //this.bots.add(b);
-                ExecutorService service = Executors.newSingleThreadExecutor();
-                Future<Bot> future = service.submit(new Bot(namen[k], this.botDifficulty, this));
-                Bot b = null;
-                try {
-                    b = future.get();
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ExecutionException ex) {
-                    Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
+                Bot b = new Bot(namen[k], this.botDifficulty, this);
                 this.bots.add(b);
 
                 CharacterPlayer c = new CharacterPlayer(1, false, 1, 3, positions[k], true, true, directions[k], this);

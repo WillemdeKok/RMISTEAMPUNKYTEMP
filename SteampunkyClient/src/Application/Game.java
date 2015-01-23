@@ -617,6 +617,7 @@ public class Game implements IGame, Serializable {
         ArrayList<CharacterPlayer> tempCharacters = new ArrayList();
         ArrayList<Projectile> tempProjectiles = new ArrayList();
         ArrayList<PowerUp> tempPowerUps = new ArrayList();
+        ArrayList<Ballista> tempBallistas = new ArrayList();
 
         this.grid.stream().forEach((p) -> {
             p.getObjects().stream().map((o) -> {
@@ -627,6 +628,11 @@ public class Game implements IGame, Serializable {
             }).map((o) -> {
                 if (o instanceof CharacterPlayer && !tempCharacters.contains((CharacterPlayer) o)) {
                     tempCharacters.add((CharacterPlayer) o);
+                }
+                return o;
+            }).map((o) -> {
+                if (o instanceof Ballista && !tempBallistas.contains((Ballista) o)) {
+                    tempBallistas.add((Ballista) o);
                 }
                 return o;
             }).map((o) -> {
@@ -643,6 +649,13 @@ public class Game implements IGame, Serializable {
         }
         tempProjectiles.stream().forEach((P) -> {
             P.move(P.getDirection());
+        });
+        tempBallistas.stream().forEach((B) -> {
+            if (B.getShotsFired() == B.getShots()) {
+                B.RemoveFromGame();
+            } else {
+                B.shootProjectile();
+            }
         });
         bots.stream().forEach((B) -> {
             if (!B.getCharacter().getDead()) {

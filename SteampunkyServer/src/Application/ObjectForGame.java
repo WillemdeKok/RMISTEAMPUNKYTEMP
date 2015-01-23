@@ -247,6 +247,10 @@ public abstract class ObjectForGame implements Serializable {
         } else if (this instanceof Obstacle) {
             Obstacle O = (Obstacle) this;
             O.setBroken(true);
+        } else if (this instanceof Ballista) {
+            Ballista B = (Ballista) this;
+            CharacterPlayer C = B.getOwner();
+            C.removeBallista(B);
         }
         this.setActive(false);
         this.position.removeObject(this);

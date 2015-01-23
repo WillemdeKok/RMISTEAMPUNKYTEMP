@@ -7,13 +7,14 @@ package Application;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.concurrent.Callable;
 
 /**
  * OK
  * <p>
  * @author Melanie
  */
-public class Bot implements Serializable {
+public class Bot implements Serializable, Callable {
 
     //************************datavelden*************************************
     private final int botID;
@@ -90,8 +91,6 @@ public class Bot implements Serializable {
             int Y = this.character.getPosition().getY();
             List<Position> grid = this.game.getGrid();
             List<Position> movableGrid = getMovableGrid(X, Y, grid, null);
-
-            System.out.println(X + " bij " + Y);
 
             // <editor-fold desc="difficulty 1." defaultstate="collapsed">
             if (this.difficulty == 1) {
@@ -199,6 +198,8 @@ public class Bot implements Serializable {
                 }
             }
             // </editor-fold>
+        } else {
+            System.out.println("dead");
         }
     }
 
@@ -239,81 +240,89 @@ public class Bot implements Serializable {
         int y = this.character.getPosition().getY();
         int t = this.character.getTorchRange();
         List<Position> tempList = new ArrayList<>();
-
-        if (this.character.getMove()) {
-            grid.stream().map((P) -> {
-                if (P.getX() == X && P.getY() == Y) {
-                    tempList.add(P);
-                }
-                return P;
-            }).map((P) -> {
-                if (P.getX() == X && P.getY() == Y + 1 && D != Direction.Up) {
-                    if (this.isVisible(X, Y + 1)) {
-                        if (!P.getObjects().isEmpty()) {
-                            P.getObjects().stream().filter((O) -> ((O instanceof Ballista) == false && (O instanceof Obstacle) == false)).forEach((_item) -> {
+        try {
+            if (this.character.getMove()) {
+                grid.stream().map((P) -> {
+                    if (P.getX() == X && P.getY() == Y) {
+                        tempList.add(P);
+                    }
+                    return P;
+                }).map((P) -> {
+                    if (P.getX() == X && P.getY() == Y + 1 && D != Direction.Up) {
+                        if (this.isVisible(X, Y + 1)) {
+                            if (!P.getObjects().isEmpty()) {
+                                P.getObjects().stream().filter((O) -> ((O instanceof Ballista) == false && (O instanceof Obstacle) == false)).forEach((_item) -> {
+                                    this.getMovableGrid(X, Y + 1, grid, Direction.Down).stream().filter((Pos) -> (!tempList.contains(Pos))).forEach((Pos) -> {
+                                        tempList.add(Pos);
+                                    });
+                                });
+                            } else {
                                 this.getMovableGrid(X, Y + 1, grid, Direction.Down).stream().filter((Pos) -> (!tempList.contains(Pos))).forEach((Pos) -> {
                                     tempList.add(Pos);
                                 });
-                            });
-                        } else {
-                            this.getMovableGrid(X, Y + 1, grid, Direction.Down).stream().filter((Pos) -> (!tempList.contains(Pos))).forEach((Pos) -> {
-                                tempList.add(Pos);
-                            });
-                        }
+                            }
 
+                        }
                     }
-                }
-                return P;
-            }).map((P) -> {
-                if (P.getX() == X + 1 && P.getY() == Y && D != Direction.Left) {
-                    if (this.isVisible(X + 1, Y)) {
-                        if (!P.getObjects().isEmpty()) {
-                            P.getObjects().stream().filter((O) -> ((O instanceof Ballista) == false && (O instanceof Obstacle) == false)).forEach((_item) -> {
+                    return P;
+                }).map((P) -> {
+                    if (P.getX() == X + 1 && P.getY() == Y && D != Direction.Left) {
+                        if (this.isVisible(X + 1, Y)) {
+                            if (!P.getObjects().isEmpty()) {
+                                P.getObjects().stream().filter((O) -> ((O instanceof Ballista) == false && (O instanceof Obstacle) == false)).forEach((_item) -> {
+                                    this.getMovableGrid(X + 1, Y, grid, Direction.Right).stream().filter((Pos) -> (!tempList.contains(Pos))).forEach((Pos) -> {
+                                        tempList.add(Pos);
+                                    });
+                                });
+                            } else {
                                 this.getMovableGrid(X + 1, Y, grid, Direction.Right).stream().filter((Pos) -> (!tempList.contains(Pos))).forEach((Pos) -> {
                                     tempList.add(Pos);
                                 });
-                            });
-                        } else {
-                            this.getMovableGrid(X + 1, Y, grid, Direction.Right).stream().filter((Pos) -> (!tempList.contains(Pos))).forEach((Pos) -> {
-                                tempList.add(Pos);
-                            });
-                        }
+                            }
 
+                        }
                     }
-                }
-                return P;
-            }).map((P) -> {
-                if (P.getX() == X && P.getY() == Y - 1 && D != Direction.Down) {
-                    if (this.isVisible(X, Y - 1)) {
-                        if (!P.getObjects().isEmpty()) {
-                            P.getObjects().stream().filter((O) -> ((O instanceof Ballista) == false && (O instanceof Obstacle) == false)).forEach((_item) -> {
+                    return P;
+                }).map((P) -> {
+                    if (P.getX() == X && P.getY() == Y - 1 && D != Direction.Down) {
+                        if (this.isVisible(X, Y - 1)) {
+                            if (!P.getObjects().isEmpty()) {
+                                P.getObjects().stream().filter((O) -> ((O instanceof Ballista) == false && (O instanceof Obstacle) == false)).forEach((_item) -> {
+                                    this.getMovableGrid(X, Y - 1, grid, Direction.Up).stream().filter((Pos) -> (!tempList.contains(Pos))).forEach((Pos) -> {
+                                        tempList.add(Pos);
+                                    });
+                                });
+                            } else {
                                 this.getMovableGrid(X, Y - 1, grid, Direction.Up).stream().filter((Pos) -> (!tempList.contains(Pos))).forEach((Pos) -> {
                                     tempList.add(Pos);
                                 });
-                            });
-                        } else {
-                            this.getMovableGrid(X, Y - 1, grid, Direction.Up).stream().filter((Pos) -> (!tempList.contains(Pos))).forEach((Pos) -> {
-                                tempList.add(Pos);
-                            });
+                            }
                         }
                     }
-                }
-                return P;
-            }).filter((P) -> (P.getX() == X - 1 && P.getY() == Y && D != Direction.Right)).filter((P) -> (this.isVisible(X - 1, Y))).forEach((P) -> {
-                if (!P.getObjects().isEmpty()) {
-                    P.getObjects().stream().filter((O) -> ((O instanceof Ballista) == false && (O instanceof Obstacle) == false)).forEach((_item) -> {
+                    return P;
+                }).filter((P) -> (P.getX() == X - 1 && P.getY() == Y && D != Direction.Right)).filter((P) -> (this.isVisible(X - 1, Y))).forEach((P) -> {
+                    if (!P.getObjects().isEmpty()) {
+                        P.getObjects().stream().filter((O) -> ((O instanceof Ballista) == false && (O instanceof Obstacle) == false)).forEach((_item) -> {
+                            this.getMovableGrid(X - 1, Y, grid, Direction.Left).stream().filter((Pos) -> (!tempList.contains(Pos))).forEach((Pos) -> {
+                                tempList.add(Pos);
+                            });
+                        });
+                    } else {
                         this.getMovableGrid(X - 1, Y, grid, Direction.Left).stream().filter((Pos) -> (!tempList.contains(Pos))).forEach((Pos) -> {
                             tempList.add(Pos);
                         });
-                    });
-                } else {
-                    this.getMovableGrid(X - 1, Y, grid, Direction.Left).stream().filter((Pos) -> (!tempList.contains(Pos))).forEach((Pos) -> {
-                        tempList.add(Pos);
-                    });
-                }
-            });
+                    }
+                });
+            }
+        } catch (StackOverflowError er) {
+            // more general: catch(Error er)
+            // anything: catch(Throwable er)
+            System.out.println("Caught " + er);
+            er.printStackTrace();
         }
+        System.out.println("After the error...");
         return tempList;
+
     }
 
     private boolean shouldIDropBallista(List<Position> grid) {
@@ -580,6 +589,11 @@ public class Bot implements Serializable {
             int randomNum = rand.nextInt(dir.size()) + 0;
             this.character.move(dir.get(randomNum));
         }
+    }
+
+    @Override
+    public Object call() throws Exception {
+        return this;
     }
 
 }

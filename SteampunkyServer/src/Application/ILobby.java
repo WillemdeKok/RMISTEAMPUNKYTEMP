@@ -38,7 +38,7 @@ public interface ILobby extends Remote {
     public void Addchatmessage(String message) throws RemoteException;
 
     public void move(String user, Direction d) throws RemoteException;
-    
+
     public void dropBallista(String user) throws RemoteException;
 
     public void updateGame() throws RemoteException;

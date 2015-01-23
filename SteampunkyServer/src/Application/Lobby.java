@@ -263,17 +263,19 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
         }
         return false;
     }
+
     @Override
-    public void dropBallista(String user){
+    public void dropBallista(String user) {
         CharacterPlayer C = null;
         try {
             C = this.game.getPlayerCharacter(user);
-            C.createBallista(Direction.Right,1);
+            C.createBallista(Direction.Right, 1);
         } catch (RemoteException ex) {
             Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
+
     @Override
     public void move(String user, Direction d) {
         CharacterPlayer C = null;
