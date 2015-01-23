@@ -836,8 +836,12 @@ public class Game implements IGame, Serializable {
                 } else if (o instanceof Projectile) {
                     objectinfo[0] = "5";
                 }
-
-                objectinfo[1] = o.getObjectType();
+                if (o instanceof PowerUp) {
+                    PowerUp P = (PowerUp) o;
+                    objectinfo[1] = P.getPowerUpType();
+                } else {
+                    objectinfo[1] = o.getObjectType();
+                }
                 objectinfo[2] = o.getPosition().getX() + "";
                 objectinfo[3] = o.getPosition().getY() + "";
 
@@ -873,6 +877,6 @@ public class Game implements IGame, Serializable {
                     isRunning = false;
                 }
             }
-        }, 500, 500);
+        }, 300, 300);
     }
 }

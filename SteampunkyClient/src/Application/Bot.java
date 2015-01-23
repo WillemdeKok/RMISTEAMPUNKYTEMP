@@ -237,93 +237,267 @@ public class Bot implements Serializable, Callable {
     }
 
     private List<Position> getMovableGrid(int X, int Y, List<Position> grid, Direction D) {
+
         int x = this.character.getPosition().getX();
         int y = this.character.getPosition().getY();
         int t = this.character.getTorchRange();
         List<Position> tempList = new ArrayList<>();
-        try {
-            if (this.character.getMove()) {
-                grid.stream().map((P) -> {
-                    if (P.getX() == X && P.getY() == Y) {
-                        tempList.add(P);
-                    }
-                    return P;
-                }).map((P) -> {
-                    if (P.getX() == X && P.getY() == Y + 1 && D != Direction.Up) {
-                        if (this.isVisible(X, Y + 1)) {
-                            if (!P.getObjects().isEmpty()) {
-                                P.getObjects().stream().filter((O) -> ((O instanceof Ballista) == false && (O instanceof Obstacle) == false)).forEach((_item) -> {
-                                    this.getMovableGrid(X, Y + 1, grid, Direction.Down).stream().filter((Pos) -> (!tempList.contains(Pos))).forEach((Pos) -> {
-                                        tempList.add(Pos);
-                                    });
-                                });
-                            } else {
-                                this.getMovableGrid(X, Y + 1, grid, Direction.Down).stream().filter((Pos) -> (!tempList.contains(Pos))).forEach((Pos) -> {
-                                    tempList.add(Pos);
-                                });
-                            }
-
-                        }
-                    }
-                    return P;
-                }).map((P) -> {
-                    if (P.getX() == X + 1 && P.getY() == Y && D != Direction.Left) {
-                        if (this.isVisible(X + 1, Y)) {
-                            if (!P.getObjects().isEmpty()) {
-                                P.getObjects().stream().filter((O) -> ((O instanceof Ballista) == false && (O instanceof Obstacle) == false)).forEach((_item) -> {
-                                    this.getMovableGrid(X + 1, Y, grid, Direction.Right).stream().filter((Pos) -> (!tempList.contains(Pos))).forEach((Pos) -> {
-                                        tempList.add(Pos);
-                                    });
-                                });
-                            } else {
-                                this.getMovableGrid(X + 1, Y, grid, Direction.Right).stream().filter((Pos) -> (!tempList.contains(Pos))).forEach((Pos) -> {
-                                    tempList.add(Pos);
-                                });
-                            }
-
-                        }
-                    }
-                    return P;
-                }).map((P) -> {
-                    if (P.getX() == X && P.getY() == Y - 1 && D != Direction.Down) {
-                        if (this.isVisible(X, Y - 1)) {
-                            if (!P.getObjects().isEmpty()) {
-                                P.getObjects().stream().filter((O) -> ((O instanceof Ballista) == false && (O instanceof Obstacle) == false)).forEach((_item) -> {
-                                    this.getMovableGrid(X, Y - 1, grid, Direction.Up).stream().filter((Pos) -> (!tempList.contains(Pos))).forEach((Pos) -> {
-                                        tempList.add(Pos);
-                                    });
-                                });
-                            } else {
-                                this.getMovableGrid(X, Y - 1, grid, Direction.Up).stream().filter((Pos) -> (!tempList.contains(Pos))).forEach((Pos) -> {
-                                    tempList.add(Pos);
-                                });
-                            }
-                        }
-                    }
-                    return P;
-                }).filter((P) -> (P.getX() == X - 1 && P.getY() == Y && D != Direction.Right)).filter((P) -> (this.isVisible(X - 1, Y))).forEach((P) -> {
-                    if (!P.getObjects().isEmpty()) {
-                        P.getObjects().stream().filter((O) -> ((O instanceof Ballista) == false && (O instanceof Obstacle) == false)).forEach((_item) -> {
-                            this.getMovableGrid(X - 1, Y, grid, Direction.Left).stream().filter((Pos) -> (!tempList.contains(Pos))).forEach((Pos) -> {
-                                tempList.add(Pos);
-                            });
-                        });
-                    } else {
-                        this.getMovableGrid(X - 1, Y, grid, Direction.Left).stream().filter((Pos) -> (!tempList.contains(Pos))).forEach((Pos) -> {
-                            tempList.add(Pos);
-                        });
-                    }
-                });
+        for (int i = 1; i < t; i++) {
+            List<Position> L = this.getGridRow(i);
+            tempList.addAll(L);
+            if (L.size() < 4) {
+                return tempList;
             }
-        } catch (StackOverflowError er) {
-            // more general: catch(Error er)
-            // anything: catch(Throwable er)
-            System.out.println("Caught " + er);
-            er.printStackTrace();
         }
-        System.out.println("After the error...");
         return tempList;
+//        
+//        try {
+//            //  if (((X - x) + (Y - y)) <= 4 && ((X - x) + (Y - y)) >= -4) {
+//            if (this.character.getMove()) {
+//                grid.stream().map((P) -> {
+//                    if (P.getX() == X && P.getY() == Y) {
+//                        tempList.add(P);
+//                    }
+//                    return P;
+//                }).map((P) -> {
+//                    if (P.getX() == X && P.getY() == Y + 1 && D != Direction.Up) {
+//                        if (this.isVisible(X, Y + 1)) {
+//                            if (!P.getObjects().isEmpty()) {
+//                                for (Object O : P.getObjects()) {
+//                                    if (O instanceof Object || O instanceof Ballista) {
+//                                        break;
+//                                    } else {
+//                                        this.getMovableGrid(X, Y + 1, grid, Direction.Down).stream().filter((Pos) -> (!tempList.contains(Pos))).forEach((Pos) -> {
+//                                            tempList.add(Pos);
+//
+//                                        });
+//                                        break;
+//                                    }
+//                                }
+//                            } else {
+//                                this.getMovableGrid(X, Y + 1, grid, Direction.Down).stream().filter((Pos) -> (!tempList.contains(Pos))).forEach((Pos) -> {
+//                                    tempList.add(Pos);
+//                                });
+//                            }
+//
+//                        }
+//                    }
+//                    return P;
+//                }).map((P) -> {
+//                    if (P.getX() == X + 1 && P.getY() == Y && D != Direction.Left) {
+//                        if (this.isVisible(X + 1, Y)) {
+//                            if (!P.getObjects().isEmpty()) {
+//                                for (Object O : P.getObjects()) {
+//                                    if (O instanceof Object || O instanceof Ballista) {
+//                                        break;
+//                                    } else {
+//                                        this.getMovableGrid(X + 1, Y, grid, Direction.Right).stream().filter((Pos) -> (!tempList.contains(Pos))).forEach((Pos) -> {
+//                                            tempList.add(Pos);
+//                                        });
+//
+//                                    }
+//                                }
+//                            } else {
+//                                this.getMovableGrid(X + 1, Y, grid, Direction.Right).stream().filter((Pos) -> (!tempList.contains(Pos))).forEach((Pos) -> {
+//                                    tempList.add(Pos);
+//                                });
+//                            }
+//
+//                        }
+//                    }
+//                    return P;
+//                }).map((P) -> {
+//                    if (P.getX() == X && P.getY() == Y - 1 && D != Direction.Down) {
+//                        if (this.isVisible(X, Y - 1)) {
+//                            if (!P.getObjects().isEmpty()) {
+//                                for (Object O : P.getObjects()) {
+//                                    if (O instanceof Object || O instanceof Ballista) {
+//                                        break;
+//                                    } else {
+//                                        this.getMovableGrid(X, Y - 1, grid, Direction.Up).stream().filter((Pos) -> (!tempList.contains(Pos))).forEach((Pos) -> {
+//                                            tempList.add(Pos);
+//                                        });
+//                                    }
+//                                }
+//                            } else {
+//                                this.getMovableGrid(X, Y - 1, grid, Direction.Up).stream().filter((Pos) -> (!tempList.contains(Pos))).forEach((Pos) -> {
+//                                    tempList.add(Pos);
+//                                });
+//                            }
+//                        }
+//                    }
+//                    return P;
+//                }).filter((P) -> (P.getX() == X - 1 && P.getY() == Y && D != Direction.Right)).filter((P) -> (this.isVisible(X - 1, Y))).forEach((P) -> {
+//                    if (!P.getObjects().isEmpty()) {
+//                        for (Object O : P.getObjects()) {
+//                            if (O instanceof Object || O instanceof Ballista) {
+//                                break;
+//                            } else {
+//                                this.getMovableGrid(X - 1, Y, grid, Direction.Left).stream().filter((Pos) -> (!tempList.contains(Pos))).forEach((Pos) -> {
+//                                    tempList.add(Pos);
+//                                });
+//                            }
+//                        }
+//                    } else {
+//                        this.getMovableGrid(X - 1, Y, grid, Direction.Left).stream().filter((Pos) -> (!tempList.contains(Pos))).forEach((Pos) -> {
+//                            tempList.add(Pos);
+//                        });
+//                    }
+//                });
+//            }
+//            // }
+//        } catch (StackOverflowError er) {
+//            // more general: catch(Error er)
+//            // anything: catch(Throwable er)
+//            System.out.println("Caught " + er);
+//            er.printStackTrace();
+//        }
+//        System.out.println("After the error...");
+//        return tempList;
 
+    }
+
+    private List<Position> getGridRow(int row) {
+        int X = this.character.getPosition().getX();
+        int Y = this.character.getPosition().getY();
+        int T = this.character.getTorchRange();
+        List<Position> tempList = new ArrayList<>();
+        List<ObjectForGame> L = new ArrayList<>();
+        if (row % 2 != 0) {
+            if (this.game.getPosition(X + row, Y) != null) {
+                L = this.game.getPosition(X + row, Y).getObjects();
+                if (L != null) {
+                    if (!L.isEmpty()) {
+                        for (Object O : L) {
+                            if (O instanceof Ballista || O instanceof Obstacle) {
+
+                            } else {
+                                tempList.add(this.game.getPosition(X + row, Y));
+                            }
+                        }
+
+                    } else {
+                        tempList.add(this.game.getPosition(X + row, Y));
+                    }
+                }
+            }
+            if (this.game.getPosition(X - row, Y) != null) {
+                L = this.game.getPosition(X - row, Y).getObjects();
+                if (L != null) {
+                    if (!L.isEmpty()) {
+                        for (Object O : L) {
+                            if (O instanceof Ballista || O instanceof Obstacle) {
+
+                            } else {
+                                tempList.add(this.game.getPosition(X - row, Y));
+                            }
+                        }
+                    } else {
+                        tempList.add(this.game.getPosition(X - row, Y));
+                    }
+
+                }
+            }
+            if (this.game.getPosition(X, Y + row) != null) {
+                L = this.game.getPosition(X, Y + row).getObjects();
+                if (L != null) {
+                    if (!L.isEmpty()) {
+                        for (Object O : L) {
+                            if (O instanceof Ballista || O instanceof Obstacle) {
+
+                            } else {
+                                tempList.add(this.game.getPosition(X, Y + row));
+                            }
+                        }
+                    } else {
+                        tempList.add(this.game.getPosition(X, Y + row));
+                    }
+                }
+            }
+            if (this.game.getPosition(X, Y - row) != null) {
+                L = this.game.getPosition(X, Y - row).getObjects();
+                if (L != null) {
+                    if (!L.isEmpty()) {
+                        for (Object O : L) {
+                            if (O instanceof Ballista || O instanceof Obstacle) {
+
+                            } else {
+                                tempList.add(this.game.getPosition(X, Y - row));
+                            }
+                        }
+                    } else {
+                        tempList.add(this.game.getPosition(X, Y - row));
+                    }
+
+                }
+            }
+        } else {
+            if (this.game.getPosition(X + row / 2, Y + row / 2) != null) {
+                L = this.game.getPosition(X + row / 2, Y + row / 2).getObjects();
+                if (L != null) {
+                    if (!L.isEmpty()) {
+                        for (Object O : L) {
+                            if (O instanceof Ballista || O instanceof Obstacle) {
+
+                            } else {
+                                tempList.add(this.game.getPosition(X + row / 2, Y + row / 2));
+                            }
+                        }
+                    } else {
+                        tempList.add(this.game.getPosition(X + row / 2, Y + row / 2));
+                    }
+                }
+            }
+            if (this.game.getPosition(X + row / 2, Y - row / 2) != null) {
+                L = this.game.getPosition(X + row / 2, Y - row / 2).getObjects();
+                if (L != null) {
+                    if (!L.isEmpty()) {
+                        for (Object O : L) {
+                            if (O instanceof Ballista || O instanceof Obstacle) {
+
+                            } else {
+                                tempList.add(this.game.getPosition(X + row / 2, Y - row / 2));
+                            }
+                        }
+                    } else {
+                        tempList.add(this.game.getPosition(X + row / 2, Y - row / 2));
+                    }
+                }
+            }
+            if (this.game.getPosition(X - row / 2, Y + row / 2) != null) {
+                L = this.game.getPosition(X - row / 2, Y + row / 2).getObjects();
+                if (L != null) {
+                    if (!L.isEmpty()) {
+                        for (Object O : L) {
+                            if (O instanceof Ballista || O instanceof Obstacle) {
+
+                            } else {
+                                tempList.add(this.game.getPosition(X - row / 2, Y + row / 2));
+                            }
+                        }
+                    } else {
+                        tempList.add(this.game.getPosition(X - row / 2, Y + row / 2));
+                    }
+                }
+            }
+            if (this.game.getPosition(X - row / 2, Y - row / 2) != null) {
+                L = this.game.getPosition(X - row / 2, Y - row / 2).getObjects();
+                if (L != null) {
+                    if (!L.isEmpty()) {
+                        for (Object O : L) {
+                            if (O instanceof Ballista || O instanceof Obstacle) {
+
+                            } else {
+                                tempList.add(this.game.getPosition(X - row / 2, Y - row / 2));
+                            }
+                        }
+                    } else {
+                        tempList.add(this.game.getPosition(X - row / 2, Y - row / 2));
+                    }
+                }
+            }
+        }
+        return tempList;
     }
 
     private boolean shouldIDropBallista(List<Position> grid) {
@@ -464,7 +638,7 @@ public class Bot implements Serializable, Callable {
         } else if (availableDirections.size() == 1) {
             return availableDirections.get(0);
         } else if (availableDirections.size() == 3) {
-            if (MoveFrom.get(1) == Direction.Left) {
+            if (MoveFrom.get(0) == Direction.Left) {
                 availableDirections.remove(Direction.Right);
                 Random rand = new Random();
                 int randomNum = rand.nextInt(availableDirections.size()) + 0;
@@ -542,7 +716,7 @@ public class Bot implements Serializable, Callable {
                 if (!this.game.getPosition(X, Y + i).getObjects().isEmpty() && movableGrid.contains(this.game.getPosition(X, Y + i))) {
                     for (ObjectForGame O : this.game.getPosition(X, Y + i).getObjects()) {
                         if (O instanceof PowerUp) {
-                            return Direction.Up;
+                            return Direction.Down;
                         }
                     }
                 }
@@ -551,7 +725,7 @@ public class Bot implements Serializable, Callable {
                 if (!this.game.getPosition(X, Y - i).getObjects().isEmpty() && movableGrid.contains(this.game.getPosition(X, Y - i))) {
                     for (ObjectForGame O : this.game.getPosition(X, Y - i).getObjects()) {
                         if (O instanceof PowerUp) {
-                            return Direction.Down;
+                            return Direction.Up;
                         }
                     }
                 }

@@ -678,7 +678,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                     }
                 });
             }
-        }, 500, 500);
+        }, 300, 300);
     }
 
     //Initialiseert de combo boxen
