@@ -139,6 +139,78 @@ public class Server extends UnicastRemoteObject implements IGameServer {
         return false;
     }
     
+    //Rating laten dalen met een waarde die hij binnenkrijgt in de methode
+    @Override
+    public int DecreaseRating(String username,int rating) {
+        int oldrating = 0;
+        int newrating = 0;
+        try {
+            Connectionstring();
+            oldrating = GetRating(username);
+            newrating = oldrating - rating;
+            System.out.println("Verbing maken is geslaagd voor het DecreaseRating van de Rating");
+            String querywrite = "UPDATE USERS SET RATING = ? WHERE NAAM = ?";
+            PreparedStatement stat2 = con.prepareStatement(querywrite);
+            stat2.setInt(1, newrating);
+            stat2.setString(2, username);
+            stat2.execute();
+            con.close();     
+        } catch (Exception ex) {
+            System.out.println("Gebruiker niet gevonden voor rating" + ex);
+            return 0;
+        }
+        System.out.println("Rating ophalen is mislukt");
+        return newrating;
+    }
+    
+    //Rating laten stijgen met een waarde die hij binnenkrijgt in de methode
+    @Override
+    public int IncreaseRating(String username,int rating) {
+        int oldrating = 0;
+        int newrating = 0;
+        try {
+            Connectionstring();
+            oldrating = GetRating(username);
+            newrating = oldrating + rating;
+            System.out.println("Verbing maken is geslaagd voor het DecreaseRating van de Rating");
+            String querywrite = "UPDATE USERS SET RATING = ? WHERE NAAM = ?";
+            PreparedStatement stat2 = con.prepareStatement(querywrite);
+            stat2.setInt(1, oldrating + rating);
+            stat2.setString(2, username);
+            stat2.execute();
+            con.close();     
+        } catch (Exception ex) {
+            System.out.println("Gebruiker niet gevonden voor rating" + ex);
+            return 0;
+        }
+        System.out.println("Rating ophalen is mislukt");
+        return newrating;
+    }
+    
+    //Rating van dit moment ophalen uit de database bij een username
+    @Override
+    public ArrayList<String> GetTotalrating() {
+        ArrayList<String> ratinglist = new ArrayList(); 
+        try {
+            Connectionstring();
+            System.out.println("Verbing maken is geslaagd voor het ophalen van de Rating");
+            String queryread = "SELECT NAAM,RATING FROM USERS ORDER BY RATING DESC,NAAM";
+            PreparedStatement stat2 = con.prepareStatement(queryread);
+            ResultSet rs = stat2.executeQuery();
+            while (rs.next()) {
+                ratinglist.add(rs.getString("NAAM") + ": " + rs.getInt("RATING"));
+            }
+            con.close();
+            return ratinglist;
+            
+        } catch (Exception ex) {
+            System.out.println("Gebruiker niet gevonden voor rating" + ex);
+            return null;
+        }
+    }
+    
+    
+    //Rating van dit moment ophalen uit de database bij een username
     @Override
     public int GetRating(String username) {
         try {

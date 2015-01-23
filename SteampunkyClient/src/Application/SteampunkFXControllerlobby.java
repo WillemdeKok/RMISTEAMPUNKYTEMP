@@ -12,6 +12,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
@@ -63,6 +64,8 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
     Button btjoinlobby;
     @FXML
     ListView Lblobby;
+    @FXML
+    ListView LVrating;
 
     Timer LobbyTimer;
     ArrayList<ILobby> lobbies;
@@ -94,8 +97,12 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
         this.main = application;
         this.LBRating.setText("Rating: " + this.clientInfo.getRating());
         this.LobbyTimer();
+        ArrayList<String> ratinglist = this.ServerMock.GetTotalrating();
+        this.LVrating.setItems(FXCollections.observableArrayList(ratinglist).sorted());
         UpdateForms();
+        
     }
+    
 
     public void JoinLobbyFromLV(Event evt) {
         System.out.println("Event triggered");
@@ -161,7 +168,7 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
         }
         
         this.CBjoinlobby.setItems(FXCollections.observableArrayList(temp));
-        this.Lblobby.setItems(FXCollections.observableArrayList(temp));
+        this.Lblobby.setItems(FXCollections.observableArrayList(temp));       
     }
 
     public void Clear() {

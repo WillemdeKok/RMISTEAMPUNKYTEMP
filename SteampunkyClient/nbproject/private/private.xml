@@ -5,12 +5,15 @@
             <url>src/Application/SteampunkFXControllerlobby.java</url>
             <bookmark id="1">
                 <name/>
-                <line>162</line>
+                <line>169</line>
                 <key/>
             </bookmark>
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/Users/Bart/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyClient/src/Application/SteampunkyFX.java</file>
+            <file>file:/C:/Users/Bart/Documents/GitHub/RMISTEAMPUNKYTEMP/SteampunkyClient/src/Application/SteampunkFXControllerlobby.java</file>
+        </group>
     </open-files>
 </project-private>
