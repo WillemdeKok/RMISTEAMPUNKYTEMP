@@ -161,6 +161,7 @@ public abstract class ObjectForGame implements Serializable {
         if (this.checkCollision(nextX, nextY)) {
             this.myGame.getObjectsFromGrid(nextX, nextY).add(this);
             this.position.removeObject(this);
+            this.direction = direction;
             this.setPosition(this.myGame.getPosition(nextX, nextY));
         }
     }
