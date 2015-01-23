@@ -341,6 +341,7 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
             if (finalMove != null) {
                 C.move(finalMove);
                 C.setCanMove(false);
+                C.setDirection(finalMove);
             }
         }
     }

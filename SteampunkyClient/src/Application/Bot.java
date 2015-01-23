@@ -187,9 +187,12 @@ public class Bot implements Serializable, Callable {
                             Direction dir = MoveFrom(threats, movableGrid);
                             if (dir != null) {
                                 this.character.move(dir);
+                                this.character.setDirection(dir);
                             }
                         } else if (getPowerUp(movableGrid) != null) {
-                            this.character.move(getPowerUp(movableGrid));
+                            Direction dir = getPowerUp(movableGrid);
+                            this.character.move(dir);
+                            this.character.setDirection(dir);
                         } else {
                             randomMove(movableGrid);
                         }
@@ -198,8 +201,6 @@ public class Bot implements Serializable, Callable {
                 }
             }
             // </editor-fold>
-        } else {
-            System.out.println("dead");
         }
     }
 
@@ -588,6 +589,7 @@ public class Bot implements Serializable, Callable {
             Random rand = new Random();
             int randomNum = rand.nextInt(dir.size()) + 0;
             this.character.move(dir.get(randomNum));
+            this.character.setDirection(dir.get(randomNum));
         }
     }
 
