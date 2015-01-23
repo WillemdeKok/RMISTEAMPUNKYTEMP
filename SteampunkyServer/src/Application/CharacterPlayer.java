@@ -13,7 +13,7 @@ import java.util.*;
  * <p>
  * @author Linda
  */
-public class CharacterPlayer extends ObjectForGame implements Serializable, ICharacter{
+public class CharacterPlayer extends ObjectForGame implements Serializable, ICharacter {
 
     //************************datavelden*************************************
     private int characterID;
@@ -66,11 +66,12 @@ public class CharacterPlayer extends ObjectForGame implements Serializable, ICha
         powerups = new ArrayList<>();
 
     }
-    public boolean getCanMove(){
+
+    public boolean getCanMove() {
         return this.canMove;
     }
-    
-    public void setCanMove(boolean bool){
+
+    public void setCanMove(boolean bool) {
         this.canMove = bool;
     }
 

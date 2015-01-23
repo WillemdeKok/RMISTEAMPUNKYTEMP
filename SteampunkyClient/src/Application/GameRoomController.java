@@ -46,6 +46,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -342,37 +343,13 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
             Random levelInt = new Random();
             level = levelInt.nextInt(3) + 1;
             this.StartGame();
-            this.setKeyBindings();
         }
     }
 
     //clears the scene and draws new boxes for every object.
-<<<<<<< HEAD
-<<<<<<< HEAD
     public void DrawGame() throws InterruptedException, ExecutionException {
-        
-        if (PlayerNames.contains(client.getUser()))
-        {
-            
-        }
-        
-        if (SpectatorNames.contains(client.getUser()))
-=======
-    public void DrawGame() throws InterruptedException, ExecutionException {
->>>>>>> 6375b4a1fc14d97db6a2d0225b31c78bdad60503
-        {
-            box.getChildren().clear();
-
-            switch (level) {
-                case 0:
-<<<<<<< HEAD
-                    this.backColor = Color.SADDLEBROWN;
-                    this.field.setFill(backColor);                
-                    this.playfield.setFill(Color.BURLYWOOD);
-=======
-    public void DrawGame() {
         box.getChildren().clear();
-        
+
         switch (level) {
             case 0:
                 this.field.setFill(Color.SADDLEBROWN);
@@ -387,18 +364,36 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                 this.playfield.setFill(Color.BEIGE);
                 break;
         }
-        
+
         box.getChildren().add(this.field);
         box.getChildren().add(this.playfield);
-        
-        ArrayList<String[]> information = null;
-        
+
+        //Informationthread.start();
+        information = null;
+
+        ExecutorService service = Executors.newSingleThreadExecutor();
+        Future<ArrayList<String[]>> future = service.submit(new Callable() {
+            @Override
+            public Object call() throws Exception {
+                try {
+                    information = lobbyinstance.GetInformation();
+                    return information;
+                } catch (RemoteException ex) {
+                    Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+                    return null;
+                }
+            }
+
+        }
+        );
         try {
-            information = this.lobbyinstance.GetInformation();
-        } catch (RemoteException ex) {
+            information = future.get();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ExecutionException ex) {
             Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         for (String[] s : information) {
             String object = "";
             String type = s[1];
@@ -408,6 +403,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
             if (this.level != Integer.parseInt(s[5])) {
                 this.level = Integer.parseInt(s[5]);
             }
+
             switch (s[0]) {
                 case "1":
                     object = "Character";
@@ -415,112 +411,20 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                 case "2":
                     object = "Obstacle";
                     break;
-                case 1:
-                    this.backColor = Color.DIMGRAY;
-                    this.field.setFill(backColor);
-                    this.playfield.setFill(Color.LIGHTGRAY);
+                case "3":
+                    object = "PowerUp";
                     break;
-                case 2:
-                    this.backColor = Color.PERU;
-                    this.field.setFill(backColor);
-=======
-                    this.field.setFill(Color.SADDLEBROWN);
-                    this.playfield.setFill(Color.BURLYWOOD);
+                case "4":
+                    object = "Ballista";
                     break;
-                case 1:
-                    this.field.setFill(Color.DIMGRAY);
-                    this.playfield.setFill(Color.LIGHTGRAY);
-                    break;
-                case 2:
-                    this.field.setFill(Color.PERU);
->>>>>>> 6375b4a1fc14d97db6a2d0225b31c78bdad60503
-                    this.playfield.setFill(Color.BEIGE);
+                case "5":
+                    object = "Projectile";
                     break;
             }
 
-            box.getChildren().add(this.field);
-            box.getChildren().add(this.playfield);
-
-<<<<<<< HEAD
-            //Informationthread.start();
-            information = null;
-        
-=======
-            information = null;
-
->>>>>>> 6375b4a1fc14d97db6a2d0225b31c78bdad60503
-            ExecutorService service = Executors.newSingleThreadExecutor();
-            Future<ArrayList<String[]>> future = service.submit(new Callable() {
-                @Override
-                public Object call() throws Exception {
-                    try {
-                        information = lobbyinstance.GetInformation();
-                        return information;
-                    } catch (RemoteException ex) {
-                        Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
-                        return null;
-                    }
-<<<<<<< HEAD
-                }
-            }
-            );
-            
-            information = future.get();
-
-            for (String[] s : information) {
-                String object = "";
-                String type = s[1];
-                int xpos = Integer.parseInt(s[2]);
-                int ypos = Integer.parseInt(s[3]);
-                String direction = s[4];
-                if(this.level != Integer.parseInt(s[5])){
-                    this.level = Integer.parseInt(s[5]);
-                }
-                switch (s[0]) {
-                    case "1":
-                        object = "Character";
-                        break;
-                    case "2":
-                        object = "Obstacle";
-                        break;
-                    case "3":
-                        object = "PowerUp";
-                        break;
-                    case "4":
-                        object = "Ballista";
-                        break;
-                    case "5":
-                        object = "Projectile";
-                        break;
-                }
-
-                Image image = null;
-                ImageView img = null;
-
-                try {
-                    //level nog niet geimplementeerd
-                    image = selector.getImage(s, level);
-                    img = new ImageView(image);
-                    img.setScaleX(this.getScale());
-                    img.setScaleY(this.getScale());
-                    img.setX((xpos * 100 * this.getScale()) + (-50 * (1 - this.getScale())));
-                    img.setY((ypos * 100 * this.getScale()) + (-50 * (1 - this.getScale())));
-
-                    if (object.equals("Projectile") || object.equals("Character")) {
-                        img.setRotate(getRotation(direction));
-                    } else {
-                        img.setRotate(0);
-                    }
-
-                    box.getChildren().add(img);
-                } catch (Exception ex) {
-                    System.out.println(ex.getMessage());
-                }
-=======
-            
             Image image = null;
             ImageView img = null;
-            
+
             try {
                 //level nog niet geimplementeerd
                 image = selector.getImage(s, level);
@@ -529,81 +433,19 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                 img.setScaleY(this.getScale());
                 img.setX((xpos * 100 * this.getScale()) + (-50 * (1 - this.getScale())));
                 img.setY((ypos * 100 * this.getScale()) + (-50 * (1 - this.getScale())));
-                
+
                 if (object.equals("Projectile") || object.equals("Character")) {
                     img.setRotate(getRotation(direction));
                 } else {
                     img.setRotate(0);
                 }
-                
+
                 box.getChildren().add(img);
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
->>>>>>> e8e63e9d5066a153c8a121b3a213a6b99380e403
-=======
-                }
->>>>>>> 6375b4a1fc14d97db6a2d0225b31c78bdad60503
-            }
-            );
-            information = future.get();
-
-            //Informationthread.start();
-            for (String[] s : information) {
-                String object = "";
-                String type = s[1];
-                int xpos = Integer.parseInt(s[2]);
-                int ypos = Integer.parseInt(s[3]);
-                String direction = s[4];
-                if (this.level != Integer.parseInt(s[5])) {
-                    this.level = Integer.parseInt(s[5]);
-                }
-                switch (s[0]) {
-                    case "1":
-                        object = "Character";
-                        break;
-                    case "2":
-                        object = "Obstacle";
-                        break;
-                    case "3":
-                        object = "PowerUp";
-                        break;
-                    case "4":
-                        object = "Ballista";
-                        break;
-                    case "5":
-                        object = "Projectile";
-                        break;
-                }
-
-                Image image = null;
-                ImageView img = null;
-
-                try {
-                    //level nog niet geimplementeerd
-                    image = selector.getImage(s, level);
-                    img = new ImageView(image);
-                    img.setScaleX(this.getScale());
-                    img.setScaleY(this.getScale());
-                    img.setX((xpos * 100 * this.getScale()) + (-50 * (1 - this.getScale())));
-                    img.setY((ypos * 100 * this.getScale()) + (-50 * (1 - this.getScale())));
-
-                    if (object.equals("Projectile") || object.equals("Character")) {
-                        img.setRotate(getRotation(direction));
-                    } else {
-                        img.setRotate(0);
-                    }
-
-                    box.getChildren().add(img);
-                } catch (Exception ex) {
-                    System.out.println(ex.getMessage());
-                }
-            }
-            try {
-                this.lobbyinstance.move(this.client.getUser(), Direction.Right);
-            } catch (RemoteException ex) {
-                Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+
     }
 
     /**
@@ -635,19 +477,16 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
     public double getScale() {
         try {
             double scale = 1;
-
-<<<<<<< HEAD
             //check scale for user
-            if (SpectatorNames.contains(client.getUser()))
-            {
+
+            if (SpectatorNames.contains(client.getUser())) {
                 double hoogteScherm = 800;
                 double hoogteSpel = this.lobbyinstance.getHeightPixels();
                 scale = hoogteScherm / hoogteSpel;
             }
 
-=======
             //check scale for admin
-            /*for (String name : this.PlayerNames)
+                    /*for (String name : this.PlayerNames)
              {
              if (name.equals(this.admin.getUsername()))
              {
@@ -658,22 +497,17 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
              for (String name : this.SpectatorNames)
              {
              if (name.equals(this.admin.getUsername()))
-             {*/
-            double hoogteScherm = 800;
+             {*/ double hoogteScherm = 800;
             double hoogteSpel = this.lobbyinstance.getHeightPixels();
             scale = hoogteScherm / hoogteSpel;
             /*}
              }*/
-<<<<<<< HEAD
-            
->>>>>>> e8e63e9d5066a153c8a121b3a213a6b99380e403
-=======
-
->>>>>>> 6375b4a1fc14d97db6a2d0225b31c78bdad60503
             return scale;
 
         } catch (RemoteException ex) {
-            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GameRoomController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+
             return 1;
         }
     }
@@ -690,8 +524,10 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         try {
             this.lobbyinstance.createGame(time, 3, level, 1, width, height);
             SetupDraw();
+
         } catch (RemoteException ex) {
-            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GameRoomController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
     //Sets up the settings needed to draw.
@@ -703,13 +539,15 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         try {
             this.PlayerNames = this.lobbyinstance.getPlayers();
             this.SpectatorNames = this.lobbyinstance.getSpectators();
-            
+
             this.widthPixels = this.lobbyinstance.getWidthPixels();
             this.widthCubes = this.lobbyinstance.getWidthCubes();
             this.heightPixels = this.lobbyinstance.getHeightPixels();
             this.heightCubes = this.lobbyinstance.getHeightCubes();
+
         } catch (RemoteException ex) {
-            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GameRoomController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
 
         root = new Group();
@@ -733,18 +571,10 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         this.stage.setMinHeight(900);
         this.stage.setMinWidth(1700);
         this.stage.setScene(scene);
+        this.setKeyBindings();
         this.GameUpdate();
     }
-<<<<<<< HEAD
-<<<<<<< HEAD
-        
 
-=======
-    
->>>>>>> e8e63e9d5066a153c8a121b3a213a6b99380e403
-=======
-
->>>>>>> 6375b4a1fc14d97db6a2d0225b31c78bdad60503
     public void drawTimer() {
 
     }
@@ -754,36 +584,32 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         this.stage.getScene().setOnKeyPressed((KeyEvent keyEvent) -> {
             try {
                 if (keyEvent.getCode().toString().equals("W")) {
-                    this.client.getIUser().move(Direction.Up);
-                    System.out.println("moveup");
-                    //this.game.getCharacter().move(Direction.Up);
+                    this.lobbyinstance.move(this.client.getUser(), Direction.Up);
                 }
 
                 if (keyEvent.getCode().toString().equals("A")) {
-                    this.client.getIUser().move(Direction.Left);
-                    //this.game.getCharacter().move(Direction.Left);
+                    this.lobbyinstance.move(this.client.getUser(), Direction.Left);
+
                 }
 
                 if (keyEvent.getCode().toString().equals("S")) {
-                    this.client.getIUser().move(Direction.Down);
-                    //this.game.getCharacter().move(Direction.Down);
+                    this.lobbyinstance.move(this.client.getUser(), Direction.Down);
                 }
 
                 if (keyEvent.getCode().toString().equals("D")) {
-                    this.client.getIUser().move(Direction.Right);
-                    //this.game.getCharacter().move(Direction.Right);
+                    this.lobbyinstance.move(this.client.getUser(), Direction.Right);
                 }
 
-                if (keyEvent.getCode().toString().equals("Q")) {
-                    //c.createBallista(Direction.Right ,4);
+                if (keyEvent.getCode() == KeyCode.SPACE) {
+                    this.lobbyinstance.dropBallista(this.client.getUser());
                 }
-
                 if (keyEvent.getCode().toString().equals("E")) {
                     //ICharacter c = (ICharacter) game.getCharacter();
                     //c.createBallista(Direction.Up ,4);
                 }
             } catch (RemoteException ex) {
-                Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(GameRoomController.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
         });
     }
@@ -841,10 +667,13 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                     {
                         try {
                             DrawGame();
+
                         } catch (InterruptedException ex) {
-                            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.getLogger(GameRoomController.class
+                                    .getName()).log(Level.SEVERE, null, ex);
                         } catch (ExecutionException ex) {
-                            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.getLogger(GameRoomController.class
+                                    .getName()).log(Level.SEVERE, null, ex);
                         }
                     }
                 });
@@ -928,8 +757,10 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                         LVChats.setItems(FXCollections.observableArrayList(lobbyinstance.getChat()));
                         int count = LVChats.getItems().size();
                         LVChats.scrollTo(count);
+
                     } catch (RemoteException ex) {
-                        Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(GameRoomController.class
+                                .getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }

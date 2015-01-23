@@ -26,21 +26,21 @@ public class Ballista extends ObjectForGame implements Serializable {
     private int delay;
 
     /**
-     * The constructor of the ObjectForGame Ballista, when this object is made a number
- of Projectiles is made to match shots. Depending on the direction give it
-     * depends which direction is made first.
+     * The constructor of the ObjectForGame Ballista, when this object is made a
+     * number of Projectiles is made to match shots. Depending on the direction
+     * give it depends which direction is made first.
      * <p>
      * @param type The type thats give so the ballista knows what type of
      * Projectiles is must make.
      * @param shots The number of shots a ballista can fire, must be a multitude
      * of 4.
      * @param projectileSpeed The speed of the Projectiles the ballista makes.
-     * @param position An attribute of ObjectForGame that holds the Position of this
- Ballista.
-     * @param active An attribute of ObjectForGame that sets if an ObjectForGame is active or
- not.
-     * @param direction An attribute of ObjectForGame that is used to decide which way
- to shoot first.
+     * @param position An attribute of ObjectForGame that holds the Position of
+     * this Ballista.
+     * @param active An attribute of ObjectForGame that sets if an ObjectForGame
+     * is active or not.
+     * @param direction An attribute of ObjectForGame that is used to decide
+     * which way to shoot first.
      * @param game An object of Game in which this Ballista is made.
      *
      */
@@ -69,8 +69,8 @@ public class Ballista extends ObjectForGame implements Serializable {
                     @Override
                     public void run() {
                         System.out.println("JAP");
-                            shootProjectile();
-                        }
+                        shootProjectile();
+                    }
                 }, delay
                 );
 
@@ -81,13 +81,12 @@ public class Ballista extends ObjectForGame implements Serializable {
     }
 
     private void shootProjectile() {
-        if(shotsShot<shots){
-        createProjectile(Direction.Up);
-        createProjectile(Direction.Down);
-        createProjectile(Direction.Left);
-        createProjectile(Direction.Right);
-        shotsShot += 4;
-        }
+            createProjectile(Direction.Up);
+            createProjectile(Direction.Down);
+            createProjectile(Direction.Left);
+            createProjectile(Direction.Right);
+            shotsShot += 4;
+
     }
 
     //**********************methoden****************************************
@@ -103,7 +102,7 @@ public class Ballista extends ObjectForGame implements Serializable {
     public String getType() {
         return this.ballistaType;
     }
-    
+
     public int getShotsFired() {
         return this.shotsShot;
     }
@@ -117,8 +116,6 @@ public class Ballista extends ObjectForGame implements Serializable {
     public int getShots() {
         return this.shots;
     }
-    
-    
 
     /**
      * An Method that creates a projectile with the given direction.

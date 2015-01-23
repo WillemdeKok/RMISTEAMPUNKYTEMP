@@ -14,7 +14,7 @@ import java.util.concurrent.Callable;
  * <p>
  * @author Melanie
  */
-public class Bot implements Serializable,Callable {
+public class Bot implements Serializable, Callable {
 
     //************************datavelden*************************************
     private final int botID;

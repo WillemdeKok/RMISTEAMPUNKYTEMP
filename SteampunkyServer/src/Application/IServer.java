@@ -12,8 +12,12 @@ import java.rmi.RemoteException;
  * @author Willem
  */
 public interface IServer {
+
     public void AddObserver(IObserver observer) throws RemoteException;
+
     public void RemoveObserver(IObserver observer) throws RemoteException;
+
     public void NotifyObserversUsers() throws RemoteException;
+
     public void NotifyObserversLobbies() throws RemoteException;
 }

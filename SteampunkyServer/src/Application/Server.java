@@ -60,15 +60,15 @@ public class Server extends UnicastRemoteObject implements IGameServer {
     public ArrayList<ILobby> getLobbies() {
         return this.lobbies;
     }
-    
+
     public ObservableList<IUser> getUsersAsUser() {
         return (ObservableList<IUser>) FXCollections.unmodifiableObservableList(observableUsers);
     }
-    
+
     @Override
-    public ArrayList<String> getUsers(){
+    public ArrayList<String> getUsers() {
         ArrayList<String> tempusers = new ArrayList();
-        for(IUser U : observableUsers){
+        for (IUser U : observableUsers) {
             try {
                 tempusers.add(U.getUsername());
             } catch (RemoteException ex) {
@@ -77,7 +77,6 @@ public class Server extends UnicastRemoteObject implements IGameServer {
         }
         return tempusers;
     }
-            
 
     @Override
     public void Connectionstring() {
@@ -89,7 +88,6 @@ public class Server extends UnicastRemoteObject implements IGameServer {
         }
     }
 
- 
     public void Userlogedin(IUser tempuser) {
         if (tempuser != null) {
             observableUsers.add(tempuser);
@@ -138,28 +136,25 @@ public class Server extends UnicastRemoteObject implements IGameServer {
         }
         return false;
     }
-    
+
     //Rating laten dalen met een waarde die hij binnenkrijgt in de methode
     @Override
-    public int DecreaseRating(String username,int rating) {
+    public int DecreaseRating(String username, int rating) {
         int oldrating = 0;
         int newrating = 0;
         try {
             Connectionstring();
             oldrating = GetRating(username);
             newrating = oldrating - rating;
-            if(newrating >= 0)
-            {
-            System.out.println("Verbing maken is geslaagd voor het DecreaseRating van de Rating");
-            String querywrite = "UPDATE USERS SET RATING = ? WHERE NAAM = ?";
-            PreparedStatement stat2 = con.prepareStatement(querywrite);
-            stat2.setInt(1, newrating);
-            stat2.setString(2, username);
-            stat2.execute();
-            con.close();    
-            }
-            else 
-            {
+            if (newrating >= 0) {
+                System.out.println("Verbing maken is geslaagd voor het DecreaseRating van de Rating");
+                String querywrite = "UPDATE USERS SET RATING = ? WHERE NAAM = ?";
+                PreparedStatement stat2 = con.prepareStatement(querywrite);
+                stat2.setInt(1, newrating);
+                stat2.setString(2, username);
+                stat2.execute();
+                con.close();
+            } else {
                 newrating = 0;
             }
         } catch (Exception ex) {
@@ -169,10 +164,10 @@ public class Server extends UnicastRemoteObject implements IGameServer {
         System.out.println("Rating ophalen is mislukt");
         return newrating;
     }
-    
+
     //Rating laten stijgen met een waarde die hij binnenkrijgt in de methode
     @Override
-    public int IncreaseRating(String username,int rating) {
+    public int IncreaseRating(String username, int rating) {
         int oldrating = 0;
         int newrating = 0;
         try {
@@ -185,7 +180,7 @@ public class Server extends UnicastRemoteObject implements IGameServer {
             stat2.setInt(1, oldrating + rating);
             stat2.setString(2, username);
             stat2.execute();
-            con.close();     
+            con.close();
         } catch (Exception ex) {
             System.out.println("Gebruiker niet gevonden voor rating" + ex);
             return 0;
@@ -193,11 +188,11 @@ public class Server extends UnicastRemoteObject implements IGameServer {
         System.out.println("Rating ophalen is mislukt");
         return newrating;
     }
-    
+
     //Rating van dit moment ophalen uit de database bij een username
     @Override
     public ArrayList<String> GetTotalrating() {
-        ArrayList<String> ratinglist = new ArrayList(); 
+        ArrayList<String> ratinglist = new ArrayList();
         try {
             Connectionstring();
             System.out.println("Verbing maken is geslaagd voor het ophalen van de Rating");
@@ -209,14 +204,13 @@ public class Server extends UnicastRemoteObject implements IGameServer {
             }
             con.close();
             return ratinglist;
-            
+
         } catch (Exception ex) {
             System.out.println("Gebruiker niet gevonden voor rating" + ex);
             return null;
         }
     }
-    
-    
+
     //Rating van dit moment ophalen uit de database bij een username
     @Override
     public int GetRating(String username) {
@@ -229,13 +223,12 @@ public class Server extends UnicastRemoteObject implements IGameServer {
             while (rs.next()) {
                 if (rs.getString("NAAM").equals(username)) {
                     GetRating = rs.getInt("Rating");
-                    System.out.println("Rating gevonden");                  
+                    System.out.println("Rating gevonden");
                     return GetRating;
                 }
             }
             con.close();
-            
-            
+
         } catch (Exception ex) {
             System.out.println("Gebruiker niet gevonden voor rating" + ex);
             return 0;
@@ -262,8 +255,7 @@ public class Server extends UnicastRemoteObject implements IGameServer {
                 }
             }
             con.close();
-            
-            
+
         } catch (Exception ex) {
             System.out.println("Gebruiker niet gevonden" + ex);
             return false;
@@ -271,17 +263,15 @@ public class Server extends UnicastRemoteObject implements IGameServer {
         System.out.println("Gebruiker mag niet inloggen");
         return false;
     }
-    
+
     @Override
-    public boolean createLobby(String lobbyName,String password,String username) {
+    public boolean createLobby(String lobbyName, String password, String username) {
         System.out.println("ik ben een lobby");
         IUser admin = null;
-        
-        for(IUser U: this.observableUsers)
-        {
+
+        for (IUser U : this.observableUsers) {
             try {
-                if(U.getUsername().equals(username))
-                {
+                if (U.getUsername().equals(username)) {
                     admin = U;
                 }
             } catch (RemoteException ex) {
@@ -351,20 +341,16 @@ public class Server extends UnicastRemoteObject implements IGameServer {
         }
         return server;
     }
-    
+
     public void AddUserToList(IUser u) {
         this.observableUsers.add(u);
     }
-    
 
-    public IUser Getuser(String username)
-    {
+    public IUser Getuser(String username) {
         IUser tempuser = null;
-        for(IUser user : this.observableUsers)
-        {
+        for (IUser user : this.observableUsers) {
             try {
-                if(user.getUsername().equals(username))
-                {
+                if (user.getUsername().equals(username)) {
                     tempuser = user;
                 }
             } catch (RemoteException ex) {

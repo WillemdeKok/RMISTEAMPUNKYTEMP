@@ -19,7 +19,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-
 /**
  *
  * @author Bart
@@ -29,6 +28,7 @@ public class SteampunkyFX extends Application {
     private Stage stage;
     private int portNumber;
     private String ipAddress;
+
     @Override
     public void start(Stage stage) throws Exception {
         System.out.println("CLIENT USING REGISTRY");
@@ -43,7 +43,6 @@ public class SteampunkyFX extends Application {
             this.stage.setMinHeight(100);
             stage.setResizable(false);
             gotoLoginselect();
-            
 
             this.stage.show();
         } catch (Exception ex) {
@@ -53,13 +52,13 @@ public class SteampunkyFX extends Application {
 
     protected void gotoLoginselect() {
         try {
-            SteampunkFXControllerLogin loginselect =(SteampunkFXControllerLogin) replaceSceneContent("LoginProftaak2.fxml");
-            loginselect.setApp(this, ipAddress, portNumber); 
+            SteampunkFXControllerLogin loginselect = (SteampunkFXControllerLogin) replaceSceneContent("LoginProftaak2.fxml");
+            loginselect.setApp(this, ipAddress, portNumber);
         } catch (Exception ex) {
             Logger.getLogger(SteampunkyFX.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     protected void gotoLobbyselect(Client client, IGameServer ServerMock) {
         try {
             SteampunkFXControllerlobby lobbyselect = (SteampunkFXControllerlobby) replaceSceneContent("Lobby3.fxml");
@@ -69,7 +68,7 @@ public class SteampunkyFX extends Application {
             Logger.getLogger(SteampunkyFX.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     protected void gotoGameRoomselect(Client client, ILobby l, IGameServer ServerMock) {
         try {
             GameRoomController GameRoomselect = (GameRoomController) replaceSceneContent("GameRoom.fxml");
@@ -78,7 +77,6 @@ public class SteampunkyFX extends Application {
             Logger.getLogger(SteampunkyFX.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
 
     private Initializable replaceSceneContent(String fxml) throws Exception {
         FXMLLoader loader = new FXMLLoader();
@@ -91,42 +89,35 @@ public class SteampunkyFX extends Application {
         } finally {
             in.close();
         }
-        
+
         Scene scene = null;
-        if(fxml.equals("LoginProftaak2.fxml"))
-        {
+        if (fxml.equals("LoginProftaak2.fxml")) {
             this.stage.setMinWidth(300);
-            this.stage.setMinHeight(268);           
-            scene = new Scene(page, 300, 268); 
-        }
-        else if(fxml.equals("Lobby3.fxml"))
-        {
+            this.stage.setMinHeight(268);
+            scene = new Scene(page, 300, 268);
+        } else if (fxml.equals("Lobby3.fxml")) {
             this.stage.setMinWidth(700);
             this.stage.setMinHeight(425);
-            scene = new Scene(page, 700, 400); 
-        }        
-        else if(fxml.equals("GameRoom.fxml"))
-        {
+            scene = new Scene(page, 700, 400);
+        } else if (fxml.equals("GameRoom.fxml")) {
             this.stage.setMinWidth(1048);
             this.stage.setMinHeight(590);
             this.stage.setX(100);
             this.stage.setY(100);
-            scene = new Scene(page, 1048, 590); 
-        }
-        else {
+            scene = new Scene(page, 1048, 590);
+        } else {
             System.out.println("FATAL GUI ERROR");
         }
-        
+
         if (scene != null) {
             scene.getStylesheets().add(SteampunkyFX.class.getResource("style.css").toExternalForm());
-        stage.setTitle("Steampunky");
-        stage.getIcons().add(new Image(SteampunkyFX.class.getResourceAsStream("icon.png"))); 
-        stage.setScene(scene);
+            stage.setTitle("Steampunky");
+            stage.getIcons().add(new Image(SteampunkyFX.class.getResourceAsStream("icon.png")));
+            stage.setScene(scene);
         } else {
             System.out.println("Create of scene in steampinkfx faild");
         }
-        
-        
+
         //stage.sizeToScene();
         return (Initializable) loader.getController();
     }
@@ -137,9 +128,8 @@ public class SteampunkyFX extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
-    public Stage getstage()
-    {
+
+    public Stage getstage() {
         return this.stage;
-    }  
+    }
 }

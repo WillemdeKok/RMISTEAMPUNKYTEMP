@@ -14,18 +14,32 @@ import java.util.ArrayList;
  * @author Mal
  */
 public interface IGameServer extends Remote {
-    public ArrayList<ILobby> getLobbies()throws RemoteException;
-    public ArrayList<String> getUsers()throws RemoteException;
-    public void Connectionstring()throws RemoteException;
-    public boolean createUser(String username, String password)throws RemoteException;
-    public boolean loginUser(String username, String password)throws RemoteException;
-    public boolean createLobby(String lobbyName,String password,String username)throws RemoteException;
-    public boolean joinLobby(ILobby lobby, String user, String password)throws RemoteException;
-    public boolean leaveLobby(ILobby lobby, String user)throws RemoteException;
-    public boolean deleteLobby(ILobby lobby) throws RemoteException; 
+
+    public ArrayList<ILobby> getLobbies() throws RemoteException;
+
+    public ArrayList<String> getUsers() throws RemoteException;
+
+    public void Connectionstring() throws RemoteException;
+
+    public boolean createUser(String username, String password) throws RemoteException;
+
+    public boolean loginUser(String username, String password) throws RemoteException;
+
+    public boolean createLobby(String lobbyName, String password, String username) throws RemoteException;
+
+    public boolean joinLobby(ILobby lobby, String user, String password) throws RemoteException;
+
+    public boolean leaveLobby(ILobby lobby, String user) throws RemoteException;
+
+    public boolean deleteLobby(ILobby lobby) throws RemoteException;
+
     public IUser Getuser(String username) throws RemoteException;
+
     public int GetRating(String username) throws RemoteException;
-    public int DecreaseRating(String username,int rating)throws RemoteException;
-    public int IncreaseRating(String username,int rating)throws RemoteException;
-    public ArrayList<String> GetTotalrating()throws RemoteException;
+
+    public int DecreaseRating(String username, int rating) throws RemoteException;
+
+    public int IncreaseRating(String username, int rating) throws RemoteException;
+
+    public ArrayList<String> GetTotalrating() throws RemoteException;
 }

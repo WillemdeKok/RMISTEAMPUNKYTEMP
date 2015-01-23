@@ -742,7 +742,7 @@ public class Game implements IGame, Serializable {
             if (k >= count) {
                 //Bot b = new Bot(namen[k], this.botDifficulty, this);
                 //this.bots.add(b);
-                ExecutorService service =  Executors.newSingleThreadExecutor();
+                ExecutorService service = Executors.newSingleThreadExecutor();
                 Future<Bot> future = service.submit(new Bot(namen[k], this.botDifficulty, this));
                 Bot b = null;
                 try {
@@ -752,7 +752,7 @@ public class Game implements IGame, Serializable {
                 } catch (ExecutionException ex) {
                     Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
+
                 this.bots.add(b);
 
                 CharacterPlayer c = new CharacterPlayer(1, false, 1, 3, positions[k], true, true, directions[k], this);

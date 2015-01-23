@@ -231,7 +231,7 @@ public abstract class ObjectForGame implements Serializable {
                 }
             }
         } else {
-            if (this instanceof Projectile){
+            if (this instanceof Projectile) {
                 this.RemoveFromGame();
             }
             Movable = false;

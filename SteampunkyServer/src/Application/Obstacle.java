@@ -30,8 +30,8 @@ public class Obstacle extends ObjectForGame implements Serializable {
      * @param type A string which holds the type of the Obstacle.
      * @param broken A boolean which holds if this obstacle can be destroyed or
      * not.
-     * @param position An ObjectForGame of the Class Position, which holds the position
- of this Obstacle.
+     * @param position An ObjectForGame of the Class Position, which holds the
+     * position of this Obstacle.
      * @param active A boolean which holds the state of this Obstacle.
      * @param movable A boolean which holds the state of this Obstacle.
      * @param game Game in which obstacle is used

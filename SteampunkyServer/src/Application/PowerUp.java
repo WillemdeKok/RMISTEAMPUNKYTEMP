@@ -30,12 +30,12 @@ public class PowerUp extends ObjectForGame implements Serializable {
      * @param powerUpType Type of this powerup
      * @param description Description of this powerup
      * @param available If this Powerup is available for the player
-     * @param position An ObjectForGame of the Class Position which holds the Position
- of this PowerUp.
+     * @param position An ObjectForGame of the Class Position which holds the
+     * Position of this PowerUp.
      * @param active A boolean that holds the current state of this PowerUp.
      * @param movable A boolean that holds the current state of this PowerUp.
      * @param direction An ObjectForGame of the Class Direction which holds the
- direction in which this PowerUp moves.
+     * direction in which this PowerUp moves.
      */
     public PowerUp(String name, String powerUpType, String description, boolean available, Position position, boolean active, boolean movable, Direction direction, Game game) {
         super(position, active, movable, direction, game, "PowerUp");

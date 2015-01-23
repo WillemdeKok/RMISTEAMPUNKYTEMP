@@ -169,7 +169,7 @@ public class SteampunkFXControllerLogin implements Initializable {
         boolean loggedin = false;
 
         for (String userlogedin : this.ServerMock.getUsers()) {
-            if (userlogedin.equals(TFUsernamelogin.getText())) {             
+            if (userlogedin.equals(TFUsernamelogin.getText())) {
                 loggedin = true;
             }
         }
@@ -193,9 +193,7 @@ public class SteampunkFXControllerLogin implements Initializable {
                 } else {
                     JOptionPane.showMessageDialog(null, "Password or username are incorrect");
                 }
-            }
-            else
-            {
+            } else {
                 JOptionPane.showMessageDialog(null, "Already logged in");
             }
         }

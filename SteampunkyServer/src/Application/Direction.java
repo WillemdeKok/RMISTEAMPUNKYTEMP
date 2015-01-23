@@ -8,11 +8,11 @@ package Application;
 import java.io.Serializable;
 
 /**
- <p>
- @author Mnesymne
+ * <p>
+ * @author Mnesymne
  */
-public enum Direction  implements Serializable
-{
+public enum Direction implements Serializable {
+
     Up, Down, Right, Left,
 
 }

@@ -13,7 +13,9 @@ import java.util.ArrayList;
  *
  * @author Willem
  */
-public interface IObserver extends Remote{
+public interface IObserver extends Remote {
+
     public void updateLobbies(ArrayList<ILobby> lobbies) throws RemoteException;
+
     public void updateUsers(ArrayList<String> users) throws RemoteException;
 }

@@ -20,7 +20,7 @@ import java.rmi.registry.Registry;
  *
  * @author Bart
  */
-public class RMIServer{
+public class RMIServer {
 
     private static boolean createRegistry = true;
     // Set port number
@@ -38,7 +38,7 @@ public class RMIServer{
         System.out.println("Server: Port number " + portNumber);
         try {
             serverMock = Server.getServer();
-            
+
             System.out.println("Server: serverMock created");
         } catch (RemoteException ex) {
             System.out.println("Server: Cannot create ServerMock");
@@ -48,16 +48,15 @@ public class RMIServer{
         //Aanmaken van een regisrty
         if (createRegistry) {
             registry = createRegistry();
-      
-        // Als register aan maken is gelukt proberen te binden op register
-        if (registry != null && serverMock != null) {
+
+            // Als register aan maken is gelukt proberen te binden op register
+            if (registry != null && serverMock != null) {
                 bindMockUsingRegistry();
                 System.out.println("Server: serverMock bound to " + bindingName);
             } else {
                 System.out.println("Server: serverMock not bound");
             }
-        } 
-        // Als register aan maken is gelukt proberen te binden op naam
+        } // Als register aan maken is gelukt proberen te binden op naam
         else {
             if (serverMock != null) {
                 bindMockUsingNaming();
@@ -91,7 +90,7 @@ public class RMIServer{
             System.out.println("Server: RemoteException: " + ex.getMessage());
         }
     }
-    
+
     // probeert het register tebinden op naam en de classe met de RemotePublisher
     private void bindMockUsingNaming() {
         try {
@@ -135,7 +134,7 @@ public class RMIServer{
             System.out.println("Server: Cannot retrieve network interface list");
             System.out.println("Server: UnknownHostException: " + ex.getMessage());
         }
-        
+
     }
 
     /**

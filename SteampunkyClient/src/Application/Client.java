@@ -23,7 +23,7 @@ public class Client {
     public void setRating(int rating) {
         this.rating = rating;
     }
-    
+
     public Client() {
 
     }
@@ -35,7 +35,7 @@ public class Client {
     public String getUser() {
         return this.user;
     }
-    
+
     public void setPassword(String password) {
         this.password = password;
     }
@@ -43,11 +43,11 @@ public class Client {
     public String getPassword() {
         return this.password;
     }
-    
+
     public void setIUser(IUser user) {
         this.Iuser = user;
     }
-    
+
     public IUser getIUser() {
         return this.Iuser;
     }

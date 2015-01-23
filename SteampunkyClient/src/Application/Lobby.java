@@ -159,12 +159,10 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
             return null;
         }
     }
-    
+
     @Override
-    public boolean addUser(IUser user)
-    {        
-        if(user != null && !spectators.contains(user))
-        {
+    public boolean addUser(IUser user) {
+        if (user != null && !spectators.contains(user)) {
             spectators.add(user);
             System.out.println("User has been added");
             publisher.inform(this, "lobby", "", "new");
@@ -265,7 +263,18 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
         }
         return false;
     }
-
+    @Override
+    public void dropBallista(String user){
+        CharacterPlayer C = null;
+        try {
+            C = this.game.getPlayerCharacter(user);
+            C.createBallista(Direction.Right,1);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    @Override
     public void move(String user, Direction d) {
         CharacterPlayer C = null;
         try {

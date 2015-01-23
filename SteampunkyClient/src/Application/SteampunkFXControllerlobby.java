@@ -86,7 +86,7 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
 
     public SteampunkFXControllerlobby() throws RemoteException {
     }
-    
+
     public void setApp(SteampunkyFX application, Client client, IGameServer ServerMock) throws RemoteException {
         this.ServerMock = ServerMock;
         this.clientInfo = client;
@@ -100,9 +100,8 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
         ArrayList<String> ratinglist = this.ServerMock.GetTotalrating();
         this.LVrating.setItems(FXCollections.observableArrayList(ratinglist).sorted());
         UpdateForms();
-        
+
     }
-    
 
     public void JoinLobbyFromLV(Event evt) {
         System.out.println("Event triggered");
@@ -120,7 +119,7 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
             System.out.println("Remote Exception has been thrown");
         }
     }
-    
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Clear();
@@ -142,7 +141,7 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
                     if (L.GetLobbyname().equals(TfCreatename.getText())) {
                         System.out.println("User in AddLobby method " + this.clientInfo.getUser());
                         this.ServerMock.joinLobby(L, this.clientInfo.getUser(), this.clientInfo.getPassword());
-                        main.gotoGameRoomselect(this.clientInfo, L, this.ServerMock);                        
+                        main.gotoGameRoomselect(this.clientInfo, L, this.ServerMock);
                     }
                 }
 
@@ -154,10 +153,10 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
         }
         this.UpdateForms();
     }
-    
+
     public void UpdateForms() throws RemoteException {
         ArrayList<String> temp = new ArrayList<>();
-        
+
         try {
             for (ILobby i : ServerMock.getLobbies()) {
                 temp.add(i.GetLobbyname());
@@ -166,9 +165,9 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
             System.out.println("Remote Exception");
             ex.printStackTrace();
         }
-        
+
         this.CBjoinlobby.setItems(FXCollections.observableArrayList(temp));
-        this.Lblobby.setItems(FXCollections.observableArrayList(temp));       
+        this.Lblobby.setItems(FXCollections.observableArrayList(temp));
     }
 
     public void Clear() {

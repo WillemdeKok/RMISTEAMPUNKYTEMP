@@ -13,28 +13,51 @@ import java.util.ArrayList;
  *
  * @author Willem
  */
-public interface IGame extends Remote{
+public interface IGame extends Remote {
+
     public void startRound() throws RemoteException;
+
     public int getHeightPixels() throws RemoteException;
+
     public int getHeightCubes() throws RemoteException;
+
     public int getWidthPixels() throws RemoteException;
+
     public int getWidthCubes() throws RemoteException;
+
     public int getBotDifficulty() throws RemoteException;
+
     public int getTotalRounds() throws RemoteException;
+
     public int getCurrentRound() throws RemoteException;
+
     public double getTotalTime() throws RemoteException;
+
     public double getCurrentTime() throws RemoteException;
+
     public int getCurrentLevel() throws RemoteException;
+
     public boolean getGameEnd() throws RemoteException;
+
     public boolean setBotDifficulty(int difficulty) throws RemoteException;
+
     public void addPlayer(IUser player) throws RemoteException;
+
     public boolean placeFillupBoxes() throws RemoteException;
+
     public boolean placeRandomPowerup() throws RemoteException;
+
     public boolean getRandomBool(double perc) throws RemoteException;
+
     public void setCurrentTime() throws RemoteException;
+
     public boolean setGameEnd() throws RemoteException;
+
     public void updateGame() throws RemoteException;
+
     public void setupGame() throws RemoteException;
+
     public void setupLevel() throws RemoteException;
+
     public ArrayList<String[]> GetInformation() throws RemoteException;
 }
