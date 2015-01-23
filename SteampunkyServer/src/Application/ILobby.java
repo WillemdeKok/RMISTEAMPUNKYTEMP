@@ -25,7 +25,7 @@ public interface ILobby extends Remote{
     public boolean assignSlot(String user) throws RemoteException;
     public int removeUser(String user) throws RemoteException;
     public void Addchatmessage(String message)throws RemoteException;
-    public void move(IUser user, Direction d)throws RemoteException;
+    public void move(String user, Direction d)throws RemoteException;
     public void updateGame()throws RemoteException;
     public int getWidthCubes()throws RemoteException;
     public int getHeightCubes()throws RemoteException;
