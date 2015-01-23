@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="286.0" prefWidth="300.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="Application.SteampunkFXControllerLogin">
+  <children>
+    <TabPane id="Createuser" fx:id="Logintabs" blendMode="SRC_ATOP" disable="false" prefHeight="286.0" prefWidth="300.0" side="TOP" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <tabs>
+        <Tab fx:id="loginuser" text="Login user">
+          <content>
+            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="268.0" prefWidth="300.0">
+              <children>
+                <Button id="Btexit" fx:id="BTExitlogin" layoutX="184.0" layoutY="164.0" mnemonicParsing="false" onAction="#BTExitlogin" text="Exit" />
+                <Button id="Btlogin" fx:id="BTloginuserlogin" layoutX="77.0" layoutY="164.0" mnemonicParsing="false" onAction="#Btlogin" text="Login user" />
+                <Label id="BtUsername" fx:id="LBUsernamelogin" layoutX="29.0" layoutY="82.0" text="Username">
+                  <font>
+                    <Font name="System Bold" size="14.0" fx:id="x1" />
+                  </font>
+                </Label>
+                <Label id="Btwachtwoord" fx:id="LBWachtwoordlogin" font="$x1" layoutX="5.0" layoutY="113.0" text="Wachtwoord" />
+                <TextField id="TFWachtwoord" fx:id="TFUsernamelogin" layoutX="115.0" layoutY="80.0" prefWidth="171.0" />
+                <PasswordField fx:id="TFWachtwoordlogin" layoutX="115.0" layoutY="111.0" prefWidth="171.0" />
+              </children>
+            </AnchorPane>
+          </content>
+        </Tab>
+        <Tab fx:id="Createuser" text="Create user">
+          <content>
+            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="255.0" prefWidth="300.0">
+              <children>
+                <Button id="Btexit" fx:id="BTExitcreate" layoutX="184.0" layoutY="164.0" mnemonicParsing="false" onAction="#BTExitlogin" text="Exit" />
+                <Button id="Btcreate" fx:id="BtCreatecreate" layoutX="77.0" layoutY="164.0" mnemonicParsing="false" onAction="#BtCreatecreate" text="Create user" />
+                <Label id="BtUsername" fx:id="LBUsernamecreate" font="$x1" layoutX="29.0" layoutY="82.0" text="Username" />
+                <Label id="Btwachtwoord" fx:id="LBWachtwoordcreate" font="$x1" layoutX="20.0" layoutY="113.0" text="Wachtwoord" />
+                <TextField id="TFUsername" fx:id="TFUsernamecreate" layoutX="115.0" layoutY="80.0" prefWidth="171.0" />
+                <PasswordField fx:id="TFWachtwoordcreate" layoutX="115.0" layoutY="111.0" prefWidth="171.0" />
+              </children>
+            </AnchorPane>
+          </content>
+        </Tab>
+      </tabs>
+    </TabPane>
+  </children>
+</AnchorPane>
