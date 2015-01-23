@@ -8,6 +8,10 @@ package Application;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -632,7 +636,7 @@ public class Game implements IGame, Serializable {
         });
         bots.stream().forEach((B) -> {
             if (!B.getCharacter().getDead()) {
-                B.AI();
+                B.AI();// starten van thread 
             } else {
                 System.out.println("dead");
             }
@@ -722,7 +726,19 @@ public class Game implements IGame, Serializable {
         //Add bots for missing players
         for (int k = i; k < 4; k++) {
             if (k >= count) {
-                Bot b = new Bot(namen[k], this.botDifficulty, this);
+                //Bot b = new Bot(namen[k], this.botDifficulty, this);
+                //this.bots.add(b);
+                ExecutorService service =  Executors.newSingleThreadExecutor();
+                Future<Bot> future = service.submit(new Bot(namen[k], this.botDifficulty, this));
+                Bot b = null;
+                try {
+                    b = future.get();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ExecutionException ex) {
+                    Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
                 this.bots.add(b);
 
                 CharacterPlayer c = new CharacterPlayer(1, false, 1, 3, positions[k], true, true, directions[k], this);

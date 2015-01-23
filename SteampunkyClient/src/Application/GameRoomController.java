@@ -23,6 +23,11 @@ import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -139,6 +144,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
     private ArrayList<String> Roomsizeheight;
     private ArrayList<String> Rounds;
     private ArrayList<String> Time;
+    private ArrayList<String[]> information;
     private transient ObservableList<String> observableRounds;
     private transient ObservableList<String> observableTime;
     private transient ObservableList<String> observableRoomsizewidth;
@@ -213,7 +219,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         }
 
         // vult de hoogte en breedte lijst van het speelveld in de combobox
-        for (int widthheight = 9; widthheight < 20; widthheight++) {
+        for (int widthheight = 9; widthheight < 14; widthheight++) {
             if (widthheight % 2 != 0) {
                 String temp = "" + widthheight;
                 observableRoomsizewidth.add(temp);
@@ -341,7 +347,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
     }
 
     //clears the scene and draws new boxes for every object.
-    public void DrawGame() {
+    public void DrawGame() throws InterruptedException, ExecutionException {
         box.getChildren().clear();
 
         switch (level) {
@@ -362,13 +368,27 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         box.getChildren().add(this.field);
         box.getChildren().add(this.playfield);
 
-        ArrayList<String[]> information = null;
-
-        try {
-            information = this.lobbyinstance.GetInformation();
-        } catch (RemoteException ex) {
-            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+        information = null;
+        
+        ExecutorService service = Executors.newSingleThreadExecutor();
+        Future<ArrayList<String[]>> future = service.submit(new Callable() {
+            @Override
+            public Object call() throws Exception {
+                try {
+                    information = lobbyinstance.GetInformation();
+                    return information;
+                } catch (RemoteException ex) {
+                    Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+                    return null;
+                }
+            }
         }
+        );
+        information = future.get();
+       
+        
+        //Informationthread.start();
+           
 
         for (String[] s : information) {
             String object = "";
@@ -626,7 +646,13 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
             public void run() {
                 javafx.application.Platform.runLater(() -> {
                     {
-                        DrawGame();
+                        try {
+                            DrawGame();
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (ExecutionException ex) {
+                            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                 });
             }
