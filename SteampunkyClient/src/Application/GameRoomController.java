@@ -23,6 +23,11 @@ import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -99,6 +104,8 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
     @FXML
     private Label LBLRound;
     @FXML
+    private Label LBLReadyToBegin;
+    @FXML
     private TextField TFChatInsert;
     @FXML
     private ListView LBPlayers;
@@ -138,6 +145,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
     private ArrayList<String> Roomsizeheight;
     private ArrayList<String> Rounds;
     private ArrayList<String> Time;
+    private ArrayList<String[]> information;
     private transient ObservableList<String> observableRounds;
     private transient ObservableList<String> observableTime;
     private transient ObservableList<String> observableRoomsizewidth;
@@ -169,9 +177,10 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         this.LBLusername.setText("Welcome: " + client.getUser());
         this.LBLRemaining.setText("Remaining slots: " + this.slotsleft);
         this.LBRating.setText("Rating: " + this.client.getRating());
-        this.BTReady.setDisable(true);
+        this.BTReady.setVisible(false);
+        this.BTstop.setVisible(false);
         this.BTSpectator.setDisable(true);
-
+        
         try {
             RemotePublisher publisher = (RemotePublisher) this.lobbyinstance;
             publisher.addListener(this, "lobby");
@@ -180,17 +189,23 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
             ex.printStackTrace();
         }
 
-        this.LBLsize.setDisable(true);
-        this.LBLHeight.setDisable(true);
-        this.LBLWidth.setDisable(true);
-        this.LBLTime.setDisable(true);
-        this.LBLRound.setDisable(true);
-        this.CBlevelsizeHeight.setDisable(true);
-        this.CBlevelsizeWidth.setDisable(true);
-        this.CBMinutes.setDisable(true);
-        this.CBrounds.setDisable(true);
-        this.BTstop.setDisable(true);
-
+        
+        this.LBLPlayer1Status.setVisible(false);
+        this.LBLPlayer2Status.setVisible(false);
+        this.LBLPlayer3Status.setVisible(false);
+        this.LBLPlayer4Status.setVisible(false);
+        
+        this.LBLsize.setVisible(false);
+        this.LBLHeight.setVisible(false);
+        this.LBLWidth.setVisible(false);
+        this.LBLTime.setVisible(false);
+        this.LBLRound.setVisible(false);
+        this.CBlevelsizeHeight.setVisible(false);
+        this.CBlevelsizeWidth.setVisible(false);
+        this.CBMinutes.setVisible(false);
+        this.CBrounds.setVisible(false);
+        this.LBLReadyToBegin.setVisible(false);
+        
         //add level size 
         observableRounds = observableList(this.Rounds);
         observableTime = observableList(this.Time);
@@ -205,7 +220,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         }
 
         // vult de hoogte en breedte lijst van het speelveld in de combobox
-        for (int widthheight = 9; widthheight < 20; widthheight++) {
+        for (int widthheight = 9; widthheight < 14; widthheight++) {
             if (widthheight % 2 != 0) {
                 String temp = "" + widthheight;
                 observableRoomsizewidth.add(temp);
@@ -225,20 +240,25 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         } catch (RemoteException ex) {
             Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
         }
-//Kijkt of de ingelogde speler een admin is
-//        for (IUser u : lobby.getSpectators()) {
-//            if (u == admin) {
-//                this.LBLsize.setDisable(false);
-//                this.LBLHeight.setDisable(false);
-//                this.LBLWidth.setDisable(false);
-//                this.LBLTime.setDisable(false);
-//                this.LBLRound.setDisable(false);
-//                this.CBlevelsizeHeight.setDisable(false);
-//                this.CBlevelsizeWidth.setDisable(false);
-//                this.CBMinutes.setDisable(false);
-//                this.CBrounds.setDisable(false);
-//            }
-//        }
+        try {
+            //Kijkt of de ingelogde speler een admin is
+            if (this.client.getUser().equals(this.lobbyinstance.getAdminName())) {
+                this.LBLReadyToBegin.setVisible(true);
+                this.BTReady.setVisible(true);
+                this.BTstop.setVisible(true);
+                this.LBLsize.setVisible(true);
+                this.LBLHeight.setVisible(true);
+                this.LBLWidth.setVisible(true);
+                this.LBLTime.setVisible(true);
+                //this.LBLRound.setVisible(true);
+                this.CBlevelsizeHeight.setVisible(true);
+                this.CBlevelsizeWidth.setVisible(true);
+                this.CBMinutes.setVisible(true);
+                //this.CBrounds.setVisible(true);
+            }
+        } catch (RemoteException ex) {
+            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
@@ -328,7 +348,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
     }
 
     //clears the scene and draws new boxes for every object.
-    public void DrawGame() {
+    public void DrawGame() throws InterruptedException, ExecutionException {
         
         if (PlayerNames.contains(client.getUser()))
         {
@@ -360,13 +380,25 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
             box.getChildren().add(this.field);
             box.getChildren().add(this.playfield);
 
-            ArrayList<String[]> information = null;
-
-            try {
-                information = this.lobbyinstance.GetInformation();
-            } catch (RemoteException ex) {
-                Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+            //Informationthread.start();
+            information = null;
+        
+            ExecutorService service = Executors.newSingleThreadExecutor();
+            Future<ArrayList<String[]>> future = service.submit(new Callable() {
+                @Override
+                public Object call() throws Exception {
+                    try {
+                        information = lobbyinstance.GetInformation();
+                        return information;
+                    } catch (RemoteException ex) {
+                        Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+                        return null;
+                    }
+                }
             }
+            );
+            
+            information = future.get();
 
             for (String[] s : information) {
                 String object = "";
@@ -469,17 +501,17 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         int width = Integer.parseInt(this.CBlevelsizeWidth.getValue().toString());
         int height = Integer.parseInt(this.CBlevelsizeHeight.getValue().toString());
         double time = Integer.parseInt(this.CBMinutes.getValue().toString()) * 60;
-        int rounds = Integer.parseInt(this.CBrounds.getValue().toString());
+        int rounds = 1;
 
         try {
-            this.lobbyinstance.createGame(time, 3, level, rounds, width, height);
+            this.lobbyinstance.createGame(time, 3, level, 1, width, height);
             SetupDraw();
         } catch (RemoteException ex) {
             Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
     //Sets up the settings needed to draw.
-
     public synchronized void SetupDraw() {
         //Teken code hier aan toevoegen
         //Moeten groter zijn dan 9; melding?!
@@ -616,7 +648,13 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
             public void run() {
                 javafx.application.Platform.runLater(() -> {
                     {
-                        DrawGame();
+                        try {
+                            DrawGame();
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (ExecutionException ex) {
+                            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                 });
             }

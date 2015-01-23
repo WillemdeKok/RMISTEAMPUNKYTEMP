@@ -8,6 +8,10 @@ package Application;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,7 +19,7 @@ import java.util.logging.Logger;
  *
  * @author Melanie
  */
-public class Game implements IGame, Serializable{
+public class Game implements IGame, Serializable {
 
     //************************datavelden*************************************
     private int heightPixels;
@@ -612,11 +616,6 @@ public class Game implements IGame, Serializable{
                 }
                 return o;
             }).map((o) -> {
-                if (o instanceof CharacterPlayer && !tempCharacters.contains((CharacterPlayer) o)) {
-                    tempCharacters.add((CharacterPlayer) o);
-                }
-                return o;
-            }).map((o) -> {
                 if (o instanceof Projectile && !tempProjectiles.contains((Projectile) o)) {
                     tempProjectiles.add((Projectile) o);
                 }
@@ -625,17 +624,19 @@ public class Game implements IGame, Serializable{
                 tempPowerUps.add((PowerUp) o);
             });
         });
-
-//        tempCharacters.stream().forEach((C) -> {
-//            C.move(C.getDirection());
-//        });
-
+        for(IUser I : players){
+            try {
+                I.setCanMove(true);
+            } catch (RemoteException ex) {
+                Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         tempProjectiles.stream().forEach((P) -> {
             P.move(P.getDirection());
         });
         bots.stream().forEach((B) -> {
-            if(!B.getCharacter().getDead()){
-                B.AI();
+            if (!B.getCharacter().getDead()) {
+                B.AI();// starten van thread 
             } else {
                 System.out.println("dead");
             }
@@ -725,7 +726,19 @@ public class Game implements IGame, Serializable{
         //Add bots for missing players
         for (int k = i; k < 4; k++) {
             if (k >= count) {
-                Bot b = new Bot(namen[k], this.botDifficulty, this);
+                //Bot b = new Bot(namen[k], this.botDifficulty, this);
+                //this.bots.add(b);
+                ExecutorService service =  Executors.newSingleThreadExecutor();
+                Future<Bot> future = service.submit(new Bot(namen[k], this.botDifficulty, this));
+                Bot b = null;
+                try {
+                    b = future.get();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ExecutionException ex) {
+                    Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
                 this.bots.add(b);
 
                 CharacterPlayer c = new CharacterPlayer(1, false, 1, 3, positions[k], true, true, directions[k], this);
@@ -790,14 +803,14 @@ public class Game implements IGame, Serializable{
             this.setObjectInGrid(o);
         });
     }
-    
+
     @Override
     public synchronized ArrayList<String[]> GetInformation() {
         ArrayList<String[]> information = new ArrayList();
-        
-	for (Position p : grid) {
+
+        for (Position p : grid) {
             ArrayList<ObjectForGame> TempObjects = this.getObjectsFromGrid(p.getX(), p.getY());
-		
+
             for (ObjectForGame o : TempObjects) {
                 String[] objectinfo = new String[6];
 
@@ -811,49 +824,44 @@ public class Game implements IGame, Serializable{
                     objectinfo[0] = "4";
                 } else if (o instanceof Projectile) {
                     objectinfo[0] = "5";
-                }	
-                
+                }
+
                 objectinfo[1] = o.getObjectType();
                 objectinfo[2] = o.getPosition().getX() + "";
                 objectinfo[3] = o.getPosition().getY() + "";
-                
-                if (o.getDirection() != null)
-                {
+
+                if (o.getDirection() != null) {
                     objectinfo[4] = o.getDirection().name() + "";
-                }
-                else
-                {
+                } else {
                     objectinfo[4] = Direction.Up.name() + "";
                 }
-                objectinfo[5] = ""+ this.currentLevel;
+                objectinfo[5] = "" + this.currentLevel;
                 information.add(objectinfo);
             }
         }
         return information;
     }
-    
-    public void GameTimer(){
-        this.gameTickTimer = new Timer();  
+
+    public void GameTimer() {
+        this.gameTickTimer = new Timer();
         System.out.println("Fail");
         //Level opnieuw uittekenen met nieuwe posities      
-       
+
         //Geeft momenteel ConcurrentModificationException error
         // Maar deze timer zou dus voor updaten moeten zijn.
-        
         this.gameTickTimer.scheduleAtFixedRate(new TimerTask() {
-            
+
             @Override
-            public void run()
-            { 
+            public void run() {
                 if (isRunning == false) {
-                isRunning = true;
-                
+                    isRunning = true;
+
                     {
                         updateGame();
-                    }    
-                    isRunning=false;
+                    }
+                    isRunning = false;
                 }
-            }           
-        },500,500);
+            }
+        }, 500, 500);
     }
 }

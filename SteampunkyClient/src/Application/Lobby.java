@@ -160,6 +160,16 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
     }
     
     @Override
+    public String getAdminName() {
+        try {
+            return this.admin.getUsername();
+        } catch (RemoteException ex) {
+            Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+    
+    @Override
     public boolean addUser(IUser user)
     {        
         if(user != null && !spectators.contains(user))
