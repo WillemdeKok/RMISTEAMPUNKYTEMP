@@ -24,6 +24,7 @@ public abstract class ObjectForGame implements Serializable {
     private Game myGame;
     //private Shape shape;
     private String objectType;
+    private boolean canMove;
 
     //***********************constructoren***********************************
     /**
@@ -64,6 +65,14 @@ public abstract class ObjectForGame implements Serializable {
 
     public String getObjectType() {
         return this.objectType;
+    }
+
+    public boolean getCanMove() {
+        return this.canMove;
+    }
+
+    public void setCanMove(boolean bool) {
+        this.canMove = bool;
     }
 
     /**
@@ -163,6 +172,7 @@ public abstract class ObjectForGame implements Serializable {
             this.position.removeObject(this);
             this.direction = direction;
             this.setPosition(this.myGame.getPosition(nextX, nextY));
+            this.canMove = false;
         }
     }
 

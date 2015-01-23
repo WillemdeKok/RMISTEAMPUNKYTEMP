@@ -24,6 +24,7 @@ public abstract class ObjectForGame implements Serializable {
     private Game myGame;
     //private Shape shape;
     private String objectType;
+    private boolean canMove;
 
     //***********************constructoren***********************************
     /**
@@ -48,7 +49,7 @@ public abstract class ObjectForGame implements Serializable {
         if (!movable) {
             this.direction = null;
         }
-        
+
         this.interfaceID++;
     }
 
@@ -61,9 +62,17 @@ public abstract class ObjectForGame implements Serializable {
     public int getInterfaceID() {
         return this.interfaceID;
     }
-    
+
     public String getObjectType() {
         return this.objectType;
+    }
+
+    public boolean getCanMove() {
+        return this.canMove;
+    }
+
+    public void setCanMove(boolean bool) {
+        this.canMove = bool;
     }
 
     /**
@@ -83,7 +92,7 @@ public abstract class ObjectForGame implements Serializable {
     public int getPositionY() {
         return this.position.getY();
     }
-    
+
     public boolean getMove() {
         return this.movable;
     }
@@ -97,7 +106,7 @@ public abstract class ObjectForGame implements Serializable {
     public Position getPosition() {
         return this.position;
     }
-    
+
     public Direction getDirection() {
         return this.direction;
     }
@@ -163,6 +172,7 @@ public abstract class ObjectForGame implements Serializable {
             this.position.removeObject(this);
             this.direction = direction;
             this.setPosition(this.myGame.getPosition(nextX, nextY));
+            this.canMove = false;
         }
     }
 
@@ -239,7 +249,7 @@ public abstract class ObjectForGame implements Serializable {
         }
         return Movable;
     }
-    
+
     public void RemoveFromGame() {
         if (this instanceof CharacterPlayer) {
             CharacterPlayer C = (CharacterPlayer) this;
@@ -256,7 +266,7 @@ public abstract class ObjectForGame implements Serializable {
         this.position.removeObject(this);
         this.myGame.getObjects().remove(this);
     }
-    
+
     private void PickUp(String type) {
         if (this instanceof CharacterPlayer) {
             CharacterPlayer c = (CharacterPlayer) this;
