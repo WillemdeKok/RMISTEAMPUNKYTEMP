@@ -118,6 +118,19 @@ public class Game implements IGame, Serializable {
         return this.heightPixels;
     }
 
+    public CharacterPlayer getPlayerCharacter(String player) throws RemoteException {
+        for (IUser I : this.players) {
+            if (I.getUsername().matches(player)) {
+                return this.characters.get(this.players.indexOf(I));
+            }
+        }
+        return null;
+    }
+
+    public int getCharacterNumber(CharacterPlayer C) {
+        return this.characters.indexOf(C);
+    }
+
     /**
      * Getter of height in cubes
      *
@@ -612,6 +625,11 @@ public class Game implements IGame, Serializable {
                 }
                 return o;
             }).map((o) -> {
+                if (o instanceof CharacterPlayer && !tempCharacters.contains((CharacterPlayer) o)) {
+                    tempCharacters.add((CharacterPlayer) o);
+                }
+                return o;
+            }).map((o) -> {
                 if (o instanceof Projectile && !tempProjectiles.contains((Projectile) o)) {
                     tempProjectiles.add((Projectile) o);
                 }
@@ -620,12 +638,8 @@ public class Game implements IGame, Serializable {
                 tempPowerUps.add((PowerUp) o);
             });
         });
-        for(IUser I : players){
-            try {
-                I.setCanMove(true);
-            } catch (RemoteException ex) {
-                Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        for (CharacterPlayer C : tempCharacters) {
+            C.setCanMove(true);
         }
         tempProjectiles.stream().forEach((P) -> {
             P.move(P.getDirection());

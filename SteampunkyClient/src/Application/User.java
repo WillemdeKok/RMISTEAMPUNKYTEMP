@@ -170,60 +170,7 @@ public class User extends UnicastRemoteObject implements IUser {
 
     @Override
     public void move(Direction d) throws RemoteException {
-        if (canMove) {
-            int move = 0;
-            int nextMove = 0;
-            switch (d) {
-                case Up:
-                    move = 0;
-                case Right:
-                    move = 1;
-                case Down:
-                    move = 2;
-                case Left:
-                    move = 3;
-            }
-            if (this.currentLobby.getPlayers().contains(this.getUsername())) {
-                int i = this.currentLobby.getPlayers().indexOf(this.getUsername());
-                switch (i) {
-                    case 0:
-                        nextMove = 0;
-                        break;
-                    case 1:
-                        nextMove = 1;
-                        break;
-                    case 2:
-                        nextMove = 2;
-                        break;
-                    case 3:
-                        nextMove = 3;
-                        break;
-                }
-
-            }
-
-            int finalMoveNo;
-            if (move + nextMove > 3) {
-                finalMoveNo = move + nextMove - 4;
-            } else {
-                finalMoveNo = move + nextMove;
-            }
-            Direction finalMove = null;
-            switch (finalMoveNo) {
-                case 0:
-                    finalMove = Direction.Up;
-                case 1:
-                    finalMove = Direction.Right;
-                case 2:
-                    finalMove = Direction.Down;
-                case 3:
-                    finalMove = Direction.Left;
-            }
-            if (finalMove != null) {
-                this.character.move(finalMove);
-                canMove = false;
-            }
-        }
+        
     }
 
     @Override

@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package Application;
 
 import Application.FontysObserver.BasicPublisher;
@@ -18,13 +17,15 @@ import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import static javafx.collections.FXCollections.observableList;
 import javafx.collections.ObservableList;
+import jdk.nashorn.internal.codegen.CompilerConstants;
 
 /**
  * OK
+ *
  * @author Bart
  */
-public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublisher
-{
+public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublisher {
+
     //************************datavelden*************************************
     private int lobbyID;
     private int nextLobbyID = 1;
@@ -40,7 +41,7 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
     //private transient ObservableList<IUser> observablePlayers;
     private int ratingDifference;
     private Game game;
-    
+
     private String[] lobbyArray;
     private BasicPublisher publisher;
 
@@ -48,8 +49,7 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
     /**
      * creates a lobby with ...
      */
-    public Lobby(String lobbyname, IUser addedByUser, String password) throws RemoteException
-    {      
+    public Lobby(String lobbyname, IUser addedByUser, String password) throws RemoteException {
         System.out.println("Lobby has been created");
         this.lobbyName = lobbyname;
         this.admin = addedByUser;
@@ -57,11 +57,11 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
         this.nextLobbyID++;
         this.password = password;
         this.admin = addedByUser;
-        
+
         this.lobbyArray = new String[1];
         this.lobbyArray[0] = "lobby";
         this.publisher = new BasicPublisher(this.lobbyArray);
-        
+
         this.spectators = new ArrayList<>();
         //observableSpectators = observableList(spectators);
         this.players = new ArrayList<>();
@@ -72,10 +72,10 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
     }
 
     @Override
-    public String GetLobbyname(){
-       return this.lobbyName;       
+    public String GetLobbyname() {
+        return this.lobbyName;
     }
-    
+
 //    public ObservableList<IUser> getPlayersAsUsers() {
 //        return (ObservableList<IUser>) FXCollections.unmodifiableObservableList(observablePlayers);
 //    }
@@ -83,10 +83,9 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
 //    public ObservableList<IUser> getSpectatorsAsUsers() {
 //        return (ObservableList<IUser>) FXCollections.unmodifiableObservableList(observableSpectators);
 //    }
-    
     @Override
     public ArrayList<String> getSpectators() {
-        ArrayList<String> temp = new ArrayList();  
+        ArrayList<String> temp = new ArrayList();
         for (IUser u : spectators) {
             try {
                 temp.add(u.getUsername());
@@ -97,11 +96,11 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
         System.out.println("temp size: " + temp.size());
         return temp;
     }
-    
+
     @Override
     public ArrayList<String> getPlayers() {
         ArrayList<String> temp = new ArrayList();
-        
+
         for (IUser u : players) {
             try {
                 temp.add(u.getUsername());
@@ -111,54 +110,46 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
         }
         return temp;
     }
-    
+
     @Override
     public ArrayList<String> getChat() {
         return this.chatMessages;
     }
-    
+
     @Override
-    public void Addchatmessage(String message)
-    {
+    public void Addchatmessage(String message) {
         chatMessages.add(message);
         this.publisher.inform(this, "lobby", "", "Message");
     }
-    
+
     @Override
-    public boolean checkPassword(String password)
-    {
-        if(this.password.equals(password))
-        {
+    public boolean checkPassword(String password) {
+        if (this.password.equals(password)) {
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
-    
+
     @Override
-    public boolean createGame(double timelimit, int botDifficulty, int level, int rounds, int width, int height)
-    {
+    public boolean createGame(double timelimit, int botDifficulty, int level, int rounds, int width, int height) {
         //todo
-        if(timelimit != 0 && botDifficulty != 0 && level > 0 && rounds != 0)
-        {
-            game = new Game(width,height,timelimit,botDifficulty,rounds,level);
-            
-            for (IUser u : players)
-            {
+        if (timelimit != 0 && botDifficulty != 0 && level > 0 && rounds != 0) {
+            game = new Game(width, height, timelimit, botDifficulty, rounds, level);
+
+            for (IUser u : players) {
                 game.addPlayer(u);
             }
-                    
+
             game.startRound();
             publisher.inform(this, "lobby", "", "start");
-                    
+
             return true;
         }
-      
+
         return false;
     }
-    
+
     @Override
     public String getAdminName() {
         try {
@@ -177,21 +168,25 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
             spectators.add(user);
             System.out.println("User has been added");
             publisher.inform(this, "lobby", "", "new");
-            return true;   
+            return true;
         }
         return false;
     }
+
     /**
-     * removes a user if this exists, if the user is an admin, check if there are more users. if there are more users give admin to the next user
-     * if there are no new users, return a value that shows that the lobby has to be removed
+     * removes a user if this exists, if the user is an admin, check if there
+     * are more users. if there are more users give admin to the next user if
+     * there are no new users, return a value that shows that the lobby has to
+     * be removed
+     *
      * @param user
-     * @return if return -1 delete this lobby, if 0 no user has been removed if 1 user has been removed
+     * @return if return -1 delete this lobby, if 0 no user has been removed if
+     * 1 user has been removed
      */
     @Override
-    public int removeUser(String user)
-    {
+    public int removeUser(String user) {
         IUser Tempuser = null;
-        
+
         for (IUser u : players) {
             try {
                 if (u.getUsername().equals(user)) {
@@ -201,35 +196,34 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
                 Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+
         int removedUser = 0;
-        
-        if(spectators.contains(Tempuser)){
+
+        if (spectators.contains(Tempuser)) {
             spectators.remove(Tempuser);
             publisher.inform(this, "lobby", "", "new");
             removedUser = 1;
-        }else if (players.contains(Tempuser)){
+        } else if (players.contains(Tempuser)) {
             players.remove(Tempuser);
             publisher.inform(this, "lobby", "", "new");
             removedUser = 1;
         }
-        if (this.admin == Tempuser && spectators.iterator().hasNext()){
-            this.admin = spectators.iterator().next();            
-        } else if (this.admin == Tempuser){
+        if (this.admin == Tempuser && spectators.iterator().hasNext()) {
+            this.admin = spectators.iterator().next();
+        } else if (this.admin == Tempuser) {
             removedUser = -1;
         }
         return removedUser;
-          
+
     }
-    
+
     @Override
-    public boolean assignSlot(String user)
-    {        
+    public boolean assignSlot(String user) {
         System.out.println("I arrived at AssignSlot");
         IUser Tempuser = null;
-        
+
         System.out.println("Size: " + spectators.size());
-        
+
         for (IUser u : spectators) {
             try {
                 if (u.getUsername().equals(user)) {
@@ -239,9 +233,8 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
                 Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
-        if(Tempuser != null && spectators.contains(Tempuser) && !players.contains(Tempuser))
-        {
+
+        if (Tempuser != null && spectators.contains(Tempuser) && !players.contains(Tempuser)) {
             players.add(Tempuser);
             spectators.remove(Tempuser);
             publisher.inform(this, "lobby", "", "new");
@@ -249,12 +242,11 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
         }
         return false;
     }
-    
+
     @Override
-    public boolean clearSlot(String user)
-    {
+    public boolean clearSlot(String user) {
         IUser Tempuser = null;
-        
+
         for (IUser u : players) {
             try {
                 if (u.getUsername().equals(user)) {
@@ -264,9 +256,8 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
                 Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
-        if(!spectators.contains(Tempuser) && players.contains(Tempuser))
-        {
+
+        if (!spectators.contains(Tempuser) && players.contains(Tempuser)) {
             spectators.add(Tempuser);
             players.remove(Tempuser);
             publisher.inform(this, "lobby", "", "new");
@@ -274,57 +265,107 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
         }
         return false;
     }
-    
-    @Override
-    public void move(IUser user, Direction d)
-    {
+
+    public void move(String user, Direction d) {
+        CharacterPlayer C = null;
         try {
-            user.move(d);
+            C = this.game.getPlayerCharacter(user);
         } catch (RemoteException ex) {
             Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
         }
+        if (C.getCanMove()) {
+            int i = this.game.getCharacterNumber(C);
+            int move = 0;
+            int nextMove = 0;
+            switch (d) {
+                case Up:
+                    move = 0;
+                    break;
+                case Right:
+                    move = 1;
+                    break;
+                case Down:
+                    move = 2;
+                    break;
+                case Left:
+                    move = 3;
+                    break;
+            }
+            switch (i) {
+                case 0:
+                    nextMove = 0;
+                    break;
+                case 1:
+                    nextMove = 1;
+                    break;
+                case 2:
+                    nextMove = 2;
+                    break;
+                case 3:
+                    nextMove = 3;
+                    break;
+            }
+
+            int finalMoveNo;
+            if (move + nextMove > 3) {
+                finalMoveNo = move + nextMove - 4;
+            } else {
+                finalMoveNo = move + nextMove;
+            }
+            Direction finalMove = null;
+            switch (finalMoveNo) {
+                case 0:
+                    finalMove = Direction.Up;
+                    break;
+                case 1:
+                    finalMove = Direction.Right;
+                    break;
+                case 2:
+                    finalMove = Direction.Down;
+                    break;
+                case 3:
+                    finalMove = Direction.Left;
+                    break;
+            }
+            if (finalMove != null) {
+                C.move(finalMove);
+            }
+        }
     }
-    
+
     @Override
-    public synchronized void updateGame()
-    {
+    public synchronized void updateGame() {
         this.game.updateGame();
     }
-    
+
     @Override
-    public synchronized int getWidthCubes()
-    {
+    public synchronized int getWidthCubes() {
         return this.game.getWidthCubes();
     }
-    
+
     @Override
-    public synchronized int getHeightCubes()
-    {
+    public synchronized int getHeightCubes() {
         return this.game.getHeightCubes();
     }
-    
+
     @Override
-    public synchronized int getWidthPixels()
-    {
+    public synchronized int getWidthPixels() {
         return this.game.getWidthPixels();
     }
-    
+
     @Override
-    public synchronized int getHeightPixels()
-    {
+    public synchronized int getHeightPixels() {
         return this.game.getHeightPixels();
     }
-    
+
     @Override
-    public synchronized ArrayList<String[]> GetInformation()
-    {
+    public synchronized ArrayList<String[]> GetInformation() {
         return this.game.GetInformation();
     }
-    
+
     @Override
-    public String toString()
-    {
-       return this.lobbyName; 
+    public String toString() {
+        return this.lobbyName;
     }
 
     @Override
