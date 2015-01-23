@@ -661,7 +661,7 @@ public class Game implements IGame, Serializable {
             if (!B.getCharacter().getDead()) {
                 B.AI();
             } else {
-                System.out.println("dead");
+
             }
         });
         int dead = 0;

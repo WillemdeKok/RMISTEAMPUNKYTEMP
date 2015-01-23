@@ -181,24 +181,33 @@ public class Bot implements Serializable, Callable {
                     if (shouldIDropBallista(movableGrid)) {
                         this.character.createBallista(Direction.Right, this.character.getSpeed());
                     }
+                    boolean onProjectile = false;
+                    for (Object Obj : this.character.getPosition().getObjects()) {
+                        if (Obj instanceof Projectile) {
+                            onProjectile = true;
+                        }
+                    }
                     if (!ballistaDropped()) {
-                        List<Direction> threats = getThreats(movableGrid);
-                        if (threats != null) {
-                            Direction dir = MoveFrom(threats, movableGrid);
-                            if (dir != null) {
+                        if (!onProjectile) {
+                            List<Direction> threats = getThreats(movableGrid);
+                            if (threats != null) {
+                                Direction dir = MoveFrom(threats, movableGrid);
+                                if (dir != null) {
+                                    this.character.move(dir);
+                                    this.character.setDirection(dir);
+                                }
+                            } else if (getPowerUp(movableGrid) != null) {
+                                Direction dir = getPowerUp(movableGrid);
                                 this.character.move(dir);
                                 this.character.setDirection(dir);
+                            } else {
+                                randomMove(movableGrid);
                             }
-                        } else if (getPowerUp(movableGrid) != null) {
-                            Direction dir = getPowerUp(movableGrid);
-                            this.character.move(dir);
-                            this.character.setDirection(dir);
-                        } else {
-                            randomMove(movableGrid);
-                        }
 
+                        }
                     }
                 }
+
             }
             // </editor-fold>
         }
