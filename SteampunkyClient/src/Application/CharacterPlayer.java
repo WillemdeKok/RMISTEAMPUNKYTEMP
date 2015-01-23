@@ -22,7 +22,7 @@ public class CharacterPlayer extends ObjectForGame implements Serializable, ICha
     private boolean dead;
     private int maxBallistas;
     private int torchLight;
-    private int shots;
+    private int shots = 4;
     private Direction direction;
     //relaties
     private List<Ballista> ballistas;
@@ -83,6 +83,10 @@ public class CharacterPlayer extends ObjectForGame implements Serializable, ICha
      */
     public int getCharacterID() {
         return this.characterID;
+    }
+
+    public void removeBallista(Ballista B) {
+        this.ballistas.remove(B);
     }
 
     /**
@@ -211,14 +215,11 @@ public class CharacterPlayer extends ObjectForGame implements Serializable, ICha
         //Create new Ballista
         if (this.ballistas.size() < this.maxBallistas) {
             Ballista newBallista = new Ballista("Normal", shots, projectileSpeed, ballistaPosition, active, direction, super.getGame());
+            newBallista.setOwner(this);
             this.ballistas.add(newBallista);
             Position p = super.getPosition();
             p.addObject(newBallista);
             System.out.println("fancy");
-            if (newBallista.getShotsFired() == shots) {
-                p.removeObject(newBallista);
-                this.ballistas.remove(newBallista);
-            }
 
         }
     }
