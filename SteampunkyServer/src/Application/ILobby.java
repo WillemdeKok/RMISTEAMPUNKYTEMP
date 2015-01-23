@@ -31,5 +31,6 @@ public interface ILobby extends Remote{
     public int getHeightCubes()throws RemoteException;
     public int getWidthPixels()throws RemoteException;
     public int getHeightPixels()throws RemoteException;
+    public String getAdminName() throws RemoteException;
     public ArrayList<String[]> GetInformation()throws RemoteException;
 }
