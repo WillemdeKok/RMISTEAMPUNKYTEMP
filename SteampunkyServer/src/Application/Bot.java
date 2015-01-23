@@ -7,13 +7,14 @@ package Application;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.concurrent.Callable;
 
 /**
  * OK
  * <p>
  * @author Melanie
  */
-public class Bot implements Serializable {
+public class Bot implements Serializable,Callable {
 
     //************************datavelden*************************************
     private final int botID;
@@ -580,6 +581,11 @@ public class Bot implements Serializable {
             int randomNum = rand.nextInt(dir.size()) + 0;
             this.character.move(dir.get(randomNum));
         }
+    }
+
+    @Override
+    public Object call() throws Exception {
+        return this;
     }
 
 }

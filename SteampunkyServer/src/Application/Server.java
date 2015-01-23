@@ -148,13 +148,20 @@ public class Server extends UnicastRemoteObject implements IGameServer {
             Connectionstring();
             oldrating = GetRating(username);
             newrating = oldrating - rating;
+            if(newrating >= 0)
+            {
             System.out.println("Verbing maken is geslaagd voor het DecreaseRating van de Rating");
             String querywrite = "UPDATE USERS SET RATING = ? WHERE NAAM = ?";
             PreparedStatement stat2 = con.prepareStatement(querywrite);
             stat2.setInt(1, newrating);
             stat2.setString(2, username);
             stat2.execute();
-            con.close();     
+            con.close();    
+            }
+            else 
+            {
+                newrating = 0;
+            }
         } catch (Exception ex) {
             System.out.println("Gebruiker niet gevonden voor rating" + ex);
             return 0;
