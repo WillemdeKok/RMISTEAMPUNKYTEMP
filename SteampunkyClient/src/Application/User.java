@@ -76,13 +76,6 @@ public class User extends UnicastRemoteObject implements IUser {
     public int getRating() throws RemoteException {
         return this.rating;
     }
-    
-    public boolean getCanMove(){
-        return this.canMove;
-    }
-    public void setCanMove(boolean bool){
-        this.canMove = bool;
-    }
 
     /**
      * The Getter of this Users Username
@@ -170,7 +163,7 @@ public class User extends UnicastRemoteObject implements IUser {
 
     @Override
     public void move(Direction d) throws RemoteException {
-        
+
     }
 
     @Override

@@ -23,6 +23,4 @@ public interface IUser extends Remote {
     public boolean checkPassword(String password) throws RemoteException;
     public void move(Direction d) throws RemoteException;
     public void setCharacter(CharacterPlayer c) throws RemoteException;
-    public boolean getCanMove() throws RemoteException;
-    public void setCanMove(boolean bool) throws RemoteException;
 }
