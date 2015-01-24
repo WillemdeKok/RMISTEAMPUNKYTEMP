@@ -105,7 +105,35 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
 
     public void JoinLobbyFromLV(Event evt) {
         System.out.println("Event triggered");
-        String s = this.Lblobby.getSelectionModel().getSelectedItem().toString();
+        String s = "";
+        try {
+            s = this.Lblobby.getSelectionModel().getSelectedItem().toString();
+        } catch (Exception ex) {
+            System.out.println("Lobby string not valid");
+        }
+        System.out.println(s);
+        try {
+            for (ILobby l : this.ServerMock.getLobbies()) {
+                System.out.println(l.GetLobbyname());
+                if (l.GetLobbyname().equals(s)) {
+                    l.addUser(this.clientInfo.getIUser());
+                    this.main.gotoGameRoomselect(clientInfo, l, this.ServerMock);
+                }
+            }
+        } catch (RemoteException ex) {
+            System.out.println("Remote Exception has been thrown");
+        }
+    }
+    
+    public void JoinLobbyFromCB(Event evt) {
+        System.out.println("Event triggered");
+        String s = "";
+        try {
+            s = this.CBjoinlobby.getSelectionModel().getSelectedItem().toString();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println("Lobby string not valid in combobox" + ex.getMessage());
+        }
         System.out.println(s);
         try {
             for (ILobby l : this.ServerMock.getLobbies()) {
