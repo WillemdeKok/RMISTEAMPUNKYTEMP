@@ -18,7 +18,6 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 /**
  *
@@ -30,6 +29,8 @@ public class SteampunkyFX extends Application {
     private int portNumber;
     private String ipAddress;
     private boolean uitloggen = false;
+    private Scene scene;
+    private AnchorPane page;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -44,7 +45,7 @@ public class SteampunkyFX extends Application {
             this.stage.setMinWidth(100);
             this.stage.setMinHeight(100);
             stage.setResizable(false);
-            gotoLoginselect(uitloggen);
+            gotoLoginselect();
 
             this.stage.show();
         } catch (Exception ex) {
@@ -52,9 +53,8 @@ public class SteampunkyFX extends Application {
         }
     }
     
-    protected void gotoLoginselect(Boolean Uitloggen) {
+    protected void gotoLoginselect() {
         try {
-            uitloggen = Uitloggen;
             SteampunkFXControllerLogin loginselect = (SteampunkFXControllerLogin) replaceSceneContent("LoginProftaak2.fxml");
             loginselect.setApp(this, ipAddress, portNumber);           
         } catch (Exception ex) {
@@ -86,46 +86,35 @@ public class SteampunkyFX extends Application {
         InputStream in = SteampunkyFX.class.getResourceAsStream(fxml);
         loader.setBuilderFactory(new JavaFXBuilderFactory());
         loader.setLocation(SteampunkyFX.class.getResource(fxml));
-        AnchorPane page;
         try {
-            page = (AnchorPane) loader.load(in);
+            this.page = (AnchorPane) loader.load(in);
         } finally {
             in.close();
         }
 
-        Scene scene = null;
         if (fxml.equals("LoginProftaak2.fxml")) {
-            if(uitloggen == false)
-            {
-            this.stage.setMinWidth(300);
-            this.stage.setMinHeight(268);
-            scene = new Scene(page, 300, 268);
-            }
-            if(uitloggen == true)
-            {
-            this.stage.setMinWidth(100);
-            this.stage.setMinHeight(100);
-            scene = new Scene(page, 100, 100);
-            }
+            this.stage.setWidth(300);
+            this.stage.setHeight(268);
+            this.scene = new Scene(this.page, 300, 268);
         } else if (fxml.equals("Lobby3.fxml")) {
-            this.stage.setMinWidth(700);
-            this.stage.setMinHeight(425);
-            scene = new Scene(page, 700, 400);
+            this.stage.setWidth(700);
+            this.stage.setHeight(425);
+            this.scene = new Scene(this.page, 700, 400);
         } else if (fxml.equals("GameRoom.fxml")) {
-            this.stage.setMinWidth(1048);
-            this.stage.setMinHeight(590);
+            this.stage.setWidth(1048);
+            this.stage.setHeight(590);
             this.stage.setX(100);
             this.stage.setY(100);
-            scene = new Scene(page, 1048, 590);
+            this.scene = new Scene(this.page, 1048, 590);
         } else {
             System.out.println("FATAL GUI ERROR");
         }
 
-        if (scene != null) {
-            scene.getStylesheets().add(SteampunkyFX.class.getResource("style.css").toExternalForm());
-            stage.setTitle("Steampunky");
-            stage.getIcons().add(new Image(SteampunkyFX.class.getResourceAsStream("icon.png")));
-            stage.setScene(scene);
+        if (this.scene != null) {
+            this.scene.getStylesheets().add(SteampunkyFX.class.getResource("style.css").toExternalForm());
+            this.stage.setTitle("Steampunky");
+            this.stage.getIcons().add(new Image(SteampunkyFX.class.getResourceAsStream("icon.png")));
+            this.stage.setScene(this.scene);
         } else {
             System.out.println("Create of scene in steampinkfx faild");
         }

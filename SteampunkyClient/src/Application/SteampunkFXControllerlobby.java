@@ -112,7 +112,7 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
             if(removeuser == true)
             {
                System.out.println("Loguit succesvol"); 
-               this.main.gotoLoginselect(true);
+               this.main.gotoLoginselect();
             }
             else
             {
