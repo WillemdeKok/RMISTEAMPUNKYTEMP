@@ -54,4 +54,6 @@ public interface ILobby extends Remote {
     public String getAdminName() throws RemoteException;
 
     public ArrayList<String[]> GetInformation() throws RemoteException;
+    
+    public int[] GetCharacter(String user) throws RemoteException;
 }

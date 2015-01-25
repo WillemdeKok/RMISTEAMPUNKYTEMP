@@ -60,4 +60,6 @@ public interface IGame extends Remote {
     public void setupLevel() throws RemoteException;
 
     public ArrayList<String[]> GetInformation() throws RemoteException;
+    
+    public int[] GetCharacter(String user) throws RemoteException;
 }

@@ -856,6 +856,25 @@ public class Game implements IGame, Serializable {
         }
         return information;
     }
+    
+    public synchronized int[] GetCharacter(String user) {
+
+        int[] s = new int[4];        
+        CharacterPlayer C = null;
+        
+        try {
+            C = this.getPlayerCharacter(user);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        s[0] = getCharacterNumber(C);
+        s[1] = C.getPositionX();
+        s[2] = C.getPositionY();
+        s[3] = C.getTorchRange();
+        
+        return s;
+    }
 
     public void GameTimer() {
         this.gameTickTimer = new Timer();

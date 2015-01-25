@@ -137,7 +137,9 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
     private AnchorPane box;
     private Rectangle field;
     private Rectangle playfield;
-    private Color backColor;
+    
+    private Color fieldColor;
+    private Color playfieldColor;
 
     //Listen die nodig zijn voor de gui te updaten
     private ArrayList<String> SpectatorNames;
@@ -326,7 +328,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         this.BTReady.setDisable(false);
     }
 
-    public void SetupStage() {
+    public void SetupStage() {        
         this.field = new Rectangle(this.widthPixels, this.heightPixels);
         this.field.setFill(Color.GRAY);
         box.getChildren().add(this.field);
@@ -348,26 +350,23 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
 
     //clears the scene and draws new boxes for every object.
     public void DrawGame() throws InterruptedException, ExecutionException {
-        box.getChildren().clear();
-
+        
         switch (level) {
-            case 0:
-                this.field.setFill(Color.SADDLEBROWN);
-                this.playfield.setFill(Color.BURLYWOOD);
-                break;
             case 1:
-                this.field.setFill(Color.DIMGRAY);
-                this.playfield.setFill(Color.LIGHTGRAY);
+                this.fieldColor = Color.SADDLEBROWN;
+                this.playfieldColor = Color.BURLYWOOD;
                 break;
             case 2:
-                this.field.setFill(Color.PERU);
-                this.playfield.setFill(Color.BEIGE);
+                this.fieldColor = Color.DIMGRAY;
+                this.playfieldColor = Color.LIGHTGRAY; 
+                break;
+            case 3:
+                this.fieldColor = Color.PERU;
+                this.playfieldColor = Color.BEIGE;
                 break;
         }
-
-        box.getChildren().add(this.field);
-        box.getChildren().add(this.playfield);
-
+        
+        //get game information (objects)
         //Informationthread.start();
         information = null;
 
@@ -386,6 +385,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
 
         }
         );
+
         try {
             information = future.get();
         } catch (InterruptedException ex) {
@@ -393,59 +393,227 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         } catch (ExecutionException ex) {
             Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        for (String[] s : information) {
-            String object = "";
-            String type = s[1];
-            int xpos = Integer.parseInt(s[2]);
-            int ypos = Integer.parseInt(s[3]);
-            String direction = s[4];
-            if (this.level != Integer.parseInt(s[5])) {
-                this.level = Integer.parseInt(s[5]);
-            }
-
-            switch (s[0]) {
-                case "1":
-                    object = "Character";
-                    break;
-                case "2":
-                    object = "Obstacle";
-                    break;
-                case "3":
-                    object = "PowerUp";
-                    break;
-                case "4":
-                    object = "Ballista";
-                    break;
-                case "5":
-                    object = "Projectile";
-                    break;
-            }
-
-            Image image = null;
-            ImageView img = null;
-
+        
+        box.getChildren().clear();
+        int rotation = 0;
+        
+        if (PlayerNames.contains(client.getUser()))
+        {
+            int[] i = null;
+            
             try {
-                //level nog niet geimplementeerd
-                image = selector.getImage(s, level);
-                img = new ImageView(image);
-                img.setScaleX(this.getScale());
-                img.setScaleY(this.getScale());
-                img.setX((xpos * 100 * this.getScale()) + (-50 * (1 - this.getScale())));
-                img.setY((ypos * 100 * this.getScale()) + (-50 * (1 - this.getScale())));
+                i = this.lobbyinstance.GetCharacter(client.getUser());
+            } catch (RemoteException ex) {
+                Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+            }            
+            
+            int characterNr = i[0];
+            int xpos = i[1];
+            int ypos = i[2];
+            int torchrange = i[3];
+            
+            switch (characterNr) {
+                case 0:
+                    rotation = 0;
+                    break;
+                case 1:
+                    rotation = 90;
+                    break;
+                case 2:
+                    rotation = 180;
+                    break;
+                case 3:
+                    rotation = 270;
+                    break;
+            }
+            
+            Rectangle borderXleft = null;
+            Rectangle borderXright = null;
+            Rectangle borderYtop = null;
+            Rectangle borderYbottom = null;    
 
-                if (object.equals("Projectile") || object.equals("Character")) {
-                    img.setRotate(getRotation(direction));
-                } else {
-                    img.setRotate(0);
+            //set range
+            double maxrange = 5 * 100;
+            double range = torchrange * 100;        
+            double maxfieldsize = 1100;
+            double fieldsize = (range*2)+100;
+
+            //draw playfield
+            field = new Rectangle(0,0,maxfieldsize,maxfieldsize);
+            field.setFill(Color.BLACK);
+            box.getChildren().add(field);
+
+            playfield = new Rectangle(maxrange-range,maxrange-range,fieldsize,fieldsize);
+            playfield.setFill(playfieldColor);
+            box.getChildren().add(playfield);
+
+            //Get player as object
+            Rectangle player = new Rectangle(maxrange, maxrange, 100, 100);
+            
+            //set gamefield border
+            double var1 = maxrange-range;        
+            double var2 = (widthCubes*100)-(xpos*100);
+            double var3 = (heightCubes*100)-(ypos*100);
+            
+            if ((xpos*100) <= range)
+            {
+                borderXleft = new Rectangle(var1,var1,range+100-(xpos*100),fieldsize);
+                borderXleft.setFill(fieldColor);
+                box.getChildren().add(borderXleft);
+            }
+
+            if ((xpos*100) >= (widthCubes*100)-range+100)
+            {            
+                borderXright = new Rectangle(range+var1+var2+100,var1,range-((widthCubes*100)-(xpos*100)),fieldsize);
+                borderXright.setFill(fieldColor);
+                box.getChildren().add(borderXright);
+            }
+
+            if ((ypos*100) <= range)
+            {
+                borderYtop = new Rectangle(var1,var1,fieldsize,range+100-(ypos*100));
+                borderYtop.setFill(fieldColor);
+                box.getChildren().add(borderYtop);
+            }
+
+            if ((ypos*100) >= (heightCubes*100)-range+100)
+            {
+                borderYbottom = new Rectangle(var1,range+var1+var3+100,fieldsize,range-var3);
+                borderYbottom.setFill(fieldColor);
+                box.getChildren().add(borderYbottom);
+            }
+            
+            //get min and max values
+            double minX = (xpos*100) - range;
+            double maxX = (xpos*100) + range;
+            double minY = (ypos*100) - range;
+            double maxY = (ypos*100) + range;
+            
+            //Draw objects in game within range
+            for (String[] s : information) {
+                String object = "";
+                String type = s[1];
+                int xpos2 = Integer.parseInt(s[2]);
+                int ypos2 = Integer.parseInt(s[3]);
+                String direction = s[4];
+                if (this.level != Integer.parseInt(s[5])) {
+                    this.level = Integer.parseInt(s[5]);
                 }
 
-                box.getChildren().add(img);
-            } catch (Exception ex) {
-                System.out.println(ex.getMessage());
+                switch (s[0]) {
+                    case "1":
+                        object = "Character";
+                        break;
+                    case "2":
+                        object = "Obstacle";
+                        break;
+                    case "3":
+                        object = "PowerUp";
+                        break;
+                    case "4":
+                        object = "Ballista";
+                        break;
+                    case "5":
+                        object = "Projectile";
+                        break;
+                }
+                
+                double X = xpos2*100;
+                double Y = ypos2*100;
+                
+                if (X >= minX && X <= maxX && Y >= minY && Y <= maxY)
+                {                                
+                    double changeX = X - (xpos*100);
+                    double changeY = Y - (ypos*100);
+
+                    Image image = null;
+                    ImageView img = null;
+
+                    try {
+                        //level nog niet geimplementeerd
+                        image = selector.getImage(s, level);
+                        img = new ImageView(image);
+                        img.setX(player.getX() + changeX);
+                        img.setY(player.getY() + changeY);
+                        
+                        System.out.println(img.getX() + ", " + img.getY());
+
+                        if (object.equals("Projectile") || object.equals("Character")) {
+                            img.setRotate(getRotation(direction));
+                        } else {
+                            img.setRotate(0);
+                        }
+
+                        box.getChildren().add(img);
+                    } catch (Exception ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                }
+            }            
+        }
+        
+        if (SpectatorNames.contains(client.getUser()))
+        {            
+            this.field.setFill(this.fieldColor);
+            this.playfield.setFill(this.playfieldColor);
+
+            box.getChildren().add(this.field);
+            box.getChildren().add(this.playfield);
+
+            for (String[] s : information) {
+                String object = "";
+                String type = s[1];
+                int xpos = Integer.parseInt(s[2]);
+                int ypos = Integer.parseInt(s[3]);
+                String direction = s[4];
+                if (this.level != Integer.parseInt(s[5])) {
+                    this.level = Integer.parseInt(s[5]);
+                }
+
+                switch (s[0]) {
+                    case "1":
+                        object = "Character";
+                        break;
+                    case "2":
+                        object = "Obstacle";
+                        break;
+                    case "3":
+                        object = "PowerUp";
+                        break;
+                    case "4":
+                        object = "Ballista";
+                        break;
+                    case "5":
+                        object = "Projectile";
+                        break;
+                }
+
+                Image image = null;
+                ImageView img = null;
+
+                try {
+                    //level nog niet geimplementeerd
+                    image = selector.getImage(s, level);
+                    img = new ImageView(image);
+                    img.setScaleX(this.getScale());
+                    img.setScaleY(this.getScale());
+                    img.setX((xpos * 100 * this.getScale()) + (-50 * (1 - this.getScale())));
+                    img.setY((ypos * 100 * this.getScale()) + (-50 * (1 - this.getScale())));
+
+                    if (object.equals("Projectile") || object.equals("Character")) {
+                        img.setRotate(getRotation(direction));
+                    } else {
+                        img.setRotate(0);
+                    }
+
+                    box.getChildren().add(img);
+                } catch (Exception ex) {
+                    System.out.println(ex.getMessage());
+                }
             }
         }
-
+        
+        box.setRotate(rotation);
     }
 
     /**
@@ -477,31 +645,21 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
     public double getScale() {
         try {
             double scale = 1;
+
             //check scale for user
+            double hoogteScherm = 0;
 
             if (SpectatorNames.contains(client.getUser())) {
-                double hoogteScherm = 800;
-                double hoogteSpel = this.lobbyinstance.getHeightPixels();
-                scale = hoogteScherm / hoogteSpel;
+                hoogteScherm = 800;                
             }
-
-            //check scale for admin
-                    /*for (String name : this.PlayerNames)
-             {
-             if (name.equals(this.admin.getUsername()))
-             {
-             scale = 1;
-             }
-             }
             
-             for (String name : this.SpectatorNames)
-             {
-             if (name.equals(this.admin.getUsername()))
-             {*/ double hoogteScherm = 800;
+            if (PlayerNames.contains(client.getUser())) {
+                hoogteScherm = 800;                
+            }
+            
             double hoogteSpel = this.lobbyinstance.getHeightPixels();
             scale = hoogteScherm / hoogteSpel;
-            /*}
-             }*/
+            
             return scale;
 
         } catch (RemoteException ex) {
@@ -560,12 +718,6 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
 
         box = new AnchorPane();
         s1.setContent(box);
-
-        this.field = new Rectangle(this.widthPixels * this.getScale(), this.heightPixels * this.getScale());
-        this.field.setFill(Color.GRAY);
-
-        this.playfield = new Rectangle(100 * this.getScale(), 100 * this.getScale(), (this.widthCubes * 100 * this.getScale()), (this.heightCubes * 100 * this.getScale()));
-        this.playfield.setFill(Color.WHITE);
 
         root.getChildren().add(s1);
         this.stage.setMinHeight(900);

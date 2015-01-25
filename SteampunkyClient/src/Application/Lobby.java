@@ -347,6 +347,11 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
     }
     
     @Override
+    public int[] GetCharacter(String user) throws RemoteException {
+        return this.game.GetCharacter(user);
+    }
+    
+    @Override
     public synchronized void updateGame() {
         this.game.updateGame();
     }
