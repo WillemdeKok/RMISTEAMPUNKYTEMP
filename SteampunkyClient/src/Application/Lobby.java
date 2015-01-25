@@ -94,6 +94,7 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
             }
         }
         System.out.println("temp size: " + temp.size());
+        publisher.inform(this, "lobby", "", "new");
         return temp;
     }
     
@@ -108,6 +109,7 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
                 Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        publisher.inform(this, "lobby", "", "new");
         return temp;
     }
     

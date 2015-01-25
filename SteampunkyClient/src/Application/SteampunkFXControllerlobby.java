@@ -68,6 +68,8 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
     ListView Lblobby;
     @FXML
     ListView LVrating;
+    @FXML
+    ListView LBHasPasword;
 
     Timer LobbyTimer;
     ArrayList<ILobby> lobbies;
@@ -227,10 +229,20 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
 
     public void UpdateForms() throws RemoteException {
         ArrayList<String> temp = new ArrayList<>();
+        ArrayList<String> password = new ArrayList<>();
 
         try {
             for (ILobby i : ServerMock.getLobbies()) {
+                if(i.checkPassword(""))
+                {
                 temp.add(i.GetLobbyname());
+                password.add("Password: NO");
+                }
+                else
+                {
+                temp.add(i.GetLobbyname());
+                password.add("Password: YES");
+                }
             }
         } catch (RemoteException ex) {
             System.out.println("Remote Exception");
@@ -239,6 +251,7 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
 
         this.CBjoinlobby.setItems(FXCollections.observableArrayList(temp));
         this.Lblobby.setItems(FXCollections.observableArrayList(temp));
+        this.LBHasPasword.setItems(FXCollections.observableArrayList(password));
     }
 
     public void Clear() {

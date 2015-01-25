@@ -18,7 +18,7 @@
     <Label fx:id="Creatlobbynamelb" layoutX="14.0" layoutY="73.0" text="Lobby Name" />
     <TextField fx:id="TfCreatename" layoutX="98.0" layoutY="73.0" prefWidth="114.0" />
     <TextField id="Tfvreatepassword" fx:id="Tfcreatepassword" layoutX="98.0" layoutY="108.0" prefWidth="114.0" />
-    <ListView fx:id="Lblobby" editable="false" layoutX="230.0" layoutY="46.0" onMouseClicked="#JoinLobbyFromLV" prefHeight="198.0" prefWidth="457.0" />
+    <ListView fx:id="Lblobby" editable="false" layoutX="230.0" layoutY="46.0" onMouseClicked="#JoinLobbyFromLV" prefHeight="198.0" prefWidth="345.0" />
     <Label fx:id="Creatlobbypasswordlb" layoutX="14.0" layoutY="114.0" text="Password" />
     <Button fx:id="Btcreatelobby" layoutX="14.0" layoutY="146.0" mnemonicParsing="false" onMouseClicked="#AddLobby" prefWidth="198.0" text="Create lobby" />
     <ComboBox id="Cbjoinlobby" fx:id="CBjoinlobby" layoutX="321.0" layoutY="309.0" prefHeight="21.0" prefWidth="137.0">
@@ -39,5 +39,7 @@
     <Label fx:id="LBTopRatings" layoutX="17.0" layoutY="183.0" text="Top ratings:" />
     <ListView fx:id="LVrating" layoutX="14.0" layoutY="208.0" prefHeight="168.0" prefWidth="198.0" />
     <Button fx:id="BTuitloggen" layoutX="613.0" layoutY="366.0" mnemonicParsing="false" onAction="#Logout" text="Uitloggen" />
+    <Label font="$x1" layoutX="575.0" layoutY="11.0" text="Has Pasword:" />
+    <ListView id="Lblobby" fx:id="LBHasPasword" editable="false" layoutX="575.0" layoutY="46.0" onMouseClicked="#JoinLobbyFromLV" prefHeight="198.0" prefWidth="114.0" />
   </children>
 </AnchorPane>

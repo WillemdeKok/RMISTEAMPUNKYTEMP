@@ -159,6 +159,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
     private Timer gameTickTimer;
     private int timercount = 6;
     private int countdown = 6;
+    private int playernumber;
     private int slotsleft = 4;
     private Client client;
     private ILobby lobbyinstance;
@@ -263,6 +264,19 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
             Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public int Calcfreeslots()
+    {
+        int result;
+        try {
+            this.playernumber = this.lobbyinstance.getPlayers().size();
+            result = this.slotsleft - this.playernumber;
+            return result;
+        } catch (RemoteException ex) {
+            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -280,14 +294,13 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
     @FXML
     public void becomeSpectator() {
         //      this.lobby.clearSlot(this.admin);
-
-        this.slotsleft++;
-        this.LBLRemaining.setText("Remaining slots: " + this.slotsleft);
+       
         this.BTReady.setDisable(true);
         this.BTPlayer.setDisable(false);
         this.BTSpectator.setDisable(true);
         try {
             this.lobbyinstance.clearSlot(this.client.getUser());
+            this.LBLRemaining.setText("Remaining slots: " + Calcfreeslots());
         } catch (RemoteException ex) {
             System.out.println("User could not be cleared");
         }
@@ -298,13 +311,12 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
     @FXML
     public void becomePlayer() {
         //      lobby.assignSlot(this.admin);
-        this.slotsleft--;
         this.BTReady.setDisable(false);
         this.BTPlayer.setDisable(true);
         this.BTSpectator.setDisable(false);
-        this.LBLRemaining.setText("Remaining slots: " + this.slotsleft);
         try {
             this.lobbyinstance.assignSlot(this.client.getUser());
+            this.LBLRemaining.setText("Remaining slots: " + Calcfreeslots());
         } catch (Exception ex) {
             System.out.println("User could not be assigned");
             ex.printStackTrace();
@@ -880,6 +892,15 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
 
         this.LBSpectators.setItems(FXCollections.observableList(temp));
         this.LBPlayers.setItems(FXCollections.observableList(temp2));
+        this.LBLRemaining.setText("Remaining slots: " + Calcfreeslots());
+        if(Calcfreeslots() == 0)
+        {
+            this.BTPlayer.setDisable(true);
+        }
+        else
+        {
+            this.BTPlayer.setDisable(false);
+        }
     }
 
     @FXML
