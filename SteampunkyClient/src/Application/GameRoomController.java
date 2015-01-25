@@ -417,13 +417,13 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                     rotation = 0;
                     break;
                 case 1:
-                    rotation = 90;
+                    rotation = 270;
                     break;
                 case 2:
                     rotation = 180;
                     break;
                 case 3:
-                    rotation = 270;
+                    rotation = 90;
                     break;
             }
             
@@ -530,13 +530,10 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                     ImageView img = null;
 
                     try {
-                        //level nog niet geimplementeerd
                         image = selector.getImage(s, level);
                         img = new ImageView(image);
                         img.setX(player.getX() + changeX);
                         img.setY(player.getY() + changeY);
-                        
-                        System.out.println(img.getX() + ", " + img.getY());
 
                         if (object.equals("Projectile") || object.equals("Character")) {
                             img.setRotate(getRotation(direction));
@@ -592,13 +589,10 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                 ImageView img = null;
 
                 try {
-                    //level nog niet geimplementeerd
                     image = selector.getImage(s, level);
                     img = new ImageView(image);
-                    img.setScaleX(this.getScale());
-                    img.setScaleY(this.getScale());
-                    img.setX((xpos * 100 * this.getScale()) + (-50 * (1 - this.getScale())));
-                    img.setY((ypos * 100 * this.getScale()) + (-50 * (1 - this.getScale())));
+                    img.setX(xpos * 100);
+                    img.setY(ypos * 100);
 
                     if (object.equals("Projectile") || object.equals("Character")) {
                         img.setRotate(getRotation(direction));
@@ -614,6 +608,8 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         }
         
         box.setRotate(rotation);
+        box.setScaleX(this.getScale());
+        box.setScaleY(this.getScale());
     }
 
     /**
@@ -647,17 +643,17 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
             double scale = 1;
 
             //check scale for user
-            double hoogteScherm = 0;
+            double hoogteScherm = 800;
+            double hoogteSpel = 0;
 
             if (SpectatorNames.contains(client.getUser())) {
-                hoogteScherm = 800;                
+                hoogteSpel = this.lobbyinstance.getHeightPixels();             
             }
             
             if (PlayerNames.contains(client.getUser())) {
-                hoogteScherm = 800;                
+                hoogteSpel = 1100;               
             }
             
-            double hoogteSpel = this.lobbyinstance.getHeightPixels();
             scale = hoogteScherm / hoogteSpel;
             
             return scale;
@@ -718,6 +714,9 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
 
         box = new AnchorPane();
         s1.setContent(box);
+        
+        this.field = new Rectangle(this.widthPixels, this.heightPixels);
+        this.playfield = new Rectangle(100, 100, this.widthCubes*100, this.heightCubes*100);
 
         root.getChildren().add(s1);
         this.stage.setMinHeight(900);
