@@ -57,7 +57,7 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
     @FXML
     TextField TfCreatename;
     @FXML
-    TextField Tfvreatepassword;
+    TextField Tfcreatepassword;
     @FXML
     Button Btcreatelobby;
     @FXML
@@ -126,6 +126,7 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
     
 
     public void JoinLobbyFromLV(Event evt) {
+        
         System.out.println("Event triggered");
         String s = "";
         try {
@@ -138,8 +139,18 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
             for (ILobby l : this.ServerMock.getLobbies()) {
                 System.out.println(l.GetLobbyname());
                 if (l.GetLobbyname().equals(s)) {
-                    l.addUser(this.clientInfo.getIUser());
-                    this.main.gotoGameRoomselect(clientInfo, l, this.ServerMock);
+                    if (l.checkPassword("")) {
+                        l.addUser(this.clientInfo.getIUser());
+                        this.main.gotoGameRoomselect(clientInfo, l, this.ServerMock);
+                    } else {
+                        String input = JOptionPane.showInputDialog("Wachtwoord van lobby: ");
+                        if (l.checkPassword(input)) {
+                            l.addUser(this.clientInfo.getIUser());
+                            this.main.gotoGameRoomselect(clientInfo, l, this.ServerMock);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Wachtwoord van lobby is niet juist");
+                        }
+                    }
                 }
             }
         } catch (RemoteException ex) {
@@ -161,9 +172,19 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
             for (ILobby l : this.ServerMock.getLobbies()) {
                 System.out.println(l.GetLobbyname());
                 if (l.GetLobbyname().equals(s)) {
-                    l.addUser(this.clientInfo.getIUser());
-                    this.main.gotoGameRoomselect(clientInfo, l, this.ServerMock);
-                }
+                    if (l.checkPassword("")) {
+                        l.addUser(this.clientInfo.getIUser());
+                        this.main.gotoGameRoomselect(clientInfo, l, this.ServerMock);
+                    } else {
+                        String input = JOptionPane.showInputDialog("Wachtwoord van lobby: ");
+                        if (l.checkPassword(input)) {
+                            l.addUser(this.clientInfo.getIUser());
+                            this.main.gotoGameRoomselect(clientInfo, l, this.ServerMock);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Wachtwoord van lobby is niet juist");
+                        }
+                    }
+                }         
             }
         } catch (RemoteException ex) {
             System.out.println("Remote Exception has been thrown");
@@ -183,7 +204,7 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
             JOptionPane.showMessageDialog(null, "Please enter a valid name.");
         } else {
             try {
-                if (ServerMock.createLobby(TfCreatename.getText(), Tfvreatepassword.getText(), this.clientInfo.getUser())) {
+                if (ServerMock.createLobby(TfCreatename.getText(), Tfcreatepassword.getText(), this.clientInfo.getUser())) {
                     System.out.println("Succes!!!");
                     JOptionPane.showMessageDialog(null, "Lobby has been created");
                 }

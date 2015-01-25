@@ -329,11 +329,18 @@ public class Server extends UnicastRemoteObject implements IGameServer {
 
     @Override
     public boolean leaveLobby(ILobby lobby, String user) throws RemoteException {
-
+        ILobby temp = null;
         if (lobby.removeUser(user) == 1) {
             return true;
-        } else if (lobby.removeUser(user) == -1) {
-            this.observableLobbies.remove(lobby);
+        } else if (lobby.removeUser(user) == -1) {           
+            for(ILobby listlobby : observableLobbies)
+            {
+                if(listlobby.GetLobbyname().equals(lobby.GetLobbyname()))
+                {
+                    temp = listlobby;
+                }
+            }
+            this.observableLobbies.remove(temp);
             return true;
         }
 

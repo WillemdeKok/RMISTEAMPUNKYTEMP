@@ -248,6 +248,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                 this.LBLReadyToBegin.setVisible(true);
                 this.BTReady.setVisible(true);
                 this.BTstop.setVisible(true);
+                this.BTstop.setDisable(true);
                 this.LBLsize.setVisible(true);
                 this.LBLHeight.setVisible(true);
                 this.LBLWidth.setVisible(true);
@@ -314,7 +315,19 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
     //Methode die de van de gameroom terug gaat naar de lobby
     @FXML
     public void ReturnToMenu() {
-        //       this.main.gotoLobbyselect(admin);
+        try {
+            if(this.ServerMock.leaveLobby(lobbyinstance, this.client.getUser()))
+            {
+            UpdateForms();
+            this.main.gotoLobbyselect(this.client, this.ServerMock);
+            }
+            else
+            {
+                System.out.println("Kan niet terug naar lobby");
+            }
+        } catch (RemoteException ex) {
+            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     //Stopt het starten van de game als op readt is geklikt
@@ -890,6 +903,30 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
             }
         }
     }
+    
+    public void AdminReset()
+    {
+        try {
+            //Kijkt of de ingelogde speler een admin is
+            if (this.client.getUser().equals(this.lobbyinstance.getAdminName())) {
+                this.LBLReadyToBegin.setVisible(true);
+                this.BTReady.setVisible(true);
+                this.BTstop.setVisible(true);
+                this.BTstop.setDisable(true);
+                this.LBLsize.setVisible(true);
+                this.LBLHeight.setVisible(true);
+                this.LBLWidth.setVisible(true);
+                this.LBLTime.setVisible(true);
+                //this.LBLRound.setVisible(true);
+                this.CBlevelsizeHeight.setVisible(true);
+                this.CBlevelsizeWidth.setVisible(true);
+                this.CBMinutes.setVisible(true);
+                //this.CBrounds.setVisible(true);
+            }
+        } catch (RemoteException ex) {
+            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) throws RemoteException {
@@ -913,6 +950,10 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                         Logger.getLogger(GameRoomController.class
                                 .getName()).log(Level.SEVERE, null, ex);
                     }
+                }
+                else if (evt.getNewValue().equals("Admin"))
+                {
+                    AdminReset();
                 }
             }
         });
