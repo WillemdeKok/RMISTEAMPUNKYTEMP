@@ -87,6 +87,27 @@ public class Server extends UnicastRemoteObject implements IGameServer {
             System.out.println("Geen verbinding met database mogelijk: " + ex);
         }
     }
+    
+    @Override
+    public boolean RemoveUser(String tempuser) {
+        IUser temp = null;
+        for(IUser tempacoount : observableUsers)
+        {
+            try {
+                if(tempacoount.getUsername().equals(tempuser))
+                {
+                    temp = tempacoount;
+                }
+            } catch (RemoteException ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        if (temp != null) {
+            observableUsers.remove(temp);
+            return true;
+        }
+        return false;
+    }
 
     public void Userlogedin(IUser tempuser) {
         if (tempuser != null) {
@@ -250,7 +271,7 @@ public class Server extends UnicastRemoteObject implements IGameServer {
                     System.out.println("Gebruiker mag inloggen");
                     User u = new User(username, password);
                     Userlogedin((IUser) u);
-                    AddUserToList((IUser) u);
+                    //AddUserToList((IUser) u);
                     return true;
                 }
             }
@@ -341,10 +362,11 @@ public class Server extends UnicastRemoteObject implements IGameServer {
         }
         return server;
     }
+    
 
-    public void AddUserToList(IUser u) {
-        this.observableUsers.add(u);
-    }
+//    public void AddUserToList(IUser u) {
+//        this.observableUsers.add(u);
+//    }
 
     public IUser Getuser(String username) {
         IUser tempuser = null;

@@ -63,6 +63,8 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
     @FXML
     Button btjoinlobby;
     @FXML
+    Button BTuitloggen;
+    @FXML
     ListView Lblobby;
     @FXML
     ListView LVrating;
@@ -102,6 +104,26 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
         UpdateForms();
 
     }
+    
+    public void Logout(Event evt)
+    {
+        try {  
+            boolean removeuser = this.ServerMock.RemoveUser(this.clientInfo.getUser());
+            if(removeuser == true)
+            {
+               System.out.println("Loguit succesvol"); 
+               this.main.gotoLoginselect(true);
+            }
+            else
+            {
+                System.out.println("Loguit failed"); 
+            }
+        } catch (RemoteException ex) {
+            Logger.getLogger(SteampunkFXControllerlobby.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Loguit failed"); 
+        }
+    }
+    
 
     public void JoinLobbyFromLV(Event evt) {
         System.out.println("Event triggered");

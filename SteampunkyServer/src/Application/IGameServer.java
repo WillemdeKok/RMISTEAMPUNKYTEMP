@@ -42,4 +42,6 @@ public interface IGameServer extends Remote {
     public int IncreaseRating(String username, int rating) throws RemoteException;
 
     public ArrayList<String> GetTotalrating() throws RemoteException;
+    
+    public boolean RemoveUser(String tempuser)throws RemoteException;
 }

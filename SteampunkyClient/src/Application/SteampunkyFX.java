@@ -18,6 +18,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 /**
  *
@@ -28,6 +29,7 @@ public class SteampunkyFX extends Application {
     private Stage stage;
     private int portNumber;
     private String ipAddress;
+    private boolean uitloggen = false;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -42,18 +44,19 @@ public class SteampunkyFX extends Application {
             this.stage.setMinWidth(100);
             this.stage.setMinHeight(100);
             stage.setResizable(false);
-            gotoLoginselect();
+            gotoLoginselect(uitloggen);
 
             this.stage.show();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
-
-    protected void gotoLoginselect() {
+    
+    protected void gotoLoginselect(Boolean Uitloggen) {
         try {
+            uitloggen = Uitloggen;
             SteampunkFXControllerLogin loginselect = (SteampunkFXControllerLogin) replaceSceneContent("LoginProftaak2.fxml");
-            loginselect.setApp(this, ipAddress, portNumber);
+            loginselect.setApp(this, ipAddress, portNumber);           
         } catch (Exception ex) {
             Logger.getLogger(SteampunkyFX.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -92,9 +95,18 @@ public class SteampunkyFX extends Application {
 
         Scene scene = null;
         if (fxml.equals("LoginProftaak2.fxml")) {
+            if(uitloggen == false)
+            {
             this.stage.setMinWidth(300);
             this.stage.setMinHeight(268);
             scene = new Scene(page, 300, 268);
+            }
+            if(uitloggen == true)
+            {
+            this.stage.setMinWidth(100);
+            this.stage.setMinHeight(100);
+            scene = new Scene(page, 100, 100);
+            }
         } else if (fxml.equals("Lobby3.fxml")) {
             this.stage.setMinWidth(700);
             this.stage.setMinHeight(425);
