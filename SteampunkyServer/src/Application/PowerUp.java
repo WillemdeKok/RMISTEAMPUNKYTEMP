@@ -49,7 +49,7 @@ public class PowerUp extends ObjectForGame implements Serializable {
                 this.description = description;
 
                 switch (powerUpType) {
-                    case "ballista":
+                    case "runspeed":
                         this.imgURL = "powerup01.png";
                         break;
                     case "torch":

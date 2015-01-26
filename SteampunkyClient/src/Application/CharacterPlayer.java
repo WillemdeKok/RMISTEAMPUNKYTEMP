@@ -27,7 +27,6 @@ public class CharacterPlayer extends ObjectForGame implements Serializable, ICha
     //relaties
     private List<Ballista> ballistas;
     private List<PowerUp> powerups;
-    private boolean canMove;
 
     /**
      * The Constructor of Character
@@ -65,14 +64,6 @@ public class CharacterPlayer extends ObjectForGame implements Serializable, ICha
         ballistas = new ArrayList<>();
         powerups = new ArrayList<>();
 
-    }
-
-    public boolean getCanMove() {
-        return this.canMove;
-    }
-
-    public void setCanMove(boolean bool) {
-        this.canMove = bool;
     }
 
     //**********************methoden****************************************
@@ -219,7 +210,7 @@ public class CharacterPlayer extends ObjectForGame implements Serializable, ICha
             this.ballistas.add(newBallista);
             Position p = super.getPosition();
             p.addObject(newBallista);
-            System.out.println("fancy"+this.ballistas.size());
+            System.out.println("fancy");
 
         }
     }

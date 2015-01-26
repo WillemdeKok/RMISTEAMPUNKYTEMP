@@ -53,7 +53,7 @@ public class ImageSelector
         {            
             switch (object[1])
             {
-                case "ballista":
+                case "runspeed":
                     url = "powerup01.png";
                     break;
                 case "torch":

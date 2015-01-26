@@ -509,7 +509,7 @@ public class Game implements IGame, Serializable {
         Random rType = new Random();
         int intType = rType.nextInt(4);
         String[] types = new String[4];
-        types[0] = "ballista";
+        types[0] = "runspeed";
         types[1] = "torch";
         types[2] = "shield";
         types[3] = "projectile";

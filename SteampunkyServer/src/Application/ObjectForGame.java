@@ -271,24 +271,17 @@ public abstract class ObjectForGame implements Serializable {
         if (this instanceof CharacterPlayer) {
             CharacterPlayer c = (CharacterPlayer) this;
             int t;
-            if (type.equals("torch")) {
+            if (type.equals("Torch")) {
                 t = c.getTorchRange();
-                t++;
-                System.out.println("tor"+t);
-                c.setTorch(t);
-                System.out.println("torch"+t);
-            } else if (type.equals("ballista")) {
+                c.setTorch(t++);
+            }
+            if (type.equals("Ballista")) {
                 t = c.getMaxBallistas();
-                t++;
-                System.out.println("ballist"+t);
-                c.setMaxBallistas(t);
-                System.out.println("ballista"+c.getMaxBallistas());
-            } else if (type.equals("projectiles")) {
+                c.setMaxBallistas(t++);
+            }
+            if (type.equals("Projectiles")) {
                 t = c.getShots();
-                t=t+4;
-                System.out.println("proj"+t);
-                c.setShots(t);
-                System.out.println("projectile"+c.getShots());
+                c.setShots(t + 4);
             }
         }
     }
