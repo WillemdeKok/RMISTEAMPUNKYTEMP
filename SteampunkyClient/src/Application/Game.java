@@ -824,7 +824,6 @@ public class Game implements IGame, Serializable {
 
     public void GameTimer() {
         this.gameTickTimer = new Timer();
-        System.out.println("Fail");
         //Level opnieuw uittekenen met nieuwe posities      
 
         //Geeft momenteel ConcurrentModificationException error

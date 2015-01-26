@@ -870,7 +870,6 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
 
     public synchronized void GameUpdate() {
         this.gameTickTimer = new Timer();
-        System.out.println("Fail");
         //Level opnieuw uittekenen met nieuwe posities      
 
         //Geeft momenteel ConcurrentModificationException error
