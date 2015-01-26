@@ -9,6 +9,7 @@ import Application.FontysObserver.RemotePropertyListener;
 import Application.FontysObserver.RemotePublisher;
 import images.ImageSelector;
 import java.beans.PropertyChangeEvent;
+import java.io.File;
 import java.net.URL;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
@@ -339,7 +340,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         }
     }
 
-    //Stopt het starten van de game als op readt is geklikt
+    //Stopt het starten van de game als op read is geklikt
     @FXML
     public void StopGame() {
         this.timer.cancel();
@@ -373,21 +374,6 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
 
     //clears the scene and draws new boxes for every object.
     public void DrawGame() throws InterruptedException, ExecutionException {
-
-        switch (level) {
-            case 1:
-                this.fieldColor = Color.SADDLEBROWN;
-                this.playfieldColor = Color.BURLYWOOD;
-                break;
-            case 2:
-                this.fieldColor = Color.DIMGRAY;
-                this.playfieldColor = Color.LIGHTGRAY;
-                break;
-            case 3:
-                this.fieldColor = Color.PERU;
-                this.playfieldColor = Color.BEIGE;
-                break;
-        }
 
         //get game information (objects)
         //Informationthread.start();
@@ -627,8 +613,8 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         canvas.setRotate(rotation);
         canvas.setScaleX(this.getScale());
         canvas.setScaleY(this.getScale());
-        canvas.setLayoutX(-170);
-        canvas.setLayoutY(-170);
+        canvas.setLayoutX(-40);
+        canvas.setLayoutY(-120);
     }
 
     /**
@@ -713,6 +699,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
             this.PlayerNames = this.lobbyinstance.getPlayers();
             this.SpectatorNames = this.lobbyinstance.getSpectators();
 
+            this.level = this.lobbyinstance.getLevel();
             this.widthPixels = this.lobbyinstance.getWidthPixels();
             this.widthCubes = this.lobbyinstance.getWidthCubes();
             this.heightPixels = this.lobbyinstance.getHeightPixels();
@@ -722,14 +709,35 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
             Logger.getLogger(GameRoomController.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
+        
+        switch (level) {
+            case 1:
+                this.fieldColor = Color.SADDLEBROWN;
+                this.playfieldColor = Color.BURLYWOOD;
+                break;
+            case 2:
+                this.fieldColor = Color.DIMGRAY;
+                this.playfieldColor = Color.LIGHTGRAY;
+                break;
+            case 3:
+                this.fieldColor = Color.PERU;
+                this.playfieldColor = Color.BEIGE;
+                break;
+        }
 
         root = new Group();
-        Scene scene = new Scene(root, 1700, 900);
+        Scene scene = new Scene(root, 900, 900);
 
         box = new AnchorPane();
-        box.setLayoutX(50);
-        box.setLayoutY(50);
-        box.setPrefSize(1600, 800);
+        box.setPrefSize(800, 800);
+        
+        String url = "border.jpg";
+        Image im = new Image(this.getClass().getResourceAsStream(url), 1800, 1125, false, false);
+        //ImageView img = new ImageView(new Image(this.getClass().getResourceAsStream(url)));
+        ImageView img = new ImageView(im);
+        //img.setX(1280);
+        //img.setY(800);
+        box.getChildren().add(img);
 
         canvas = new AnchorPane();
         canvas.setMaxSize(800, 800);
