@@ -46,6 +46,10 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
     private String[] lobbyArray;
     private BasicPublisher publisher;
     private IGameServer mock;
+    
+    private boolean hasStarted = false;
+
+
 
     //***********************constructoren***********************************
     /**
@@ -71,6 +75,11 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
         this.chatMessages = new ArrayList<>();
         //observableChat = observableList(chatMessages);
         this.chatMessages.add("Welkom Bij Steampunky u bevindt zich in de volgende lobby: " + this.lobbyName);
+    }
+
+    @Override
+    public boolean GetHasStarted() {
+        return hasStarted;
     }
 
     @Override
@@ -136,6 +145,8 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
     @Override
     public boolean createGame(double timelimit, int botDifficulty, int level, int width, int height) {
         //todo
+        this.hasStarted = true;
+        
         if (timelimit != 0 && botDifficulty != 0 && level > 0) {
             game = new Game(height, width, timelimit, botDifficulty, level);
 
@@ -152,6 +163,7 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
                 public void run() {
                     {
                         if (game.getGameEnd()) {
+                            hasStarted = false;
                             T.cancel();
                             for (IUser I : players) {
                                 try {

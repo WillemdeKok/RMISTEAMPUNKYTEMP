@@ -293,6 +293,14 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         } catch (RemoteException ex) {
             Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        try {
+            if (this.lobbyinstance.GetHasStarted()) {
+                this.SetupDraw();
+            }
+        } catch (RemoteException ex) {
+            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public int Calcfreeslots() {
@@ -1025,6 +1033,8 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                     }
                 } else if (evt.getNewValue().equals("Admin")) {
                     AdminReset();
+                } else if (evt.getNewValue().equals("endgame")) {
+                    System.out.println("End game detected");
                 }
             }
         });
