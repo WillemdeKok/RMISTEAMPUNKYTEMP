@@ -94,7 +94,6 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
             }
         }
         System.out.println("temp size: " + temp.size());
-        publisher.inform(this, "lobby", "", "new");
         return temp;
     }
     
@@ -109,7 +108,6 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
                 Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        publisher.inform(this, "lobby", "", "new");
         return temp;
     }
     
@@ -185,12 +183,23 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
      */
     @Override
     public int removeUser(String user) {
-        IUser Tempuser = null;
+        IUser TempuserSpec = null;
+        IUser TempuserPlay = null;
         
         for (IUser u : players) {
             try {
                 if (u.getUsername().equals(user)) {
-                    Tempuser = u;
+                    TempuserPlay = u;
+                }
+            } catch (RemoteException ex) {
+                Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        for (IUser u : spectators) {
+            try {
+                if (u.getUsername().equals(user)) {
+                    TempuserSpec = u;
                 }
             } catch (RemoteException ex) {
                 Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
@@ -199,18 +208,33 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
         
         int removedUser = 0;
         
-        if (spectators.contains(Tempuser)) {
-            spectators.remove(Tempuser);
+        if (spectators.contains(TempuserSpec)) {
+            spectators.remove(TempuserSpec);
             publisher.inform(this, "lobby", "", "new");
             removedUser = 1;
-        } else if (players.contains(Tempuser)) {
-            players.remove(Tempuser);
+        } else if (players.contains(TempuserPlay)) {
+            players.remove(TempuserPlay);
             publisher.inform(this, "lobby", "", "new");
             removedUser = 1;
         }
-        if (this.admin == Tempuser && spectators.iterator().hasNext()) {
-            this.admin = spectators.iterator().next();
-        } else if (this.admin == Tempuser) {
+        try {
+            if (this.admin.getUsername().equals(user))
+            {
+                if(players.iterator().hasNext())
+                {
+                    this.admin = players.iterator().next();
+                    publisher.inform(this, "lobby", "", "Admin");
+                }
+                else if(spectators.iterator().hasNext())
+                {
+                    this.admin = spectators.iterator().next();
+                    publisher.inform(this, "lobby", "", "Admin");
+                }
+            }
+        } catch (RemoteException ex) {
+            Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        if (this.spectators.isEmpty() && this.players.isEmpty()) {
             removedUser = -1;
         }
         return removedUser;
@@ -396,10 +420,5 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
     @Override
     public void removeListener(RemotePropertyListener listener, String property) throws RemoteException {
         this.publisher.removeListener(listener, property);
-    }
-
-    @Override
-    public int getLevel() throws RemoteException {
-        return this.game.getCurrentLevel();
     }
 }

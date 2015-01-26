@@ -397,9 +397,4 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
     public void removeListener(RemotePropertyListener listener, String property) throws RemoteException {
         this.publisher.removeListener(listener, property);
     }
-
-    @Override
-    public int getLevel() throws RemoteException {
-        return this.game.getCurrentLevel();
-    }
 }

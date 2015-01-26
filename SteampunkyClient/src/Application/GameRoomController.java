@@ -725,7 +725,6 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
             this.PlayerNames = this.lobbyinstance.getPlayers();
             this.SpectatorNames = this.lobbyinstance.getSpectators();
 
-            this.level = this.lobbyinstance.getLevel();
             this.widthPixels = this.lobbyinstance.getWidthPixels();
             this.widthCubes = this.lobbyinstance.getWidthCubes();
             this.heightPixels = this.lobbyinstance.getHeightPixels();
