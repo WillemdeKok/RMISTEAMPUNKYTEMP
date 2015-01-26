@@ -52,11 +52,11 @@ public class SteampunkyFX extends Application {
             ex.printStackTrace();
         }
     }
-    
+
     protected void gotoLoginselect() {
         try {
             SteampunkFXControllerLogin loginselect = (SteampunkFXControllerLogin) replaceSceneContent("LoginProftaak2.fxml");
-            loginselect.setApp(this, ipAddress, portNumber);           
+            loginselect.setApp(this, ipAddress, portNumber);
         } catch (Exception ex) {
             Logger.getLogger(SteampunkyFX.class.getName()).log(Level.SEVERE, null, ex);
         }

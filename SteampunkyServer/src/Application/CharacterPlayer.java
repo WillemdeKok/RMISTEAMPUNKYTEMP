@@ -197,6 +197,16 @@ public class CharacterPlayer extends ObjectForGame implements Serializable, ICha
     public void setDirection(Direction direction) {
         this.direction = direction;
     }
+    
+    @Override
+    public boolean getMovable(){
+        return super.getMovable();
+    }
+    
+    @Override
+    public void setMovable(boolean bool){
+        super.setMovable(bool);
+    }
 
     /**
      * A Method for setting down a new Ballista

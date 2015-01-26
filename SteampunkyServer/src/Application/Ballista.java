@@ -67,13 +67,13 @@ public class Ballista extends ObjectForGame implements Serializable {
                 this.delay = 2000;
 
                 Timer ProjectileTimer = new Timer();
-                ProjectileTimer.schedule(new TimerTask() {
+                ProjectileTimer.scheduleAtFixedRate(new TimerTask() {
                     @Override
                     public void run() {
                         System.out.println("JAP");
                         shotsenabled = true;
                     }
-                }, delay
+                }, delay, 1000
                 );
 
                 //While # of shots fired is less then maxNumber of shots, continues through loop
@@ -89,6 +89,7 @@ public class Ballista extends ObjectForGame implements Serializable {
             createProjectile(Direction.Left);
             createProjectile(Direction.Right);
             shotsShot += 4;
+            shotsenabled = false;
         }
     }
 

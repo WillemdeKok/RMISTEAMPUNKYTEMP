@@ -507,12 +507,11 @@ public class Game implements IGame, Serializable {
 
         //get random type
         Random rType = new Random();
-        int intType = rType.nextInt(4);
-        String[] types = new String[4];
-        types[0] = "runspeed";
+        int intType = rType.nextInt(3);
+        String[] types = new String[3];
+        types[0] = "ballista";
         types[1] = "torch";
-        types[2] = "shield";
-        types[3] = "projectile";
+        types[2] = "projectile";
 
         if (p.getObjects().size() <= 0) {
             if (((row == 1 && col > 3 && col < (this.heightCubes - 2))
@@ -644,9 +643,20 @@ public class Game implements IGame, Serializable {
                 tempPowerUps.add((PowerUp) o);
             });
         });
-        for (CharacterPlayer C : tempCharacters) {
-            C.setCanMove(true);
-        }
+        tempCharacters.stream().forEach((C) -> {
+            if (!C.getDead()) {
+                C.setCanMove(true);
+            } else {
+                C.setDead(true);
+            }
+        });
+        bots.stream().forEach((B) -> {
+            if (!B.getCharacter().getDead()) {
+                B.AI();
+            } else {
+
+            }
+        });
         tempProjectiles.stream().forEach((P) -> {
             P.move(P.getDirection());
         });
@@ -657,17 +667,15 @@ public class Game implements IGame, Serializable {
                 B.shootProjectile();
             }
         });
-        bots.stream().forEach((B) -> {
-            if (!B.getCharacter().getDead()) {
-                B.AI();
-            } else {
 
-            }
-        });
         int dead = 0;
 
         //Check if characters are dead
-        dead = this.characters.stream().filter((c) -> (c.getDead())).map((_item) -> 1).reduce(dead, Integer::sum);
+        for(CharacterPlayer C : tempCharacters){
+            if(C.getDead()){
+                dead++;
+            }
+        }
 
         //Stop game if all characters are dead
         if (dead == 3) {
@@ -733,7 +741,7 @@ public class Game implements IGame, Serializable {
 
         //Add character to player
         for (IUser p : this.players) {
-            CharacterPlayer c = new CharacterPlayer(1, false, 1, 3, positions[i], true, true, directions[i], this);
+            CharacterPlayer c = new CharacterPlayer(1, false, 1, 2, positions[i], true, true, directions[i], this);
             try {
                 p.setCharacter(c);
             } catch (RemoteException ex) {
@@ -752,7 +760,7 @@ public class Game implements IGame, Serializable {
                 Bot b = new Bot(namen[k], this.botDifficulty, this);
                 this.bots.add(b);
 
-                CharacterPlayer c = new CharacterPlayer(1, false, 1, 3, positions[k], true, true, directions[k], this);
+                CharacterPlayer c = new CharacterPlayer(1, false, 1, 2, positions[k], true, true, directions[k], this);
                 b.setCharacter(c);
                 this.objects.add(c);
             }
@@ -856,23 +864,23 @@ public class Game implements IGame, Serializable {
         }
         return information;
     }
-    
+
     public synchronized int[] GetCharacter(String user) {
 
-        int[] s = new int[4];        
+        int[] s = new int[4];
         CharacterPlayer C = null;
-        
+
         try {
             C = this.getPlayerCharacter(user);
         } catch (RemoteException ex) {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         s[0] = getCharacterNumber(C);
         s[1] = C.getPositionX();
         s[2] = C.getPositionY();
         s[3] = C.getTorchRange();
-        
+
         return s;
     }
 

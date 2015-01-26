@@ -74,6 +74,13 @@ public abstract class ObjectForGame implements Serializable {
     public void setCanMove(boolean bool) {
         this.canMove = bool;
     }
+    
+    public void setMovable(boolean bool){
+        this.movable = bool;
+    }
+    public boolean getMovable() {
+        return this.movable;
+    }
 
     /**
      * The Getter of this Objects PositionX.
@@ -156,23 +163,25 @@ public abstract class ObjectForGame implements Serializable {
      * direction in which direction this ObjectForGame is moving.
      */
     public synchronized void move(Direction direction) {
-        int nextX = this.getPositionX();
-        int nextY = this.getPositionY();
-        if (direction == Direction.Right) {
-            nextX++;
-        } else if (direction == Direction.Left) {
-            nextX--;
-        } else if (direction == Direction.Up) {
-            nextY--;
-        } else {
-            nextY++;
-        }
-        if (this.checkCollision(nextX, nextY)) {
-            this.myGame.getObjectsFromGrid(nextX, nextY).add(this);
-            this.position.removeObject(this);
-            this.direction = direction;
-            this.setPosition(this.myGame.getPosition(nextX, nextY));
-            this.canMove = false;
+        if (movable) {
+            int nextX = this.getPositionX();
+            int nextY = this.getPositionY();
+            if (direction == Direction.Right) {
+                nextX++;
+            } else if (direction == Direction.Left) {
+                nextX--;
+            } else if (direction == Direction.Up) {
+                nextY--;
+            } else {
+                nextY++;
+            }
+            if (this.checkCollision(nextX, nextY)) {
+                this.myGame.getObjectsFromGrid(nextX, nextY).add(this);
+                this.position.removeObject(this);
+                this.direction = direction;
+                this.setPosition(this.myGame.getPosition(nextX, nextY));
+                this.canMove = false;
+            }
         }
     }
 
@@ -254,6 +263,8 @@ public abstract class ObjectForGame implements Serializable {
         if (this instanceof CharacterPlayer) {
             CharacterPlayer C = (CharacterPlayer) this;
             C.setDead(true);
+            C.setCanMove(false);
+            C.setMovable(false);
         } else if (this instanceof Obstacle) {
             Obstacle O = (Obstacle) this;
             O.setBroken(true);
@@ -271,17 +282,21 @@ public abstract class ObjectForGame implements Serializable {
         if (this instanceof CharacterPlayer) {
             CharacterPlayer c = (CharacterPlayer) this;
             int t;
-            if (type.equals("Torch")) {
+            if (type.equals("torch")) {
                 t = c.getTorchRange();
-                c.setTorch(t++);
-            }
-            if (type.equals("Ballista")) {
+                t++;
+                c.setTorch(t);
+                System.out.println("torch+" + t);
+            } else if (type.equals("ballista")) {
                 t = c.getMaxBallistas();
-                c.setMaxBallistas(t++);
-            }
-            if (type.equals("Projectiles")) {
+                t++;
+                c.setMaxBallistas(t);
+                System.out.println("ballista+" + t);
+            } else if (type.equals("projectile")) {
                 t = c.getShots();
-                c.setShots(t + 4);
+                t = t + 4;
+                c.setShots(t);
+                System.out.println("projectiles+" + t);
             }
         }
     }

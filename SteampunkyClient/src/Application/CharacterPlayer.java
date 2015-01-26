@@ -27,6 +27,7 @@ public class CharacterPlayer extends ObjectForGame implements Serializable, ICha
     //relaties
     private List<Ballista> ballistas;
     private List<PowerUp> powerups;
+    private boolean canMove;
 
     /**
      * The Constructor of Character
@@ -64,6 +65,14 @@ public class CharacterPlayer extends ObjectForGame implements Serializable, ICha
         ballistas = new ArrayList<>();
         powerups = new ArrayList<>();
 
+    }
+
+    public boolean getCanMove() {
+        return this.canMove;
+    }
+
+    public void setCanMove(boolean bool) {
+        this.canMove = bool;
     }
 
     //**********************methoden****************************************
@@ -160,7 +169,9 @@ public class CharacterPlayer extends ObjectForGame implements Serializable, ICha
      * @param range An int which is the new range of this TorchLight.
      */
     public void setTorch(int range) {
-        this.torchLight = range;
+        if (range <= 5) {
+            this.torchLight = range;
+        }
     }
 
     public int getMaxBallistas() {
@@ -187,6 +198,16 @@ public class CharacterPlayer extends ObjectForGame implements Serializable, ICha
      */
     public void setDirection(Direction direction) {
         this.direction = direction;
+    }
+
+    @Override
+    public boolean getMovable() {
+        return super.getMovable();
+    }
+
+    @Override
+    public void setMovable(boolean bool) {
+        super.setMovable(bool);
     }
 
     /**
