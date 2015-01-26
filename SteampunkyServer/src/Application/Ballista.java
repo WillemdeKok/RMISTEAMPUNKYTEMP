@@ -70,7 +70,6 @@ public class Ballista extends ObjectForGame implements Serializable {
                 ProjectileTimer.scheduleAtFixedRate(new TimerTask() {
                     @Override
                     public void run() {
-                        System.out.println("JAP");
                         shotsenabled = true;
                     }
                 }, delay, 1000

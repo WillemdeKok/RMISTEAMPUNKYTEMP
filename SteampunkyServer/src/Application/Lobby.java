@@ -8,6 +8,7 @@ package Application;
 import Application.FontysObserver.BasicPublisher;
 import Application.FontysObserver.RemotePropertyListener;
 import Application.FontysObserver.RemotePublisher;
+import static Application.Game.isRunning;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -44,12 +45,13 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
 
     private String[] lobbyArray;
     private BasicPublisher publisher;
+    private IGameServer mock;
 
     //***********************constructoren***********************************
     /**
      * creates a lobby with ...
      */
-    public Lobby(String lobbyname, IUser addedByUser, String password) throws RemoteException {
+    public Lobby(String lobbyname, IUser addedByUser, String password, IGameServer mock) throws RemoteException {
         System.out.println("Lobby has been created");
         this.lobbyName = lobbyname;
         this.admin = addedByUser;
@@ -57,7 +59,7 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
         this.nextLobbyID++;
         this.password = password;
         this.admin = addedByUser;
-
+        this.mock = mock;
         this.lobbyArray = new String[1];
         this.lobbyArray[0] = "lobby";
         this.publisher = new BasicPublisher(this.lobbyArray);
@@ -143,7 +145,30 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
 
             game.startRound();
             publisher.inform(this, "lobby", "", "start");
+            Timer T = new Timer();
+            T.scheduleAtFixedRate(new TimerTask() {
 
+                @Override
+                public void run() {
+                    {
+                        if (game.getGameEnd()) {
+                            T.cancel();
+                            for (IUser I : players) {
+                                try {
+                                    if (game.getPlayerCharacter(I.getUsername()).getDead()) {
+                                        mock.DecreaseRating(I.getUsername(), 10);
+                                    } else {
+                                        mock.IncreaseRating(I.getUsername(), 10);
+                                    }
+                                } catch (RemoteException ex) {
+                                    Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }, 300, 2000);
             return true;
         }
 
@@ -421,5 +446,10 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
     @Override
     public int getLevel() throws RemoteException {
         return this.game.getCurrentLevel();
+    }
+
+    @Override
+    public boolean getGameEnd() throws RemoteException {
+        return this.game.getGameEnd();
     }
 }

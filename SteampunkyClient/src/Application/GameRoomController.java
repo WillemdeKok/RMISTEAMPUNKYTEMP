@@ -696,7 +696,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
 
         try {
             this.lobbyinstance.createGame(time, 3, level, 1, width, height);
-            SetupDraw();
+            //SetupDraw();
 
         } catch (RemoteException ex) {
             Logger.getLogger(GameRoomController.class
@@ -739,8 +739,8 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         this.playfield = new Rectangle(100, 100, this.widthCubes * 100, this.heightCubes * 100);
 
         root.getChildren().add(box);
-        this.stage.setMinHeight(900);
-        this.stage.setMinWidth(1700);
+        this.stage.setHeight(900);
+        this.stage.setWidth(1700);
         this.stage.setScene(scene);
         this.setKeyBindings();
         this.GameUpdate();
@@ -800,7 +800,6 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                         Countdown();
                         if (countdown == 0) {
                             timer.cancel();
-                            StartGame();
                         }
                     }
                 });
@@ -837,7 +836,17 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                 javafx.application.Platform.runLater(() -> {
                     {
                         try {
-                            DrawGame();
+                            try {
+                                if (lobbyinstance.getGameEnd()) {
+                                    gameTickTimer.cancel();
+                                    JOptionPane.showMessageDialog(null, "Game has ended");
+                                    main.gotoGameRoomselect(client, lobbyinstance, ServerMock);
+                                } else {
+                                    DrawGame();
+                                }
+                            } catch (RemoteException ex) {
+                                Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
 
                         } catch (InterruptedException ex) {
                             Logger.getLogger(GameRoomController.class

@@ -169,7 +169,9 @@ public class CharacterPlayer extends ObjectForGame implements Serializable, ICha
      * @param range An int which is the new range of this TorchLight.
      */
     public void setTorch(int range) {
-        this.torchLight = range;
+        if (range <= 5) {
+            this.torchLight = range;
+        }
     }
 
     public int getMaxBallistas() {
@@ -229,7 +231,6 @@ public class CharacterPlayer extends ObjectForGame implements Serializable, ICha
             this.ballistas.add(newBallista);
             Position p = super.getPosition();
             p.addObject(newBallista);
-            System.out.println("fancy");
 
         }
     }

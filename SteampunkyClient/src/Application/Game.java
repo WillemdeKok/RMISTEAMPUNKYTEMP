@@ -22,7 +22,7 @@ public class Game implements IGame, Serializable {
     private int heightCubes;
     private int widthPixels;
     private int widthCubes;
-
+    
     private int botDifficulty;
     private transient Timer timer;
     private transient TimerTask task;
@@ -30,10 +30,10 @@ public class Game implements IGame, Serializable {
     private double totalTime;
     private Timer gameTickTimer;
     static boolean isRunning = false;
-
+    
     private boolean gameEnd;
     private int currentLevel;
-
+    
     private ArrayList<Position> grid;
     private ArrayList<ObjectForGame> objects;
     private ArrayList<IUser> players;
@@ -58,12 +58,12 @@ public class Game implements IGame, Serializable {
             this.widthCubes = width;
             this.widthPixels = (width * 100) + 200;
             this.objects = new ArrayList<>();
-
+            
             this.botDifficulty = botDifficulty;
             this.totalTime = timelimit;
             this.currentTime = 0;
             this.currentLevel = level;
-
+            
             this.grid = new ArrayList<>();
             int row = 1;
             int col = 1;
@@ -84,7 +84,7 @@ public class Game implements IGame, Serializable {
             this.players = new ArrayList<>();
             this.bots = new ArrayList<>();
             this.characters = new ArrayList<>();
-
+            
             timer = new Timer();
             task = new TimerTask() {
                 @Override
@@ -108,7 +108,7 @@ public class Game implements IGame, Serializable {
     public int getHeightPixels() {
         return this.heightPixels;
     }
-
+    
     public CharacterPlayer getPlayerCharacter(String player) throws RemoteException {
         for (IUser I : this.players) {
             if (I.getUsername().matches(player)) {
@@ -117,7 +117,7 @@ public class Game implements IGame, Serializable {
         }
         return null;
     }
-
+    
     public int getCharacterNumber(CharacterPlayer C) {
         return this.characters.indexOf(C);
     }
@@ -166,7 +166,7 @@ public class Game implements IGame, Serializable {
                 return p.getObjects();
             }
         }
-
+        
         return null;
     }
 
@@ -183,7 +183,7 @@ public class Game implements IGame, Serializable {
                 return p;
             }
         }
-
+        
         return null;
     }
 
@@ -234,7 +234,7 @@ public class Game implements IGame, Serializable {
     public ArrayList<ObjectForGame> getObjects() {
         return this.objects;
     }
-
+    
     public ObjectForGame getCharacter() {
         return this.characters.get(0);
     }
@@ -302,10 +302,10 @@ public class Game implements IGame, Serializable {
         ArrayList<ObjectForGame> cubes = new ArrayList<>();
         int row = 2;
         int col = 2;
-
+        
         while (row < this.heightCubes) {
             col = 2;
-
+            
             while (col < this.widthCubes) {
                 Position p = getPosition(col, row);
                 ObjectForGame ob = new Obstacle("cube", false, p, true, false, this);
@@ -313,10 +313,10 @@ public class Game implements IGame, Serializable {
                 cubes.add(ob);
                 col += 2;
             }
-
+            
             row += 2;
         }
-
+        
         return cubes;
     }
 
@@ -332,7 +332,7 @@ public class Game implements IGame, Serializable {
 
         //bigger field means more cubes
         double perc = 0.4;
-
+        
         if (this.heightCubes > 15 || this.widthCubes > 15) {
             perc = 0.5;
         }
@@ -344,21 +344,21 @@ public class Game implements IGame, Serializable {
         p = getPosition(1, 3);
         ob = new Obstacle("box", false, p, true, false, this);
         boxes.add(ob);
-
+        
         p = getPosition(this.widthCubes - 2, 1);
         ob = new Obstacle("box", false, p, true, false, this);
         boxes.add(ob);
         p = getPosition(this.widthCubes, 3);
         ob = new Obstacle("box", false, p, true, false, this);
         boxes.add(ob);
-
+        
         p = getPosition(1, this.heightCubes - 2);
         ob = new Obstacle("box", false, p, true, false, this);
         boxes.add(ob);
         p = getPosition(3, this.heightCubes);
         ob = new Obstacle("box", false, p, true, false, this);
         boxes.add(ob);
-
+        
         p = getPosition(this.widthCubes - 2, this.heightCubes);
         ob = new Obstacle("box", false, p, true, false, this);
         boxes.add(ob);
@@ -369,7 +369,7 @@ public class Game implements IGame, Serializable {
         //fill rest of field with random boxes
         while (row <= this.heightCubes) {
             col = 1;
-
+            
             while (col <= this.widthCubes) {
                 //can't place in the corners
                 if (((row == 1 && col > 3 && col < (this.widthCubes - 2))
@@ -388,16 +388,16 @@ public class Game implements IGame, Serializable {
                         boxes.add(ob);
                     }
                 }
-
+                
                 col++;
             }
-
+            
             row++;
         }
-
+        
         return boxes;
     }
-
+    
     @Override
     public boolean placeFillupBoxes() {
 //        int round;
@@ -483,7 +483,7 @@ public class Game implements IGame, Serializable {
         types[0] = "ballista";
         types[1] = "torch";
         types[2] = "projectile";
-
+        
         if (this.getObjectsFromGrid(col, row).size() <= 0) {
             if (((row == 1 && col > 3 && col < (this.heightCubes - 2))
                     || (row == 2 && col > 2 && col < (this.heightCubes - 1))
@@ -499,7 +499,7 @@ public class Game implements IGame, Serializable {
                 return true;
             }
         }
-
+        
         return false;
     }
 
@@ -514,7 +514,7 @@ public class Game implements IGame, Serializable {
         if (perc > 0 && perc < 1) {
             Random r = new Random();
             double b = r.nextDouble();
-
+            
             return b <= perc;
         } else {
             throw new IllegalArgumentException();
@@ -562,7 +562,7 @@ public class Game implements IGame, Serializable {
         for (Position p : this.grid) {
             p.clearAllObjects();
         }
-
+        
         setupGame();
         this.GameTimer();
     }
@@ -577,7 +577,7 @@ public class Game implements IGame, Serializable {
         ArrayList<Projectile> tempProjectiles = new ArrayList();
         ArrayList<PowerUp> tempPowerUps = new ArrayList();
         ArrayList<Ballista> tempBallistas = new ArrayList();
-
+        
         this.grid.stream().forEach((p) -> {
             p.getObjects().stream().map((o) -> {
                 if (!this.objects.contains(o)) {
@@ -607,14 +607,14 @@ public class Game implements IGame, Serializable {
             if (!C.getDead()) {
                 C.setCanMove(true);
             } else {
-                C.setDead(true);
+                C.setCanMove(false);
             }
         });
         bots.stream().forEach((B) -> {
             if (!B.getCharacter().getDead()) {
                 B.AI();
             } else {
-
+                
             }
         });
         tempProjectiles.stream().forEach((P) -> {
@@ -627,23 +627,24 @@ public class Game implements IGame, Serializable {
                 B.shootProjectile();
             }
         });
-
+        
         int dead = 0;
-
         //Check if characters are dead
-        for (CharacterPlayer C : tempCharacters) {
+        for (CharacterPlayer C : characters) {
             if (C.getDead()) {
                 dead++;
             }
         }
-
-        System.out.println(dead);
+        
+        if (dead != 0) {
+            System.out.println(dead);
+        }
 
         //Stop game if all characters are dead
         if (dead == 3) {
             setGameEnd();
         }
-
+        
         boolean ended = getGameEnd();
     }
 
@@ -657,22 +658,22 @@ public class Game implements IGame, Serializable {
         namen[1] = "Marcel";
         namen[2] = "Andre";
         namen[3] = "Nico";
-
+        
         Position[] positions = new Position[4];
         positions[0] = getPosition(1, this.heightCubes);
         positions[1] = getPosition(1, 1);
         positions[2] = getPosition(this.widthCubes, 1);
         positions[3] = getPosition(this.widthCubes, this.heightCubes);
-
+        
         Direction[] directions = new Direction[4];
         directions[0] = Direction.Right;
         directions[1] = Direction.Down;
         directions[2] = Direction.Left;
         directions[3] = Direction.Up;
-
+        
         this.objects.addAll(this.getBoxes());
         this.objects.addAll(this.getCubes());
-
+        
         int i = 0;
 
         //Add character to player
@@ -687,7 +688,7 @@ public class Game implements IGame, Serializable {
             this.objects.add(c);
             i++;
         }
-
+        
         int count = this.players.size();
 
         //Add bots for missing players
@@ -695,13 +696,14 @@ public class Game implements IGame, Serializable {
             if (k >= count) {
                 Bot b = new Bot(namen[k], this.botDifficulty, this);
                 this.bots.add(b);
-
+                
                 CharacterPlayer c = new CharacterPlayer(1, false, 1, 2, positions[k], true, true, directions[k], this);
                 b.setCharacter(c);
                 this.objects.add(c);
+                this.characters.add(c);
             }
         }
-
+        
         int cubes = this.heightCubes * this.widthCubes;
         int powerups = Math.round((cubes / 10) / 2);
         boolean bool = false;
@@ -709,7 +711,7 @@ public class Game implements IGame, Serializable {
         //Add powerups
         for (int j = 0; j < powerups; j++) {
             bool = false;
-
+            
             while (bool == false) {
                 bool = placeRandomPowerup();
             }
@@ -727,19 +729,19 @@ public class Game implements IGame, Serializable {
     @Override
     public void setupLevel() {
         this.objects.clear();
-
+        
         Position[] positions = new Position[4];
         positions[0] = getPosition(1, this.heightCubes);
         positions[1] = getPosition(1, 1);
         positions[2] = getPosition(this.widthCubes, 1);
         positions[3] = getPosition(this.widthCubes, this.heightCubes);
-
+        
         Direction[] directions = new Direction[4];
         directions[0] = Direction.Right;
         directions[1] = Direction.Down;
         directions[2] = Direction.Left;
         directions[3] = Direction.Up;
-
+        
         int i = 0;
 
         //reset position of characters
@@ -748,7 +750,7 @@ public class Game implements IGame, Serializable {
             c.setDirection(directions[i]);
             i++;
         }
-
+        
         this.objects.addAll(this.characters);
         this.objects.addAll(this.getBoxes());
         this.objects.addAll(this.getCubes());
@@ -758,17 +760,17 @@ public class Game implements IGame, Serializable {
             this.setObjectInGrid(o);
         });
     }
-
+    
     @Override
     public synchronized ArrayList<String[]> GetInformation() {
         ArrayList<String[]> information = new ArrayList();
-
+        
         for (Position p : grid) {
             ArrayList<ObjectForGame> TempObjects = this.getObjectsFromGrid(p.getX(), p.getY());
-
+            
             for (ObjectForGame o : TempObjects) {
                 String[] objectinfo = new String[6];
-
+                
                 if (o instanceof CharacterPlayer) {
                     objectinfo[0] = "1";
                 } else if (o instanceof Obstacle) {
@@ -788,7 +790,7 @@ public class Game implements IGame, Serializable {
                 }
                 objectinfo[2] = o.getPosition().getX() + "";
                 objectinfo[3] = o.getPosition().getY() + "";
-
+                
                 if (o.getDirection() != null) {
                     objectinfo[4] = o.getDirection().name() + "";
                 } else {
@@ -800,26 +802,26 @@ public class Game implements IGame, Serializable {
         }
         return information;
     }
-
+    
     public synchronized int[] GetCharacter(String user) {
-
+        
         int[] s = new int[4];
         CharacterPlayer C = null;
-
+        
         try {
             C = this.getPlayerCharacter(user);
         } catch (RemoteException ex) {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
         s[0] = getCharacterNumber(C);
         s[1] = C.getPositionX();
         s[2] = C.getPositionY();
         s[3] = C.getTorchRange();
-
+        
         return s;
     }
-
+    
     public void GameTimer() {
         this.gameTickTimer = new Timer();
         System.out.println("Fail");
@@ -828,14 +830,19 @@ public class Game implements IGame, Serializable {
         //Geeft momenteel ConcurrentModificationException error
         // Maar deze timer zou dus voor updaten moeten zijn.
         this.gameTickTimer.scheduleAtFixedRate(new TimerTask() {
-
+            
             @Override
             public void run() {
                 if (isRunning == false) {
                     isRunning = true;
-
+                    
                     {
-                        updateGame();
+                        if (getGameEnd()) {
+                            gameTickTimer.cancel();                            
+                        } else {
+                            updateGame();
+                        }
+                        
                     }
                     isRunning = false;
                 }

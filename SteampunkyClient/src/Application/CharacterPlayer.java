@@ -231,7 +231,6 @@ public class CharacterPlayer extends ObjectForGame implements Serializable, ICha
             this.ballistas.add(newBallista);
             Position p = super.getPosition();
             p.addObject(newBallista);
-            System.out.println("fancy");
 
         }
     }

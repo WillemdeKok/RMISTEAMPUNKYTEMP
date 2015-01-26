@@ -25,7 +25,7 @@ public interface IGameServer extends Remote {
 
     public boolean loginUser(String username, String password) throws RemoteException;
 
-    public boolean createLobby(String lobbyName, String password, String username) throws RemoteException;
+    public boolean createLobby(String lobbyName, String password, String username, IGameServer server) throws RemoteException;
 
     public boolean joinLobby(ILobby lobby, String user, String password) throws RemoteException;
 
