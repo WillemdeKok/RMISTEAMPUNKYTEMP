@@ -613,8 +613,9 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         canvas.setRotate(rotation);
         canvas.setScaleX(this.getScale());
         canvas.setScaleY(this.getScale());
-        canvas.setLayoutX(-40);
-        canvas.setLayoutY(-120);
+        
+        canvas.setLayoutX(-40 - ((this.widthCubes-9)*40));
+        canvas.setLayoutY(-120 - ((this.heightCubes-9)*40));
     }
 
     /**
@@ -652,7 +653,15 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
             double hoogteSpel = 0;
 
             if (SpectatorNames.contains(client.getUser())) {
-                hoogteSpel = this.lobbyinstance.getHeightPixels();
+                
+                if (this.lobbyinstance.getHeightCubes() >= this.lobbyinstance.getWidthCubes())
+                {
+                    hoogteSpel = this.lobbyinstance.getHeightPixels();
+                }
+                else
+                {
+                    hoogteSpel = this.lobbyinstance.getWidthPixels();
+                }
             }
 
             if (PlayerNames.contains(client.getUser())) {
@@ -681,7 +690,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         int rounds = 1;
 
         try {
-            this.lobbyinstance.createGame(time, 3, level, 1, width, height);
+            this.lobbyinstance.createGame(time, 3, level, 1, height, width);
             SetupDraw();
 
         } catch (RemoteException ex) {

@@ -69,14 +69,14 @@ public class Game implements IGame, Serializable {
             int col = 1;
 
             //<editor-fold defaultstate="collapsed" desc="Initiate Grid">
-            while (row <= this.widthCubes) {
-                col = 1;
-                while (col <= this.heightCubes) {
+            while (col <= this.widthCubes) {
+                row = 1;
+                while (row <= this.heightCubes) {
                     Position p = new Position(col, row);
                     this.grid.add(p);
-                    col++;
+                    row++;
                 }
-                row++;
+                col++;
             }
             //</editor-fold>
 
