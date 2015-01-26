@@ -69,14 +69,14 @@ public class Game implements IGame, Serializable {
             int col = 1;
 
             //<editor-fold defaultstate="collapsed" desc="Initiate Grid">
-            while (col <= this.widthCubes) {
-                row = 1;
-                while (row <= this.heightCubes) {
+            while (row <= this.widthCubes) {
+                col = 1;
+                while (col <= this.heightCubes) {
                     Position p = new Position(col, row);
                     this.grid.add(p);
-                    row++;
+                    col++;
                 }
-                col++;
+                row++;
             }
             //</editor-fold>
 
@@ -607,7 +607,7 @@ public class Game implements IGame, Serializable {
             if (!C.getDead()) {
                 C.setCanMove(true);
             } else {
-                C.setDead(true);
+                C.setCanMove(false);
             }
         });
         bots.stream().forEach((B) -> {
@@ -629,15 +629,16 @@ public class Game implements IGame, Serializable {
         });
 
         int dead = 0;
-
         //Check if characters are dead
-        for (CharacterPlayer C : tempCharacters) {
+        for (CharacterPlayer C : characters) {
             if (C.getDead()) {
                 dead++;
             }
         }
 
-        System.out.println(dead);
+        if (dead != 0) {
+            System.out.println(dead);
+        }
 
         //Stop game if all characters are dead
         if (dead == 3) {
@@ -699,6 +700,7 @@ public class Game implements IGame, Serializable {
                 CharacterPlayer c = new CharacterPlayer(1, false, 1, 2, positions[k], true, true, directions[k], this);
                 b.setCharacter(c);
                 this.objects.add(c);
+                this.characters.add(c);
             }
         }
 
@@ -835,7 +837,12 @@ public class Game implements IGame, Serializable {
                     isRunning = true;
 
                     {
-                        updateGame();
+                        if (getGameEnd()) {
+                            gameTickTimer.cancel();
+                        } else {
+                            updateGame();
+                        }
+
                     }
                     isRunning = false;
                 }

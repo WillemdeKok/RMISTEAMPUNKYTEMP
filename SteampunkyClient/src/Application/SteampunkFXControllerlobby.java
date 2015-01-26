@@ -201,7 +201,7 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
             JOptionPane.showMessageDialog(null, "Please enter a valid name.");
         } else {
             try {
-                if (ServerMock.createLobby(TfCreatename.getText(), Tfcreatepassword.getText(), this.clientInfo.getUser())) {
+                if (ServerMock.createLobby(TfCreatename.getText(), Tfcreatepassword.getText(), this.clientInfo.getUser(), ServerMock)) {
                     System.out.println("Succes!!!");
                     JOptionPane.showMessageDialog(null, "Lobby has been created");
                 }
@@ -244,6 +244,11 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
         this.CBjoinlobby.setItems(FXCollections.observableArrayList(temp));
         this.Lblobby.setItems(FXCollections.observableArrayList(temp));
         this.LBHasPasword.setItems(FXCollections.observableArrayList(password));
+        try {
+            this.LBRating.setText("Rating: " + ServerMock.GetRating(clientInfo.getUser()));
+        } catch (RemoteException ex) {
+            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void Clear() {
