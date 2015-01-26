@@ -709,7 +709,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
             Logger.getLogger(GameRoomController.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         switch (level) {
             case 1:
                 this.fieldColor = Color.SADDLEBROWN;
@@ -730,7 +730,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
 
         box = new AnchorPane();
         box.setPrefSize(800, 800);
-        
+
         String url = "border.jpg";
         Image im = new Image(this.getClass().getResourceAsStream(url), 1800, 1125, false, false);
         //ImageView img = new ImageView(new Image(this.getClass().getResourceAsStream(url)));
@@ -847,8 +847,10 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                             try {
                                 if (lobbyinstance.getGameEnd()) {
                                     gameTickTimer.cancel();
-                                    JOptionPane.showMessageDialog(null, "Game has ended");
+                                    JOptionPane.showMessageDialog(null, "Game has ended, rating is calculated.");
                                     main.gotoGameRoomselect(client, lobbyinstance, ServerMock);
+                                    UpdateForms();
+
                                 } else {
                                     DrawGame();
                                 }
@@ -909,6 +911,11 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
             this.BTPlayer.setDisable(true);
         } else {
             this.BTPlayer.setDisable(false);
+        }
+        try {
+            this.LBRating.setText("Rating: " + ServerMock.GetRating(client.getUser()));
+        } catch (RemoteException ex) {
+            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
