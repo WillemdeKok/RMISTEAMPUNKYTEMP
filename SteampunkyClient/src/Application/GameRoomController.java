@@ -375,21 +375,6 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
     //clears the scene and draws new boxes for every object.
     public void DrawGame() throws InterruptedException, ExecutionException {
 
-        switch (level) {
-            case 1:
-                this.fieldColor = Color.SADDLEBROWN;
-                this.playfieldColor = Color.BURLYWOOD;
-                break;
-            case 2:
-                this.fieldColor = Color.DIMGRAY;
-                this.playfieldColor = Color.LIGHTGRAY;
-                break;
-            case 3:
-                this.fieldColor = Color.PERU;
-                this.playfieldColor = Color.BEIGE;
-                break;
-        }
-
         //get game information (objects)
         //Informationthread.start();
         information = null;
@@ -714,6 +699,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
             this.PlayerNames = this.lobbyinstance.getPlayers();
             this.SpectatorNames = this.lobbyinstance.getSpectators();
 
+            this.level = this.lobbyinstance.getLevel();
             this.widthPixels = this.lobbyinstance.getWidthPixels();
             this.widthCubes = this.lobbyinstance.getWidthCubes();
             this.heightPixels = this.lobbyinstance.getHeightPixels();
@@ -722,6 +708,21 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         } catch (RemoteException ex) {
             Logger.getLogger(GameRoomController.class
                     .getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        switch (level) {
+            case 1:
+                this.fieldColor = Color.SADDLEBROWN;
+                this.playfieldColor = Color.BURLYWOOD;
+                break;
+            case 2:
+                this.fieldColor = Color.DIMGRAY;
+                this.playfieldColor = Color.LIGHTGRAY;
+                break;
+            case 3:
+                this.fieldColor = Color.PERU;
+                this.playfieldColor = Color.BEIGE;
+                break;
         }
 
         root = new Group();
