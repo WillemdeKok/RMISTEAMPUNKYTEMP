@@ -27,7 +27,7 @@ public interface ILobby extends Remote {
 
     public boolean getGameEnd() throws RemoteException;
 
-    public boolean createGame(double timelimit, int botDifficulty, int level, int rounds, int width, int height) throws RemoteException;
+    public boolean createGame(double timelimit, int botDifficulty, int level, int width, int height) throws RemoteException;
 
     public boolean addUser(IUser user) throws RemoteException;
 

@@ -550,6 +550,9 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                     }
                 }
             }
+            
+            canvas.setLayoutX(-50);
+            canvas.setLayoutY(-120);
         }
 
         if (SpectatorNames.contains(client.getUser())) {
@@ -608,13 +611,17 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                     System.out.println(ex.getMessage());
                 }
             }
+            
+            int changeX = (this.widthCubes-9)*50;
+            int changeY = (this.heightCubes-9)*50;
+
+            canvas.setLayoutX(-50-changeX);
+            canvas.setLayoutY(-120-changeY);
         }
 
         canvas.setRotate(rotation);
         canvas.setScaleX(this.getScale());
-        canvas.setScaleY(this.getScale());
-        canvas.setLayoutX(-40);
-        canvas.setLayoutY(-120);
+        canvas.setScaleY(this.getScale());        
     }
 
     /**
@@ -652,7 +659,14 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
             double hoogteSpel = 0;
 
             if (SpectatorNames.contains(client.getUser())) {
-                hoogteSpel = this.lobbyinstance.getHeightPixels();
+                if (this.heightCubes >= this.widthCubes)
+                {
+                    hoogteSpel = this.lobbyinstance.getHeightPixels();
+                }
+                else
+                {
+                    hoogteSpel = this.lobbyinstance.getWidthPixels();
+                }
             }
 
             if (PlayerNames.contains(client.getUser())) {
@@ -678,10 +692,9 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         int width = Integer.parseInt(this.CBlevelsizeWidth.getValue().toString());
         int height = Integer.parseInt(this.CBlevelsizeHeight.getValue().toString());
         double time = Integer.parseInt(this.CBMinutes.getValue().toString()) * 60;
-        int rounds = 1;
 
         try {
-            this.lobbyinstance.createGame(time, 3, level, 1, width, height);
+            this.lobbyinstance.createGame(time, 3, level, width, height);
             //SetupDraw();
 
         } catch (RemoteException ex) {
@@ -726,17 +739,14 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         }
 
         root = new Group();
-        Scene scene = new Scene(root, 900, 900);
+        Scene scene = new Scene(root, 1000, 900);
 
         box = new AnchorPane();
         box.setPrefSize(800, 800);
 
         String url = "border.jpg";
         Image im = new Image(this.getClass().getResourceAsStream(url), 1800, 1125, false, false);
-        //ImageView img = new ImageView(new Image(this.getClass().getResourceAsStream(url)));
         ImageView img = new ImageView(im);
-        //img.setX(1280);
-        //img.setY(800);
         box.getChildren().add(img);
 
         canvas = new AnchorPane();
@@ -748,7 +758,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
 
         root.getChildren().add(box);
         this.stage.setHeight(900);
-        this.stage.setWidth(1700);
+        this.stage.setWidth(1000);
         this.stage.setScene(scene);
         this.setKeyBindings();
         this.GameUpdate();

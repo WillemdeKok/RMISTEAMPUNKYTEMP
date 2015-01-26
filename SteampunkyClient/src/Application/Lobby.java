@@ -134,10 +134,10 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
     }
 
     @Override
-    public boolean createGame(double timelimit, int botDifficulty, int level, int rounds, int width, int height) {
+    public boolean createGame(double timelimit, int botDifficulty, int level, int width, int height) {
         //todo
-        if (timelimit != 0 && botDifficulty != 0 && level > 0 && rounds != 0) {
-            game = new Game(width, height, timelimit, botDifficulty, rounds, level);
+        if (timelimit != 0 && botDifficulty != 0 && level > 0) {
+            game = new Game(height, width, timelimit, botDifficulty, level);
 
             for (IUser u : players) {
                 game.addPlayer(u);
