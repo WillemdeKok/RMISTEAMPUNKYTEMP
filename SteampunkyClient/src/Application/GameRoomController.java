@@ -35,6 +35,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import static javafx.collections.FXCollections.observableList;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
@@ -55,6 +56,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javax.swing.JOptionPane;
 
 /**
@@ -173,12 +175,38 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
     public GameRoomController() throws RemoteException {
     }
 
-    public void setApp(SteampunkyFX application, Stage stage, Client client, ILobby l, IGameServer ServerMock) {
+        public void setApp(SteampunkyFX application, Stage stage, Client client, ILobby l, IGameServer ServerMock) {
         this.ServerMock = ServerMock;
         this.lobbyinstance = l;
         this.stage = stage;
         this.main = application;
         this.client = client;
+        
+        this.stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+
+            @Override
+            public void handle(WindowEvent event) {
+                Platform.runLater(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        try {
+                            ServerMock.leaveLobby(lobbyinstance, client.getUser());
+                            boolean removeuser = ServerMock.RemoveUser(client.getUser());
+                            if (removeuser == true) {
+                                System.out.println("Loguit succesvol");
+                            } else {
+                                System.out.println("Loguit failed");
+                            }
+                        } catch (RemoteException ex) {
+                            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        System.exit(0);
+                    }
+                });
+            }
+        });
+        
 
         this.LBLusername.setText("Welcome: " + client.getUser());
         this.LBLRemaining.setText("Remaining slots: " + this.slotsleft);

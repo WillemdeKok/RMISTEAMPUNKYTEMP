@@ -20,10 +20,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import static javafx.collections.FXCollections.observableList;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -31,6 +33,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javax.swing.JOptionPane;
 
 /**
@@ -85,13 +89,15 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
     private String ipAddress;
     private Registry registry = null;
     private IGameServer ServerMock;
+    private Stage stage;
 
     private static final String bindingName = "serverMock";
 
     public SteampunkFXControllerlobby() throws RemoteException {
     }
 
-    public void setApp(SteampunkyFX application, Client client, IGameServer ServerMock) throws RemoteException {
+    public void setApp(SteampunkyFX application, Client client, IGameServer ServerMock, Stage stage) throws RemoteException {
+        this.stage = stage;        
         this.ServerMock = ServerMock;
         this.clientInfo = client;
         this.main = application;
@@ -103,6 +109,35 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
         this.LobbyTimer();
         ArrayList<String> ratinglist = this.ServerMock.GetTotalrating();
         this.LVrating.setItems(FXCollections.observableArrayList(ratinglist).sorted());
+        
+        
+        this.stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+
+            @Override
+            public void handle(WindowEvent event) {
+                Platform.runLater(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        System.out.println("Exited lobby");
+
+                        try {
+                            boolean removeuser = ServerMock.RemoveUser(clientInfo.getUser());
+                            if (removeuser == true) {
+                                System.out.println("Loguit succesvol");
+                            } else {
+                                System.out.println("Loguit failed");
+                            }
+                        } catch (RemoteException ex) {
+                            Logger.getLogger(SteampunkFXControllerlobby.class.getName()).log(Level.SEVERE, null, ex);
+                            System.out.println("Loguit failed");
+                        }
+                        System.exit(0);
+                    }
+                });
+            }
+        });
+
         UpdateForms();
 
     }

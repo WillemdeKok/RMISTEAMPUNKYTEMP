@@ -56,7 +56,7 @@ public class SteampunkyFX extends Application {
     protected void gotoLoginselect() {
         try {
             SteampunkFXControllerLogin loginselect = (SteampunkFXControllerLogin) replaceSceneContent("LoginProftaak2.fxml");
-            loginselect.setApp(this, ipAddress, portNumber);
+            loginselect.setApp(this, ipAddress, portNumber, this.stage);
         } catch (Exception ex) {
             Logger.getLogger(SteampunkyFX.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -65,7 +65,7 @@ public class SteampunkyFX extends Application {
     protected void gotoLobbyselect(Client client, IGameServer ServerMock) {
         try {
             SteampunkFXControllerlobby lobbyselect = (SteampunkFXControllerlobby) replaceSceneContent("Lobby3.fxml");
-            lobbyselect.setApp(this, client, ServerMock);
+            lobbyselect.setApp(this, client, ServerMock, this.stage);
         } catch (Exception ex) {
             System.out.println("Error: " + ex.getMessage());
             Logger.getLogger(SteampunkyFX.class.getName()).log(Level.SEVERE, null, ex);

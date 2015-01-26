@@ -17,10 +17,13 @@ import java.rmi.registry.Registry;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javax.swing.JOptionPane;
 
 /**
@@ -92,15 +95,31 @@ public class SteampunkFXControllerLogin implements Initializable {
     private Registry registry = null;
     private IGameServer ServerMock;
     private Client clientInfo;
+    private Stage stage;
 
     public SteampunkFXControllerLogin() {
 
     }
 
-    public void setApp(SteampunkyFX application, String ipAddress, int portNumber) {
+    public void setApp(SteampunkyFX application, String ipAddress, int portNumber, Stage stage) {
         this.ipAddress = ipAddress;
         this.portNumber = portNumber;
         this.main = application;
+        this.stage = stage;
+        this.stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+
+            @Override
+            public void handle(WindowEvent event) {
+                Platform.runLater(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        System.out.println("Exited game");
+                        System.exit(0);
+                    }
+                });
+            }
+        });
 
         clientInfo = new Client();
         // Print IP address and port number for registry
