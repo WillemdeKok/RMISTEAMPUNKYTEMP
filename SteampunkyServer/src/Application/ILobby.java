@@ -42,6 +42,8 @@ public interface ILobby extends Remote {
     public void dropBallista(String user) throws RemoteException;
 
     public void updateGame() throws RemoteException;
+    
+    public int getLevel() throws RemoteException;
 
     public int getWidthCubes() throws RemoteException;
 
