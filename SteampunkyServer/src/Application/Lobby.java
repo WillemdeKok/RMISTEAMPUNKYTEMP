@@ -41,7 +41,7 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
     //private transient ObservableList<IUser> observablePlayers;
     private int ratingDifference;
     private Game game;
-    
+
     private String[] lobbyArray;
     private BasicPublisher publisher;
 
@@ -57,11 +57,11 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
         this.nextLobbyID++;
         this.password = password;
         this.admin = addedByUser;
-        
+
         this.lobbyArray = new String[1];
         this.lobbyArray[0] = "lobby";
         this.publisher = new BasicPublisher(this.lobbyArray);
-        
+
         this.spectators = new ArrayList<>();
         //observableSpectators = observableList(spectators);
         this.players = new ArrayList<>();
@@ -70,7 +70,7 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
         //observableChat = observableList(chatMessages);
         this.chatMessages.add("Welkom Bij Steampunky u bevindt zich in de volgende lobby: " + this.lobbyName);
     }
-    
+
     @Override
     public String GetLobbyname() {
         return this.lobbyName;
@@ -96,11 +96,11 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
         System.out.println("temp size: " + temp.size());
         return temp;
     }
-    
+
     @Override
     public ArrayList<String> getPlayers() {
         ArrayList<String> temp = new ArrayList();
-        
+
         for (IUser u : players) {
             try {
                 temp.add(u.getUsername());
@@ -110,18 +110,18 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
         }
         return temp;
     }
-    
+
     @Override
     public ArrayList<String> getChat() {
         return this.chatMessages;
     }
-    
+
     @Override
     public void Addchatmessage(String message) {
         chatMessages.add(message);
         this.publisher.inform(this, "lobby", "", "Message");
     }
-    
+
     @Override
     public boolean checkPassword(String password) {
         if (this.password.equals(password)) {
@@ -130,26 +130,26 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
             return false;
         }
     }
-    
+
     @Override
     public boolean createGame(double timelimit, int botDifficulty, int level, int rounds, int width, int height) {
         //todo
         if (timelimit != 0 && botDifficulty != 0 && level > 0 && rounds != 0) {
             game = new Game(width, height, timelimit, botDifficulty, rounds, level);
-            
+
             for (IUser u : players) {
                 game.addPlayer(u);
             }
-            
+
             game.startRound();
             publisher.inform(this, "lobby", "", "start");
-            
+
             return true;
         }
-        
+
         return false;
     }
-    
+
     @Override
     public String getAdminName() {
         try {
@@ -159,7 +159,7 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
             return null;
         }
     }
-    
+
     @Override
     public boolean addUser(IUser user) {
         if (user != null && !spectators.contains(user)) {
@@ -185,7 +185,7 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
     public int removeUser(String user) {
         IUser TempuserSpec = null;
         IUser TempuserPlay = null;
-        
+
         for (IUser u : players) {
             try {
                 if (u.getUsername().equals(user)) {
@@ -195,7 +195,7 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
                 Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+
         for (IUser u : spectators) {
             try {
                 if (u.getUsername().equals(user)) {
@@ -205,9 +205,9 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
                 Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+
         int removedUser = 0;
-        
+
         if (spectators.contains(TempuserSpec)) {
             spectators.remove(TempuserSpec);
             publisher.inform(this, "lobby", "", "new");
@@ -218,36 +218,32 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
             removedUser = 1;
         }
         try {
-            if (this.admin.getUsername().equals(user))
-            {
-                if(players.iterator().hasNext())
-                {
+            if (this.admin.getUsername().equals(user)) {
+                if (players.iterator().hasNext()) {
                     this.admin = players.iterator().next();
                     publisher.inform(this, "lobby", "", "Admin");
-                }
-                else if(spectators.iterator().hasNext())
-                {
+                } else if (spectators.iterator().hasNext()) {
                     this.admin = spectators.iterator().next();
                     publisher.inform(this, "lobby", "", "Admin");
                 }
             }
         } catch (RemoteException ex) {
             Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+        }
         if (this.spectators.isEmpty() && this.players.isEmpty()) {
             removedUser = -1;
         }
         return removedUser;
-        
+
     }
-    
+
     @Override
     public boolean assignSlot(String user) {
         System.out.println("I arrived at AssignSlot");
         IUser Tempuser = null;
-        
+
         System.out.println("Size: " + spectators.size());
-        
+
         for (IUser u : spectators) {
             try {
                 if (u.getUsername().equals(user)) {
@@ -257,7 +253,7 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
                 Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+
         if (Tempuser != null && spectators.contains(Tempuser) && !players.contains(Tempuser)) {
             players.add(Tempuser);
             spectators.remove(Tempuser);
@@ -266,11 +262,11 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
         }
         return false;
     }
-    
+
     @Override
     public boolean clearSlot(String user) {
         IUser Tempuser = null;
-        
+
         for (IUser u : players) {
             try {
                 if (u.getUsername().equals(user)) {
@@ -280,7 +276,7 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
                 Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+
         if (!spectators.contains(Tempuser) && players.contains(Tempuser)) {
             spectators.add(Tempuser);
             players.remove(Tempuser);
@@ -289,7 +285,7 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
         }
         return false;
     }
-    
+
     @Override
     public void dropBallista(String user) {
         CharacterPlayer C = null;
@@ -299,9 +295,9 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
         } catch (RemoteException ex) {
             Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
-    
+
     @Override
     public void move(String user, Direction d) {
         CharacterPlayer C = null;
@@ -342,7 +338,7 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
                     nextMove = 3;
                     break;
             }
-            
+
             int finalMoveNo;
             if (move + nextMove > 3) {
                 finalMoveNo = move + nextMove - 4;
@@ -371,54 +367,59 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
             }
         }
     }
-    
+
     @Override
     public int[] GetCharacter(String user) throws RemoteException {
         return this.game.GetCharacter(user);
     }
-    
+
     @Override
     public synchronized void updateGame() {
         this.game.updateGame();
     }
-    
+
     @Override
     public synchronized int getWidthCubes() {
         return this.game.getWidthCubes();
     }
-    
+
     @Override
     public synchronized int getHeightCubes() {
         return this.game.getHeightCubes();
     }
-    
+
     @Override
     public synchronized int getWidthPixels() {
         return this.game.getWidthPixels();
     }
-    
+
     @Override
     public synchronized int getHeightPixels() {
         return this.game.getHeightPixels();
     }
-    
+
     @Override
     public synchronized ArrayList<String[]> GetInformation() {
         return this.game.GetInformation();
     }
-    
+
     @Override
     public String toString() {
         return this.lobbyName;
     }
-    
+
     @Override
     public void addListener(RemotePropertyListener listener, String property) throws RemoteException {
         this.publisher.addListener(listener, property);
     }
-    
+
     @Override
     public void removeListener(RemotePropertyListener listener, String property) throws RemoteException {
         this.publisher.removeListener(listener, property);
+    }
+
+    @Override
+    public int getLevel() throws RemoteException {
+        return this.game.getCurrentLevel();
     }
 }

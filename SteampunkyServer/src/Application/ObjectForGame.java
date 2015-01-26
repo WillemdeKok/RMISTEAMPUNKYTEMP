@@ -74,10 +74,11 @@ public abstract class ObjectForGame implements Serializable {
     public void setCanMove(boolean bool) {
         this.canMove = bool;
     }
-    
-    public void setMovable(boolean bool){
+
+    public void setMovable(boolean bool) {
         this.movable = bool;
     }
+
     public boolean getMovable() {
         return this.movable;
     }

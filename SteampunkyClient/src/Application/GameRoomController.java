@@ -138,7 +138,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
     private AnchorPane canvas;
     private Rectangle field;
     private Rectangle playfield;
-    
+
     private Color fieldColor;
     private Color playfieldColor;
 
@@ -265,9 +265,8 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
             Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public int Calcfreeslots()
-    {
+
+    public int Calcfreeslots() {
         int result;
         try {
             this.playernumber = this.lobbyinstance.getPlayers().size();
@@ -295,7 +294,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
     @FXML
     public void becomeSpectator() {
         //      this.lobby.clearSlot(this.admin);
-       
+
         this.BTReady.setDisable(true);
         this.BTPlayer.setDisable(false);
         this.BTSpectator.setDisable(true);
@@ -329,13 +328,10 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
     @FXML
     public void ReturnToMenu() {
         try {
-            if(this.ServerMock.leaveLobby(lobbyinstance, this.client.getUser()))
-            {
-            UpdateForms();
-            this.main.gotoLobbyselect(this.client, this.ServerMock);
-            }
-            else
-            {
+            if (this.ServerMock.leaveLobby(lobbyinstance, this.client.getUser())) {
+                UpdateForms();
+                this.main.gotoLobbyselect(this.client, this.ServerMock);
+            } else {
                 System.out.println("Kan niet terug naar lobby");
             }
         } catch (RemoteException ex) {
@@ -355,7 +351,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
     }
 
     public void SetupStage() {
-        
+
         this.field = new Rectangle(this.widthPixels, this.heightPixels);
         this.field.setFill(Color.GRAY);
         canvas.getChildren().add(this.field);
@@ -377,7 +373,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
 
     //clears the scene and draws new boxes for every object.
     public void DrawGame() throws InterruptedException, ExecutionException {
-        
+
         switch (level) {
             case 1:
                 this.fieldColor = Color.SADDLEBROWN;
@@ -385,14 +381,14 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                 break;
             case 2:
                 this.fieldColor = Color.DIMGRAY;
-                this.playfieldColor = Color.LIGHTGRAY; 
+                this.playfieldColor = Color.LIGHTGRAY;
                 break;
             case 3:
                 this.fieldColor = Color.PERU;
                 this.playfieldColor = Color.BEIGE;
                 break;
         }
-        
+
         //get game information (objects)
         //Informationthread.start();
         information = null;
@@ -420,25 +416,24 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         } catch (ExecutionException ex) {
             Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         canvas.getChildren().clear();
         int rotation = 0;
-        
-        if (PlayerNames.contains(client.getUser()))
-        {
+
+        if (PlayerNames.contains(client.getUser())) {
             int[] i = null;
-            
+
             try {
                 i = this.lobbyinstance.GetCharacter(client.getUser());
             } catch (RemoteException ex) {
                 Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
-            }            
-            
+            }
+
             int characterNr = i[0];
             int xpos = i[1];
             int ypos = i[2];
             int torchrange = i[3];
-            
+
             switch (characterNr) {
                 case 0:
                     rotation = 0;
@@ -453,69 +448,65 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                     rotation = 90;
                     break;
             }
-            
+
             Rectangle borderXleft = null;
             Rectangle borderXright = null;
             Rectangle borderYtop = null;
-            Rectangle borderYbottom = null;    
+            Rectangle borderYbottom = null;
 
             //set range
             double maxrange = 5 * 100;
-            double range = torchrange * 100;        
+            double range = torchrange * 100;
             double maxfieldsize = 1100;
-            double fieldsize = (range*2)+100;
+            double fieldsize = (range * 2) + 100;
 
             //draw playfield
-            field = new Rectangle(0,0,maxfieldsize,maxfieldsize);
+            field = new Rectangle(0, 0, maxfieldsize, maxfieldsize);
             field.setFill(Color.BLACK);
             canvas.getChildren().add(field);
 
-            playfield = new Rectangle(maxrange-range,maxrange-range,fieldsize,fieldsize);
+            playfield = new Rectangle(maxrange - range, maxrange - range, fieldsize, fieldsize);
             playfield.setFill(playfieldColor);
             canvas.getChildren().add(playfield);
 
             //Get player as object
             Rectangle player = new Rectangle(maxrange, maxrange, 100, 100);
-            
+
             //set gamefield border
-            double var1 = maxrange-range;        
-            double var2 = (widthCubes*100)-(xpos*100);
-            double var3 = (heightCubes*100)-(ypos*100);
-            
-            if ((xpos*100) <= range)
-            {
-                borderXleft = new Rectangle(var1,var1,range+100-(xpos*100),fieldsize);
+            double var1 = maxrange - range;
+            double var2 = (widthCubes * 100) - (xpos * 100);
+            double var3 = (heightCubes * 100) - (ypos * 100);
+
+            if ((xpos * 100) <= range) {
+                borderXleft = new Rectangle(var1, var1, range + 100 - (xpos * 100), fieldsize);
                 borderXleft.setFill(fieldColor);
                 canvas.getChildren().add(borderXleft);
             }
 
-            if ((xpos*100) >= (widthCubes*100)-range+100)
-            {            
-                borderXright = new Rectangle(range+var1+var2+100,var1,range-((widthCubes*100)-(xpos*100)),fieldsize);
+            if ((xpos * 100) >= (widthCubes * 100) - range + 100) {
+                borderXright = new Rectangle(range + var1 + var2 + 100, var1, range - ((widthCubes * 100) - (xpos * 100)), fieldsize);
                 borderXright.setFill(fieldColor);
                 canvas.getChildren().add(borderXright);
             }
 
-            if ((ypos*100) <= range)
-            {
-                borderYtop = new Rectangle(var1,var1,fieldsize,range+100-(ypos*100));
+            if ((ypos * 100) <= range) {
+                borderYtop = new Rectangle(var1, var1, fieldsize, range + 100 - (ypos * 100));
                 borderYtop.setFill(fieldColor);
                 canvas.getChildren().add(borderYtop);
             }
 
-            if ((ypos*100) >= (heightCubes*100)-range+100)
-            {
-                borderYbottom = new Rectangle(var1,range+var1+var3+100,fieldsize,range-var3);
+            if ((ypos * 100) >= (heightCubes * 100) - range + 100) {
+                borderYbottom = new Rectangle(var1, range + var1 + var3 + 100, fieldsize, range - var3);
                 borderYbottom.setFill(fieldColor);
                 canvas.getChildren().add(borderYbottom);
             }
-            
+
             //get min and max values
-            double minX = (xpos*100) - range;
-            double maxX = (xpos*100) + range;
-            double minY = (ypos*100) - range;
-            double maxY = (ypos*100) + range;
-            
+            double minX = (xpos * 100) - range;
+            double maxX = (xpos * 100) + range;
+            double minY = (ypos * 100) - range;
+            double maxY = (ypos * 100) + range;
+
             //Draw objects in game within range
             for (String[] s : information) {
                 String object = "";
@@ -544,14 +535,13 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                         object = "Projectile";
                         break;
                 }
-                
-                double X = xpos2*100;
-                double Y = ypos2*100;
-                
-                if (X >= minX && X <= maxX && Y >= minY && Y <= maxY)
-                {                                
-                    double changeX = X - (xpos*100);
-                    double changeY = Y - (ypos*100);
+
+                double X = xpos2 * 100;
+                double Y = ypos2 * 100;
+
+                if (X >= minX && X <= maxX && Y >= minY && Y <= maxY) {
+                    double changeX = X - (xpos * 100);
+                    double changeY = Y - (ypos * 100);
 
                     Image image = null;
                     ImageView img = null;
@@ -573,11 +563,10 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                         System.out.println(ex.getMessage());
                     }
                 }
-            }            
+            }
         }
-        
-        if (SpectatorNames.contains(client.getUser()))
-        {            
+
+        if (SpectatorNames.contains(client.getUser())) {
             this.field.setFill(this.fieldColor);
             this.playfield.setFill(this.playfieldColor);
 
@@ -628,14 +617,13 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                     }
 
                     canvas.getChildren().add(img);
-                    
-        
+
                 } catch (Exception ex) {
                     System.out.println(ex.getMessage());
                 }
             }
         }
-        
+
         canvas.setRotate(rotation);
         canvas.setScaleX(this.getScale());
         canvas.setScaleY(this.getScale());
@@ -678,15 +666,15 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
             double hoogteSpel = 0;
 
             if (SpectatorNames.contains(client.getUser())) {
-                hoogteSpel = this.lobbyinstance.getHeightPixels();             
+                hoogteSpel = this.lobbyinstance.getHeightPixels();
             }
-            
+
             if (PlayerNames.contains(client.getUser())) {
-                hoogteSpel = 1100;               
+                hoogteSpel = 1100;
             }
-            
+
             scale = hoogteScherm / hoogteSpel;
-            
+
             return scale;
 
         } catch (RemoteException ex) {
@@ -737,7 +725,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
 
         root = new Group();
         Scene scene = new Scene(root, 1700, 900);
-        
+
         box = new AnchorPane();
         box.setLayoutX(50);
         box.setLayoutY(50);
@@ -746,9 +734,9 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         canvas = new AnchorPane();
         canvas.setMaxSize(800, 800);
         box.getChildren().add(canvas);
-        
+
         this.field = new Rectangle(this.widthPixels, this.heightPixels);
-        this.playfield = new Rectangle(100, 100, this.widthCubes*100, this.heightCubes*100);
+        this.playfield = new Rectangle(100, 100, this.widthCubes * 100, this.heightCubes * 100);
 
         root.getChildren().add(box);
         this.stage.setMinHeight(900);
@@ -900,12 +888,9 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         this.LBSpectators.setItems(FXCollections.observableList(temp));
         this.LBPlayers.setItems(FXCollections.observableList(temp2));
         this.LBLRemaining.setText("Remaining slots: " + Calcfreeslots());
-        if(Calcfreeslots() == 0)
-        {
+        if (Calcfreeslots() == 0) {
             this.BTPlayer.setDisable(true);
-        }
-        else
-        {
+        } else {
             this.BTPlayer.setDisable(false);
         }
     }
@@ -931,9 +916,8 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
             }
         }
     }
-    
-    public void AdminReset()
-    {
+
+    public void AdminReset() {
         try {
             //Kijkt of de ingelogde speler een admin is
             if (this.client.getUser().equals(this.lobbyinstance.getAdminName())) {
@@ -978,9 +962,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                         Logger.getLogger(GameRoomController.class
                                 .getName()).log(Level.SEVERE, null, ex);
                     }
-                }
-                else if (evt.getNewValue().equals("Admin"))
-                {
+                } else if (evt.getNewValue().equals("Admin")) {
                     AdminReset();
                 }
             }

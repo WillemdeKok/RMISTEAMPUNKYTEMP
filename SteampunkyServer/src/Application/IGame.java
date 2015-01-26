@@ -27,10 +27,6 @@ public interface IGame extends Remote {
 
     public int getBotDifficulty() throws RemoteException;
 
-    public int getTotalRounds() throws RemoteException;
-
-    public int getCurrentRound() throws RemoteException;
-
     public double getTotalTime() throws RemoteException;
 
     public double getCurrentTime() throws RemoteException;
@@ -60,6 +56,6 @@ public interface IGame extends Remote {
     public void setupLevel() throws RemoteException;
 
     public ArrayList<String[]> GetInformation() throws RemoteException;
-    
+
     public int[] GetCharacter(String user) throws RemoteException;
 }

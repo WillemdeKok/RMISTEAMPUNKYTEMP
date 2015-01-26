@@ -87,15 +87,13 @@ public class Server extends UnicastRemoteObject implements IGameServer {
             System.out.println("Geen verbinding met database mogelijk: " + ex);
         }
     }
-    
+
     @Override
     public boolean RemoveUser(String tempuser) {
         IUser temp = null;
-        for(IUser tempacoount : observableUsers)
-        {
+        for (IUser tempacoount : observableUsers) {
             try {
-                if(tempacoount.getUsername().equals(tempuser))
-                {
+                if (tempacoount.getUsername().equals(tempuser)) {
                     temp = tempacoount;
                 }
             } catch (RemoteException ex) {
@@ -332,11 +330,9 @@ public class Server extends UnicastRemoteObject implements IGameServer {
         ILobby temp = null;
         if (lobby.removeUser(user) == 1) {
             return true;
-        } else if (lobby.removeUser(user) == -1) {           
-            for(ILobby listlobby : observableLobbies)
-            {
-                if(listlobby.GetLobbyname().equals(lobby.GetLobbyname()))
-                {
+        } else if (lobby.removeUser(user) == -1) {
+            for (ILobby listlobby : observableLobbies) {
+                if (listlobby.GetLobbyname().equals(lobby.GetLobbyname())) {
                     temp = listlobby;
                 }
             }
@@ -369,12 +365,10 @@ public class Server extends UnicastRemoteObject implements IGameServer {
         }
         return server;
     }
-    
 
 //    public void AddUserToList(IUser u) {
 //        this.observableUsers.add(u);
 //    }
-
     public IUser Getuser(String username) {
         IUser tempuser = null;
         for (IUser user : this.observableUsers) {

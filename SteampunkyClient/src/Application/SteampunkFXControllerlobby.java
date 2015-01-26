@@ -106,29 +106,24 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
         UpdateForms();
 
     }
-    
-    public void Logout(Event evt)
-    {
-        try {  
+
+    public void Logout(Event evt) {
+        try {
             boolean removeuser = this.ServerMock.RemoveUser(this.clientInfo.getUser());
-            if(removeuser == true)
-            {
-               System.out.println("Loguit succesvol"); 
-               this.main.gotoLoginselect();
-            }
-            else
-            {
-                System.out.println("Loguit failed"); 
+            if (removeuser == true) {
+                System.out.println("Loguit succesvol");
+                this.main.gotoLoginselect();
+            } else {
+                System.out.println("Loguit failed");
             }
         } catch (RemoteException ex) {
             Logger.getLogger(SteampunkFXControllerlobby.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("Loguit failed"); 
+            System.out.println("Loguit failed");
         }
     }
-    
 
     public void JoinLobbyFromLV(Event evt) {
-        
+
         System.out.println("Event triggered");
         String s = "";
         try {
@@ -159,7 +154,7 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
             System.out.println("Remote Exception has been thrown");
         }
     }
-    
+
     public void JoinLobbyFromCB(Event evt) {
         System.out.println("Event triggered");
         String s = "";
@@ -186,7 +181,7 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
                             JOptionPane.showMessageDialog(null, "Wachtwoord van lobby is niet juist");
                         }
                     }
-                }         
+                }
             }
         } catch (RemoteException ex) {
             System.out.println("Remote Exception has been thrown");
@@ -233,15 +228,12 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
 
         try {
             for (ILobby i : ServerMock.getLobbies()) {
-                if(i.checkPassword(""))
-                {
-                temp.add(i.GetLobbyname());
-                password.add("Password: NO");
-                }
-                else
-                {
-                temp.add(i.GetLobbyname());
-                password.add("Password: YES");
+                if (i.checkPassword("")) {
+                    temp.add(i.GetLobbyname());
+                    password.add("Password: NO");
+                } else {
+                    temp.add(i.GetLobbyname());
+                    password.add("Password: YES");
                 }
             }
         } catch (RemoteException ex) {

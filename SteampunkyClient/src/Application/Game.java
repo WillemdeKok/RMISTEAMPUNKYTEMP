@@ -31,13 +31,8 @@ public class Game implements IGame, Serializable {
     private Timer gameTickTimer;
     static boolean isRunning = false;
 
-    private int totalRounds;
-    private int currentRound;
     private boolean gameEnd;
     private int currentLevel;
-
-    private double boxStartTime;
-    private boolean fillUp;
 
     private ArrayList<Position> grid;
     private ArrayList<ObjectForGame> objects;
@@ -67,11 +62,7 @@ public class Game implements IGame, Serializable {
             this.botDifficulty = botDifficulty;
             this.totalTime = timelimit;
             this.currentTime = 0;
-            this.totalRounds = rounds;
             this.currentLevel = level;
-            this.currentRound = 1;
-            this.boxStartTime = 0;
-            this.fillUp = false;
 
             this.grid = new ArrayList<>();
             int row = 1;
@@ -213,26 +204,6 @@ public class Game implements IGame, Serializable {
     @Override
     public int getBotDifficulty() {
         return this.botDifficulty;
-    }
-
-    /**
-     * Getter of TotalRounds
-     *
-     * @return an int with the amount of rounds
-     */
-    @Override
-    public int getTotalRounds() {
-        return this.totalRounds;
-    }
-
-    /**
-     * Getter of CurrentRound
-     *
-     * @return an int with the value of current round
-     */
-    @Override
-    public int getCurrentRound() {
-        return this.currentRound;
     }
 
     /**
@@ -429,66 +400,66 @@ public class Game implements IGame, Serializable {
 
     @Override
     public boolean placeFillupBoxes() {
-        int round;
-        int maxRounds = 0;
-        int x = 1;
-        int minWidth = 1;
-        int maxWidth = this.widthCubes;
-        int y = 1;
-        int minHeight = 1;
-        int maxHeight = this.widthCubes;
-
-        if (maxWidth > maxHeight) {
-            maxRounds = (maxHeight + 1) / 2;
-        } else {
-            maxRounds = (maxWidth + 1) / 2;
-        }
-
-        //place box every five seconds around field
-        if ((this.getCurrentTime() - this.boxStartTime) % 5 == 0) {
-            for (round = 1; round < maxRounds; round++) {
-                while (x <= maxWidth) {
-                    Position p = getPosition(x, y);
-                    ObjectForGame ob = new Obstacle("cube", false, p, true, false, this);
-                    this.objects.add(ob);
-                    x++;
-                }
-
-                minHeight++;
-
-                while (y <= maxHeight) {
-                    Position p = getPosition(x, y);
-                    ObjectForGame ob = new Obstacle("cube", false, p, true, false, this);
-                    this.objects.add(ob);
-                    y++;
-                }
-
-                maxWidth--;
-
-                while (x >= minWidth) {
-                    Position p = getPosition(x, y);
-                    ObjectForGame ob = new Obstacle("cube", false, p, true, false, this);
-                    this.objects.add(ob);
-                    x--;
-                }
-
-                maxHeight--;
-
-                while (y >= minHeight) {
-                    Position p = getPosition(x, y);
-                    ObjectForGame ob = new Obstacle("cube", false, p, true, false, this);
-                    this.objects.add(ob);
-                    y--;
-                }
-
-                minWidth--;
-
-                return true;
-            }
-        }
-
-        //When field is full of boxes, set game end
-        this.setGameEnd();
+//        int round;
+//        int maxRounds = 0;
+//        int x = 1;
+//        int minWidth = 1;
+//        int maxWidth = this.widthCubes;
+//        int y = 1;
+//        int minHeight = 1;
+//        int maxHeight = this.widthCubes;
+//
+//        if (maxWidth > maxHeight) {
+//            maxRounds = (maxHeight + 1) / 2;
+//        } else {
+//            maxRounds = (maxWidth + 1) / 2;
+//        }
+//
+//        //place box every five seconds around field
+//        if ((this.getCurrentTime() - this.boxStartTime) % 5 == 0) {
+//            for (round = 1; round < maxRounds; round++) {
+//                while (x <= maxWidth) {
+//                    Position p = getPosition(x, y);
+//                    ObjectForGame ob = new Obstacle("cube", false, p, true, false, this);;
+//                    this.setObjectInGrid(ob);
+//                    x++;
+//                }
+//
+//                minHeight++;
+//
+//                while (y <= maxHeight) {
+//                    Position p = getPosition(x, y);
+//                    ObjectForGame ob = new Obstacle("cube", false, p, true, false, this);
+//                    this.setObjectInGrid(ob);
+//                    y++;
+//                }
+//
+//                maxWidth--;
+//
+//                while (x >= minWidth) {
+//                    Position p = getPosition(x, y);
+//                    ObjectForGame ob = new Obstacle("cube", false, p, true, false, this);
+//                    this.setObjectInGrid(ob);
+//                    x--;
+//                }
+//
+//                maxHeight--;
+//
+//                while (y >= minHeight) {
+//                    Position p = getPosition(x, y);
+//                    ObjectForGame ob = new Obstacle("cube", false, p, true, false, this);
+//                    this.setObjectInGrid(ob);
+//                    y--;
+//                }
+//
+//                minWidth--;
+//
+//                return true;
+//            }
+//        }
+//
+//        //When field is full of boxes, set game end
+//        this.setGameEnd();
         return false;
     }
 
@@ -513,7 +484,7 @@ public class Game implements IGame, Serializable {
         types[1] = "torch";
         types[2] = "projectile";
 
-        if (p.getObjects().size() <= 0) {
+        if (this.getObjectsFromGrid(col, row).size() <= 0) {
             if (((row == 1 && col > 3 && col < (this.heightCubes - 2))
                     || (row == 2 && col > 2 && col < (this.heightCubes - 1))
                     || (row == 3 && col > 1 && col < this.heightCubes)
@@ -577,14 +548,7 @@ public class Game implements IGame, Serializable {
     @Override
     public boolean setGameEnd() {
         this.gameEnd = true;
-
-        //Ga naar de volgende ronde mits die er is
-        if (this.currentRound < this.totalRounds) {
-            this.currentRound++;
-            return false;
-        }
-
-        return true;
+        return this.gameEnd;
     }
 
     /**
@@ -599,11 +563,7 @@ public class Game implements IGame, Serializable {
             p.clearAllObjects();
         }
 
-        if (getCurrentRound() == 1) {
-            setupGame();
-        } else {
-            setupLevel();
-        }
+        setupGame();
         this.GameTimer();
     }
 
@@ -671,44 +631,20 @@ public class Game implements IGame, Serializable {
         int dead = 0;
 
         //Check if characters are dead
-        for(CharacterPlayer C : tempCharacters){
-            if(C.getDead()){
+        for (CharacterPlayer C : tempCharacters) {
+            if (C.getDead()) {
                 dead++;
             }
         }
+
+        System.out.println(dead);
 
         //Stop game if all characters are dead
         if (dead == 3) {
             setGameEnd();
         }
 
-        int count = 0;
-
-        if (this.fillUp) {
-            //Start methode placeFillupBoxes() one time
-            if (count == 0) {
-                placeFillupBoxes();
-                count++;
-            }
-        }
-
         boolean ended = getGameEnd();
-
-        if (!ended) {
-            if (this.currentTime >= this.totalTime) {
-                //Add boxes in circle in level
-                this.fillUp = true;
-                this.boxStartTime = getCurrentTime();
-            }
-        } else {
-            boolean lastLevel = setGameEnd();
-
-            if (!lastLevel) {
-                startRound();
-            } else {
-                //einde van game
-            }
-        }
     }
 
     /**

@@ -43,6 +43,8 @@ public interface ILobby extends Remote {
 
     public void updateGame() throws RemoteException;
 
+    public int getLevel() throws RemoteException;
+
     public int getWidthCubes() throws RemoteException;
 
     public int getHeightCubes() throws RemoteException;
@@ -54,6 +56,6 @@ public interface ILobby extends Remote {
     public String getAdminName() throws RemoteException;
 
     public ArrayList<String[]> GetInformation() throws RemoteException;
-    
+
     public int[] GetCharacter(String user) throws RemoteException;
 }
