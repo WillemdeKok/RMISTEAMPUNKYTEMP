@@ -175,13 +175,13 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
     public GameRoomController() throws RemoteException {
     }
 
-        public void setApp(SteampunkyFX application, Stage stage, Client client, ILobby l, IGameServer ServerMock) {
+    public void setApp(SteampunkyFX application, Stage stage, Client client, ILobby l, IGameServer ServerMock) {
         this.ServerMock = ServerMock;
         this.lobbyinstance = l;
         this.stage = stage;
         this.main = application;
         this.client = client;
-        
+
         this.stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 
             @Override
@@ -206,7 +206,6 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                 });
             }
         });
-        
 
         this.LBLusername.setText("Welcome: " + client.getUser());
         this.LBLRemaining.setText("Remaining slots: " + this.slotsleft);
@@ -293,7 +292,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         } catch (RemoteException ex) {
             Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         try {
             if (this.lobbyinstance.GetHasStarted()) {
                 this.SetupDraw();
@@ -587,7 +586,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                     }
                 }
             }
-            
+
             canvas.setLayoutX(-50);
             canvas.setLayoutY(-120);
         }
@@ -648,17 +647,17 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                     System.out.println(ex.getMessage());
                 }
             }
-            
-            int changeX = (this.widthCubes-9)*50;
-            int changeY = (this.heightCubes-9)*50;
 
-            canvas.setLayoutX(-50-changeX);
-            canvas.setLayoutY(-120-changeY);
+            int changeX = (this.widthCubes - 9) * 50;
+            int changeY = (this.heightCubes - 9) * 50;
+
+            canvas.setLayoutX(-50 - changeX);
+            canvas.setLayoutY(-120 - changeY);
         }
 
         canvas.setRotate(rotation);
         canvas.setScaleX(this.getScale());
-        canvas.setScaleY(this.getScale());        
+        canvas.setScaleY(this.getScale());
     }
 
     /**
@@ -696,12 +695,9 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
             double hoogteSpel = 0;
 
             if (SpectatorNames.contains(client.getUser())) {
-                if (this.heightCubes >= this.widthCubes)
-                {
+                if (this.heightCubes >= this.widthCubes) {
                     hoogteSpel = this.lobbyinstance.getHeightPixels();
-                }
-                else
-                {
+                } else {
                     hoogteSpel = this.lobbyinstance.getWidthPixels();
                 }
             }
@@ -891,19 +887,14 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                 javafx.application.Platform.runLater(() -> {
                     {
                         try {
-                            try {
-                                if (lobbyinstance.getGameEnd()) {
-                                    gameTickTimer.cancel();
-                                    gameTickTimer.purge();
-                                    JOptionPane.showMessageDialog(null, "Game has ended, rating is calculated.");
-                                    main.gotoGameRoomselect(client, lobbyinstance, ServerMock);
-                                    UpdateForms();
 
-                                } else {
-                                    DrawGame();
-                                }
-                            } catch (RemoteException ex) {
-                                Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+                            if (lobbyinstance.getGameEnd()) {
+                                gameTickTimer.cancel();
+                                gameTickTimer.purge();
+                                JOptionPane.showMessageDialog(null, "Game has ended, rating is calculated.");
+                                main.gotoGameRoomselect(client, lobbyinstance, ServerMock);
+                            } else {
+                                DrawGame();
                             }
 
                         } catch (InterruptedException ex) {
@@ -912,11 +903,15 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                         } catch (ExecutionException ex) {
                             Logger.getLogger(GameRoomController.class
                                     .getName()).log(Level.SEVERE, null, ex);
+                        } catch (RemoteException ex) {
+                            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
-                });
+                }
+                );
             }
-        }, 300, 300);
+        },
+                300, 300);
     }
 
     //Initialiseert de combo boxen
@@ -962,8 +957,10 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         }
         try {
             this.LBRating.setText("Rating: " + ServerMock.GetRating(client.getUser()));
+
         } catch (RemoteException ex) {
-            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GameRoomController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -1006,9 +1003,11 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                 this.CBlevelsizeWidth.setVisible(true);
                 this.CBMinutes.setVisible(true);
                 //this.CBrounds.setVisible(true);
+
             }
         } catch (RemoteException ex) {
-            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GameRoomController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
