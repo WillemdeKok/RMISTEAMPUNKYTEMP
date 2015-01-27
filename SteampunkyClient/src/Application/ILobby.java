@@ -62,4 +62,6 @@ public interface ILobby extends Remote {
     public int[] GetCharacter(String user) throws RemoteException;
     
     public boolean GetHasStarted() throws RemoteException;
+    
+    public void setHasStarted(boolean bool) throws RemoteException;
 }

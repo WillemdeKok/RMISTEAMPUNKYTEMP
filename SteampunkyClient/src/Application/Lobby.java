@@ -467,4 +467,9 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
     public boolean getGameEnd() throws RemoteException {
         return this.game.getGameEnd();
     }
+
+    @Override
+    public void setHasStarted(boolean bool) throws RemoteException {
+        this.hasStarted = bool;
+    }
 }
