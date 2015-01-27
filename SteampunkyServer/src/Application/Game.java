@@ -31,7 +31,7 @@ public class Game implements IGame, Serializable {
     private Timer gameTickTimer;
     static boolean isRunning = false;
 
-    private boolean gameEnd;
+    private boolean gameEnd = false;
     private int currentLevel;
 
     private ArrayList<Position> grid;

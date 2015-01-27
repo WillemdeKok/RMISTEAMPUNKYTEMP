@@ -56,6 +56,7 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
      * creates a lobby with ...
      */
     public Lobby(String lobbyname, IUser addedByUser, String password, IGameServer mock) throws RemoteException {
+        this.game = null;
         System.out.println("Lobby has been created");
         this.lobbyName = lobbyname;
         this.admin = addedByUser;
@@ -162,7 +163,8 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
                 @Override
                 public void run() {
                     {
-                        if (game.getGameEnd()) {
+                        if (game.getGameEnd() && game != null) {
+                            publisher.inform(this, "lobby", "", "endgame");
                             hasStarted = false;
                             T.cancel();
                             for (IUser I : players) {
