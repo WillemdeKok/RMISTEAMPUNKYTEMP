@@ -279,11 +279,6 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
         this.CBjoinlobby.setItems(FXCollections.observableArrayList(temp));
         this.Lblobby.setItems(FXCollections.observableArrayList(temp));
         this.LBHasPasword.setItems(FXCollections.observableArrayList(password));
-        try {
-            this.LBRating.setText("Rating: " + ServerMock.GetRating(clientInfo.getUser()));
-        } catch (RemoteException ex) {
-            Logger.getLogger(GameRoomController.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     public void Clear() {

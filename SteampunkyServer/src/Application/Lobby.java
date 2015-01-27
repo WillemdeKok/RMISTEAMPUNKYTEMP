@@ -181,7 +181,6 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
                                 }
                             }
                         }
-
                     }
                 }
             }, 300, 2000);
