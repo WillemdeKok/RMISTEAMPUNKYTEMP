@@ -164,6 +164,7 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
                 public void run() {
                     {
                         if (game.getGameEnd() && game != null) {
+                            System.out.println("Condition was true");
                             publisher.inform(this, "lobby", "", "endgame");
                             hasStarted = false;
                             T.cancel();
