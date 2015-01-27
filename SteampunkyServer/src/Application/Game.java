@@ -641,7 +641,7 @@ public class Game implements IGame, Serializable {
         }
 
         //Stop game if all characters are dead
-        if (dead == 3) {
+        if (dead >= 3) {
             setGameEnd();
         }
 
@@ -824,7 +824,6 @@ public class Game implements IGame, Serializable {
 
     public void GameTimer() {
         this.gameTickTimer = new Timer();
-        System.out.println("Fail");
         //Level opnieuw uittekenen met nieuwe posities      
 
         //Geeft momenteel ConcurrentModificationException error
@@ -839,6 +838,7 @@ public class Game implements IGame, Serializable {
                     {
                         if (getGameEnd()) {
                             gameTickTimer.cancel();
+                            gameTickTimer.purge();
                         } else {
                             updateGame();
                         }

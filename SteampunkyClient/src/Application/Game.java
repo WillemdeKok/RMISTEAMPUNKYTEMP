@@ -641,7 +641,7 @@ public class Game implements IGame, Serializable {
         }
 
         //Stop game if all characters are dead
-        if (dead == 3) {
+        if (dead >= 3) {
             setGameEnd();
         }
 
