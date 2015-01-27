@@ -167,6 +167,7 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
                             hasStarted = false;
                             T.cancel();
                             T.purge();
+                            List<IUser> users = players;
                             for (IUser I : players) {
                                 try {
                                     if (game.getPlayerCharacter(I.getUsername()).getDead()) {
@@ -175,11 +176,17 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
                                         mock.IncreaseRating(I.getUsername(), 10);
                                     }
                                     clearSlot(I.getUsername());
+                                    removeUser(I.getUsername());
                                 } catch (RemoteException ex) {
                                     Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                             }
                             players.clear();
+                            for (IUser I : users){
+                                addUser(I);
+                            }
+                                    
+                            
                         }
                     }
                 }
