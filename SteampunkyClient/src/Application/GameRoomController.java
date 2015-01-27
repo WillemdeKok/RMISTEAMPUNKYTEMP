@@ -729,6 +729,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         try {
             this.lobbyinstance.createGame(time, 3, level, width, height);
             SetupDraw();
+            this.GameUpdate();
 
         } catch (RemoteException ex) {
             Logger.getLogger(GameRoomController.class
@@ -794,7 +795,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         this.stage.setWidth(1000);
         this.stage.setScene(scene);
         this.setKeyBindings();
-        this.GameUpdate();
+        
     }
 
     public void drawTimer() {
@@ -1026,6 +1027,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                 } else if (evt.getNewValue().equals("start")) {
                     System.out.println("Game started");
                     SetupDraw();
+                    GameUpdate();
                 } else if (evt.getNewValue().equals("Message")) {
                     try {
                         LVChats.setItems(FXCollections.observableArrayList(lobbyinstance.getChat()));
