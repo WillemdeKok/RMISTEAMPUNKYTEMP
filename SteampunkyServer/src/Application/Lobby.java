@@ -183,8 +183,12 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
                             }
                             players.clear();
                             for (IUser I : users){
-                                addUser(I);
-                                assignSlot(I);
+                                try {
+                                    addUser(I);
+                                    assignSlot(I.getUsername());
+                                } catch (RemoteException ex) {
+                                    Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
+                                }
                             }
                                     
                             
