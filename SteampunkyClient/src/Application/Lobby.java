@@ -46,10 +46,8 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
     private String[] lobbyArray;
     private BasicPublisher publisher;
     private IGameServer mock;
-    
+
     private boolean hasStarted = false;
-
-
 
     //***********************constructoren***********************************
     /**
@@ -147,7 +145,7 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
     public boolean createGame(double timelimit, int botDifficulty, int level, int width, int height) {
         //todo
         this.hasStarted = true;
-        
+
         if (timelimit != 0 && botDifficulty != 0 && level > 0) {
             game = new Game(height, width, timelimit, botDifficulty, level);
 
@@ -181,7 +179,6 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
                                 }
                             }
                         }
-
                     }
                 }
             }, 300, 2000);
@@ -332,7 +329,9 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
         CharacterPlayer C = null;
         try {
             C = this.game.getPlayerCharacter(user);
-            C.createBallista(Direction.Right, 1);
+            if (!C.getDead()) {
+                C.createBallista(Direction.Right, 1);
+            }
         } catch (RemoteException ex) {
             Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
         }
