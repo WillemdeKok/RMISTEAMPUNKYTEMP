@@ -184,6 +184,7 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
                             players.clear();
                             for (IUser I : users){
                                 addUser(I);
+                                assignSlot(I);
                             }
                                     
                             
