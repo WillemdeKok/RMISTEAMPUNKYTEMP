@@ -37,7 +37,7 @@ public class SteampunkyFX extends Application {
         System.out.println("CLIENT USING REGISTRY");
         Scanner input = new Scanner(System.in);
         //To be changed in case of deployment to the IP adres of the server you want to connect to.
-        ipAddress = Inet4Address.getLocalHost().getHostAddress();
+        ipAddress = "192.168.1.254";
         portNumber = 1099;
         try {
             this.stage = stage;
