@@ -167,7 +167,6 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
                             System.out.println("Condition was true");
                             publisher.inform(this, "lobby", "", "endgame");
                             hasStarted = false;
-                            T.cancel();
                             for (IUser I : players) {
                                 try {
                                     if (game.getPlayerCharacter(I.getUsername()).getDead()) {
@@ -180,7 +179,6 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
                                 }
                             }
                         }
-
                     }
                 }
             }, 300, 2000);
