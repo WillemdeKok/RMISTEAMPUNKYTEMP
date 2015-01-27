@@ -732,7 +732,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
 
         try {
             this.lobbyinstance.createGame(time, 3, level, width, height);
-            //SetupDraw();
+            SetupDraw();
 
         } catch (RemoteException ex) {
             Logger.getLogger(GameRoomController.class
