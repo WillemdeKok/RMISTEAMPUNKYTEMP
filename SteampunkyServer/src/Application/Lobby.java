@@ -168,6 +168,7 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
                             publisher.inform(this, "lobby", "", "endgame");
                             hasStarted = false;
                             T.cancel();
+                            T.purge();
                             for (IUser I : players) {
                                 try {
                                     if (game.getPlayerCharacter(I.getUsername()).getDead()) {

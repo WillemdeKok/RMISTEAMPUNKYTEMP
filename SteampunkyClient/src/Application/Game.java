@@ -838,6 +838,7 @@ public class Game implements IGame, Serializable {
                     {
                         if (getGameEnd()) {
                             gameTickTimer.cancel();
+                            gameTickTimer.purge();
                         } else {
                             updateGame();
                         }

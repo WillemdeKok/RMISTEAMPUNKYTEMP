@@ -380,6 +380,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
     @FXML
     public void StopGame() {
         this.timer.cancel();
+        this.timer.purge();
         this.timercount = 6;
         this.countdown = 6;
         this.LBLGameState.setText("Waiting for players");
@@ -854,6 +855,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                         Countdown();
                         if (countdown == 0) {
                             timer.cancel();
+                            timer.purge();
                         }
                     }
                 });
@@ -892,6 +894,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                             try {
                                 if (lobbyinstance.getGameEnd()) {
                                     gameTickTimer.cancel();
+                                    gameTickTimer.purge();
                                     JOptionPane.showMessageDialog(null, "Game has ended, rating is calculated.");
                                     main.gotoGameRoomselect(client, lobbyinstance, ServerMock);
                                     UpdateForms();
