@@ -97,7 +97,7 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
     }
 
     public void setApp(SteampunkyFX application, Client client, IGameServer ServerMock, Stage stage) throws RemoteException {
-        this.stage = stage;        
+        this.stage = stage;
         this.ServerMock = ServerMock;
         this.clientInfo = client;
         this.main = application;
@@ -109,8 +109,7 @@ public class SteampunkFXControllerlobby extends UnicastRemoteObject implements I
         this.LobbyTimer();
         ArrayList<String> ratinglist = this.ServerMock.GetTotalrating();
         this.LVrating.setItems(FXCollections.observableArrayList(ratinglist).sorted());
-        
-        
+
         this.stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 
             @Override

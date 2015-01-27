@@ -60,8 +60,8 @@ public interface ILobby extends Remote {
     public ArrayList<String[]> GetInformation() throws RemoteException;
 
     public int[] GetCharacter(String user) throws RemoteException;
-    
+
     public boolean GetHasStarted() throws RemoteException;
-    
+
     public void setHasStarted(boolean bool) throws RemoteException;
 }
