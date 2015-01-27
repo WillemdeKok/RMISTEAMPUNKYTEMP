@@ -174,10 +174,12 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
                                     } else {
                                         mock.IncreaseRating(I.getUsername(), 10);
                                     }
+                                    clearSlot(I.getUsername());
                                 } catch (RemoteException ex) {
                                     Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                             }
+                            players.clear();
                         }
                     }
                 }
