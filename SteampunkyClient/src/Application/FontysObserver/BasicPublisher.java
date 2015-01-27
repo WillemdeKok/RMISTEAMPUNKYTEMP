@@ -101,7 +101,7 @@ public class BasicPublisher {
      * (mag null zijn)
      * @param newValue nieuwe waarde van de property van de publisher
      */
-    public void inform(Object source, String property, Object oldValue, Object newValue) {
+    public synchronized void inform(Object source, String property, Object oldValue, Object newValue) {
         checkInBehalfOfProgrammer(property);
 
         Set<RemotePropertyListener> alertable;
