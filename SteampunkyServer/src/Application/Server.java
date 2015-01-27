@@ -284,7 +284,7 @@ public class Server extends UnicastRemoteObject implements IGameServer {
     }
 
     @Override
-    public boolean createLobby(String lobbyName, String password, String username, IGameServer server) {
+    public synchronized boolean createLobby(String lobbyName, String password, String username, IGameServer server) {
         System.out.println("ik ben een lobby");
         IUser admin = null;
 
