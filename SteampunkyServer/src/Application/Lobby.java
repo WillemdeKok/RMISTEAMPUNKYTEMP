@@ -142,7 +142,7 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
     }
 
     @Override
-    public boolean createGame(double timelimit, int botDifficulty, int level, int width, int height) {
+    public synchronized boolean createGame(double timelimit, int botDifficulty, int level, int width, int height) {
         //todo
         this.hasStarted = true;
 
@@ -159,7 +159,7 @@ public class Lobby extends UnicastRemoteObject implements ILobby, RemotePublishe
             T.scheduleAtFixedRate(new TimerTask() {
 
                 @Override
-                public void run() {
+                public synchronized void run() {
                     {
                         if (game.getGameEnd() && game != null) {
                             System.out.println("Condition was true");

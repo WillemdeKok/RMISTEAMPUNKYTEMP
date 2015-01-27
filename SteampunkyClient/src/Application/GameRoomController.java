@@ -894,6 +894,11 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                                 TickTimer.cancel();
                                 TickTimer.purge();
                                 lobbyinstance.setHasStarted(false);
+                                
+                                for(String S : lobbyinstance.getPlayers()){
+                                  lobbyinstance.assignSlot(S);
+                                
+                                }
                                 JOptionPane.showMessageDialog(null, "Game has ended, rating is calculated.");
                                 main.gotoGameRoomselect(client, lobbyinstance, ServerMock);
                                 running = false;
