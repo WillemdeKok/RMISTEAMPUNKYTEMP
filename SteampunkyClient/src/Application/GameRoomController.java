@@ -402,6 +402,8 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
 
         if (this.countdown == 0) {
             //get random level from 1 to 3
+            this.timer.cancel();
+            this.timer.purge();
             Random levelInt = new Random();
             level = levelInt.nextInt(3) + 1;
             this.StartGame();
@@ -849,13 +851,9 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                 javafx.application.Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
+                       
                         Countdown();
-                        if (countdown == 0) {
-                            timer.cancel();
-                            timer.purge();
-                            countdown = 6;
-
-                        }
+                        
                     }
                 });
             }
