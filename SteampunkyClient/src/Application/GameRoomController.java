@@ -893,6 +893,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                             if (lobbyinstance.getGameEnd()) {
                                 gameTickTimer.cancel();
                                 gameTickTimer.purge();
+                                gameTickTimer = new Timer();
                                 JOptionPane.showMessageDialog(null, "Game has ended, rating is calculated.");
                                 main.gotoGameRoomselect(client, lobbyinstance, ServerMock);
                             } else {
