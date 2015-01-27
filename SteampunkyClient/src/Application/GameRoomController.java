@@ -852,6 +852,8 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                         if (countdown == 0) {
                             timer.cancel();
                             timer.purge();
+                            countdown = 6;
+                            
                         }
                     }
                 });
