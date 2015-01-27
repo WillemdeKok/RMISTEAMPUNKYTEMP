@@ -123,7 +123,7 @@ public class BasicPublisher {
                 listener.propertyChange(evt);
             } catch (RemoteException ex) {
                 removeListener(listener, null);
-                Logger.getLogger(BasicPublisher.class.getName()).log(Level.SEVERE, null, ex);
+                //Logger.getLogger(BasicPublisher.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }
