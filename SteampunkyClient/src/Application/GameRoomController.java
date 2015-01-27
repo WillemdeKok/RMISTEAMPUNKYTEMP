@@ -403,7 +403,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         if (this.countdown == 0) {
             //get random level from 1 to 3
             this.timer.cancel();
-            this.timer.purge(); 
+            this.timer.purge();
             Random levelInt = new Random();
             level = levelInt.nextInt(3) + 1;
             this.StartGame();
@@ -798,7 +798,7 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         this.stage.setWidth(1000);
         this.stage.setScene(scene);
         this.setKeyBindings();
-        
+
     }
 
     public void drawTimer() {
@@ -852,9 +852,9 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
                 javafx.application.Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                       
+
                         Countdown();
-                        
+
                     }
                 });
             }
@@ -883,28 +883,25 @@ public class GameRoomController extends UnicastRemoteObject implements Initializ
         //Geeft momenteel ConcurrentModificationException error
         // Maar deze timer zou dus voor updaten moeten zijn.
         this.TickTimer.scheduleAtFixedRate(new TimerTask() {
-        boolean running = true;
+            boolean running = true;
+
             @Override
             public void run() {
                 javafx.application.Platform.runLater(() -> {
                     {
                         try {
-                            if (running){
-                            if (lobbyinstance.getGameEnd()) {
-                                TickTimer.cancel();
-                                TickTimer.purge();
-                                lobbyinstance.setHasStarted(false);
-                                
-                                for(String S : lobbyinstance.getPlayers()){
-                                  lobbyinstance.assignSlot(S);
-                                
+                            if (running) {
+                                if (lobbyinstance.getGameEnd()) {
+                                    TickTimer.cancel();
+                                    TickTimer.purge();
+                                    lobbyinstance.setHasStarted(false);
+
+                                    JOptionPane.showMessageDialog(null, "Game has ended, rating is calculated.");
+                                    main.gotoGameRoomselect(client, lobbyinstance, ServerMock);
+                                    running = false;
+                                } else {
+                                    DrawGame();
                                 }
-                                JOptionPane.showMessageDialog(null, "Game has ended, rating is calculated.");
-                                main.gotoGameRoomselect(client, lobbyinstance, ServerMock);
-                                running = false;
-                            } else {
-                                DrawGame();
-                            }
                             } else {
                                 TickTimer.cancel();
                                 TickTimer.purge();
